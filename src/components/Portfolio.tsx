@@ -1,0 +1,1170 @@
+import { useTheme } from "./ThemeProvider";
+import { useState } from "react";
+import { Reveal } from "./motion/Reveal";
+import { HeroInteractiveGradient } from "./motion/HeroInteractiveGradient";
+import {
+  Github,
+  Linkedin,
+  Mail,
+  ExternalLink,
+  MapPin,
+  Calendar,
+  Code,
+  Briefcase,
+  GraduationCap,
+  Award,
+  ChevronDown,
+  Download,
+  Phone,
+  Users,
+  Mic,
+  Trophy,
+  Heart,
+  Filter,
+  X,
+  Sun,
+  Moon,
+  Lightbulb,
+  Camera,
+  FolderKanban,
+  Sparkles
+} from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Separator } from "./ui/separator";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+// import data from "@/data"; // If your data file uses default export
+// Helper to safely wrap arrays (generic, but always returns T[])
+function A<T>(x: T[] | undefined | null): T[] {
+  return Array.isArray(x) ? x : [];
+}
+// If your data file uses named exports, use:
+// import { projects, experiences, competitions, events } from "@/data";
+
+export function Portfolio() {
+  const { theme, setTheme } = useTheme();
+  
+  const experiences = [
+    {
+      title: "Operations (Data Science) Intern",
+      company: "Superbank",
+      period: "May 2025 - Aug 2025",
+      location: "Jakarta, Indonesia",
+      description: `
+• Engineered 200+ fraud detection features in Python and Snowflake SQL, enhancing the anomaly detection model’s ability to flag suspicious account behaviour.
+• Designed and standardised feature documentation templates in Excel, cataloguing 200+ features with definitions to ensure clarity, reproducibility, and audit readiness.
+• Optimised SQL queries on datasets exceeding 50M records by breaking complex scripts into modular components, improving processing efficiency by ~40%.
+• Created snapshot views of payment data in Snowflake, enabling more efficient transactional analysis and model training.
+• Created and maintained data pipelines in Snowflake, enabling real-time visibility into anomalies such as mismatched devices, OS versions, and high-frequency transaction bursts.
+`,
+      technologies: ["Python", "SQL", "Snowflake"],
+      logo: "/superbank-logo.webp",
+      link: "https://www.linkedin.com/posts/bernardino-lintang_datascience-snowflake-sql-activity-7361775942270087169-1ZpQ?utm_source=share&utm_medium=member_desktop&rcm=ACoAADoCz-YBehyqcK0bh8mFQ1k3aFoNU9k0BSg"
+    },
+    {
+      title: "Artificial Intelligence Engineer Intern",
+      company: "Crayon Data",
+      period: "Dec 2025 - Jan 2026",
+      location: "Chennai, India",
+      description: `Part of the India Ready Talent Programme
+Entrepreneur in Residence (EIR) - Agentic AI Systems
+• Built an LLM-driven data ingestion platform that converts unstructured offer data into structured, production-ready datasets, cutting manual processing by 70%+.
+• Designed editable instruction and validation layers that allow business users to regenerate outputs safely while enforcing schema and mandatory field constraints.
+• Implemented deduplication, ID assignment, and referential integrity logic to support scalable ingestion into a global merchant repository.`,
+      technologies: ["Python", "Cursor", "Agentic AI", "LLM", "Production Integration"],
+      logo: "/crayon-data-logo.jpg",
+      link: "https://www.crayondata.com/"
+    },
+    {
+      title: "GenAI Product Development Intern (Incoming)",
+      company: "CPF Board",
+      period: "Jan 2026 - May 2026",
+      location: "Singapore, Singapore",
+      description: `
+• I will design and develop Generative AI solutions to enhance customer service operations and solve real-life problems at the CPF Customer Contact Centre.
+• I will build and optimise Retrieval-Augmented Generation (RAG) systems by incorporating CPF’s internal knowledge base and documentation to improve AI responses.
+• I will maintain and enhance existing LLM technologies, with a focus on prompt engineering, functionality improvements, and user experience.
+• I will develop and implement testing frameworks to evaluate model performance, accuracy, and alignment with business requirements.
+• I will collaborate with cross-functional teams to explore innovative applications of AI/ML and contribute to CPF’s mission of improving the member experience.
+`,
+      technologies: ["FastAPI", "Node.js", "Next.js", "Mongodb", "Postgresql", "mySQL", "Python","OpenAI"],
+      logo: "/cpf-logo.png",
+      link: "https://www.cpf.gov.sg"
+    }
+  ];
+
+  const competitions = [
+    {
+      title: "NUS Tiger Brokers Case Competition",
+      date: "Mar 2025",
+      description: `Our team developed Tiger Learn, an educational app that empowers tertiary students to learn investing in an engaging and accessible way. We:\n\n- Identified the gap: Students are keen to invest but lack knowledge, confidence, and capital.\n- Designed the solution: A gamified learning app with quizzes, progress tracking, paper trading, and interactive modules covering stocks, REITs, crypto, and more.\n- Created differentiation: Added community features, mentorships, and webinars to build loyalty and position Tiger Learn as the go-to platform for student investors.\n- Planned execution: Outlined a launch timeline, marketing strategies, security measures, and a scalable revenue model.\n- Measured impact: Set KPIs for adoption, engagement, conversion to trading, and retention to show Tiger Learn's value to both users and Tiger Brokers.`,
+      technologies: ["Product Design", "Gamification", "App Development", "EdTech", "User Interface", "Business Strategy"],
+      image: "/tiger-brokers.png"
+    },
+    {
+      title: "NUS Datathon (Financial Advisory Matching, Category A), Top 5 Finalists",
+      date: "Feb 2025",
+      description: "Developed a hybrid recommendation model to optimize financial advisor-client matching using Singular Value Decomposition (SVD) with Collaborative Filtering and Content-Based Filtering (cosine similarity). Our model analyzed historical policy success rates, client profiles, and advisor expertise to recommend the most suitable advisors for clients, improving personalization and engagement.",
+      technologies: ["Python", "Pandas", "scikit-learn", "SVD", "Collaborative Filtering", "Content-Based Filtering", "Cosine Similarity"],
+      image: "/nus-datathon.jpg"
+    },
+    {
+      title: "SDS Hackathon (Medical Insurance Cost Prediction) - Top 3 Finalists",
+      date: "Nov 2025",
+      description: `- Engineered and standardized features (age, BMI, smoker status, region) with interaction terms (smoker × BMI, smoker × age) to capture non-linear health-risk effects.\n- Applied and compared Ridge, Lasso, Elastic Net, Random Forest, and XGBoost models using cross-validation and grid search.\n- Quantified feature impact using Akaike Information Criterion (AIC) and SHAP values, identifying smoking status and BMI as dominant cost predictors.\n- Performed Equalized Odds fairness analysis to evaluate subgroup performance across sex, region, and smoker groups, highlighting bias in smoker-related predictions.\n- Achieved R² > 0.85 with stable residuals and interpretable SHAP patterns; presented results to an expert judging panel, earning Top 3 Finalist recognition out of 40 teams.`,
+      technologies: ["Python", "scikit-learn", "XGBoost", "SHAP", "Random Forest", "Ridge Regression", "Lasso", "Elastic Net", "Fairness Analysis", "Machine Learning"],
+      image: "/nus-hackathon-2025.jpg"
+    },
+    {
+      title: "Changi Airport Group Case Challenge 2025",
+      date: "Aug 2025",
+      description: `- Framed the problem: Changi needs a new large-scale attraction that is safe, inclusive, and culturally authentic to sustain its "wow" factor and global leadership.\n- Developed the concept: A gesture-activated installation where travellers are immersed into iconic Singapore scenes (hawker centres, SAF bases, landmarks), creating personalised, highly shareable digital souvenirs.\n- Ensured feasibility: Built on mature technologies (vision AI, Unity 3D, depth cameras) with privacy-by-design, inclusivity, low-maintenance operations, and scalable rollout across terminals.\n- Created impact: Drives organic media, increases dwell time, strengthens Singapore's cultural diplomacy, and opens revenue streams through partnerships, advertising, and IP collaborations.\n- Aligned with Changi's vision: Showcasing innovation, world-class excellence, and community connection while reinforcing brand leadership in safe, sustainable, and vibrant airport experiences.`,
+      technologies: ["AI", "Unity 3D", "Computer Vision", "Experience Design", "Cultural Diplomacy"],
+      image: "/cag-case-challenge.png"
+    }
+  ];
+
+  const projects = [
+    {
+      title: "Multi-Model Approach for DNA-Binding Protein Classification",
+      date: "Aug 2024 - Nov 2024",
+      description: `In this IT1244 Group Project, we developed and evaluated various machine learning models, including Logistic Regression, Naive Bayes, Random Forest, and Convolutional Neural Network (CNN), to classify DNA-binding proteins. Each model leveraged k-mer frequencies, amino acid composition, and embeddings for feature extraction, aiming to improve accuracy and reduce processing time. Hyperparameter tuning and class-weighted loss functions were used to address class imbalance, enhancing model performance. The CNN ultimately excelled in capturing sequence-based features, demonstrating the highest potential for complex biological data classification.`,
+      technologies: ["Python", "scikit-learn", "TensorFlow", "CNN", "Bioinformatics"],
+      image: "/it1244.png"
+    },
+    {
+      title: "Analyzing Emotional Characteristics of Taylor Swift’s Albums and Their Impact on Reception",
+      date: "Oct 2024 - Nov 2024",
+      description: `For this DSA2101 group project, we conducted a detailed analysis of Taylor Swift’s discography, examining how emotional elements within her music may influence critical and fan reception. Leveraging data science tools in R, I analyzed song attributes such as valence (positivity of music), key, and mode (major or minor) and explored how these emotional aspects correlate with Metacritic scores (critic reviews) and user scores (fan reception) for each album.`,
+      technologies: ["R", "Data Science", "Music Analysis", "Metacritic API"],
+      image: "/dsa2101.png",
+    }
+  ];
+
+  const skills = {
+    "Frontend": ["React", "Vue.js", "TypeScript", "Next.js", "Tailwind CSS"],
+    "Backend": ["Node.js", "Python", "Express", "FastAPI", "Java", "Flask"],
+    "Database": ["Snowflake SQL", "PostgreSQL", "MongoDB", "Firebase Firestore"],
+    "DevOps": ["Docker", "AWS"],
+    "Tools": ["Git", "Figma", "Excel"],
+    "Data Science/Analytics": ["Pandas", "NumPy", "scikit-learn", "TensorFlow", "R", "ggplot2", "Tableau", "Power BI"]
+  };
+
+  const events = [
+    {
+      title: "Participant",
+      type: ["Workshop"],
+      event: "NUS SME X AWS Workshop: An Introduction to Generative AI on Cloud",
+      date: "March 2025",
+      location: "Singapore, Singapore",
+      description: "Built a financial insights AI agent on AWS Bedrock by setting up an S3 knowledge base with the Fannie Mae Selling Guide, enabling foundation models, configuring action groups (loan calculator, MLS lookup), and testing retrieval-augmented generation for mortgage-related queries.",
+      topics: ["AWS Bedrock", "AI Agent", "Retrieval-Augmented Generation", "S3", "Foundation Models", "Action Groups", "Cloud", "Financial Services"],
+      categories: ["AI/ML", "Cloud", "Workshop", "Finance"],
+      icon: Award,
+      image: "/aws-workshop-group.jpg",
+    },
+    {
+      title: "Participant",
+      type: ["Tour"],
+      event: "Google Office Tour",
+      date: "April 2025",
+      location: "Singapore, Singapore",
+      description: "Visited Google’s Singapore office for an exclusive tour, gaining insights into Google’s workplace culture, innovation practices, and cutting-edge technologies.",
+      topics: ["Workplace Culture", "Innovation", "Tech Industry", "Office Tour", "Networking"],
+      categories: ["Corporate", "Technology", "Networking"],
+      icon: Users,
+      image: "/google-office-tour-portrait.jpg",
+    },
+    {
+      title: "Participant",
+      type: ["Case Study"],
+      event: "PwC Career Compass Day",
+      date: "September 2025",
+      location: "Singapore, Singapore",
+      description: "Participated in PwC Career Compass Day, working with a team on a case study simulating a client engagement. Contributed to analysis, structured recommendations, and co-presented to a panel, showcasing collaboration, critical thinking, and communication skills under time pressure.",
+      topics: ["Teamwork", "Case Study", "Communication", "Critical Thinking", "Collaboration"],
+      categories: ["Corporate", "Case Study", "Teamwork"],
+      icon: Mic,
+      image: "/pwc-career-compass-day.jpg",
+      //link: "https://reactconf.com/2024/speakers"
+    },
+    // Publicity / Creative Portfolio as an event-like entry so it appears in Events & Community filters
+    {
+      title: "Publicity & Creative Portfolio",
+      type: ["Portfolio"],
+      event: "Photography & Videography — events, clubs, campaigns",
+      date: "Ongoing",
+      location: "Singapore, Singapore",
+      description: "I have experience in publicity, photography, and videography for events, clubs, and campaigns. Explore my creative portfolio.",
+      topics: ["Photography", "Videography", "Portfolio", "Canva"],
+      categories: ["Publicity", "Photography", "Videography", "Media"],
+      icon: Camera,
+      image: "/Home page.png",
+      link: "https://www.canva.com/design/DAGP3qLlhuY/L8drQBMy-80nV-wVlQbNZg/edit"
+    },
+    {
+      title: "Marketing Head for Science Club Welfare",
+      type: ["Activity"],
+      date: "October 2024 - August 2025",
+      location: "Singapore, Singapore",
+      description: "Led branding and marketing efforts for the annual Sponsorship Booklet, overseeing design consistency, partner engagement, and promotional strategy.",
+      tags: ["Leadership", "Marketing", "Sponsorship", "Strategy"],
+      image: "/science-welfare-picture.jpg",
+      icon: Briefcase,
+      // ensure minimal arrays exist so consumers of categories/topics won't crash
+      categories: ["Marketing", "Publicity", "Leadership"],
+      topics: ["Branding", "Sponsorship", "Strategy"],
+    },
+    {
+      title: "Curriculum Executive",
+      type: ["Activity"],
+      event: "NUS Product Club",
+      date: "Aug 2025 - May 2026",
+      location: "Singapore, Singapore",
+      description: "Presented an internal A/B Testing analysis session at Product Club, showcasing statistical testing and product insights for feature rollout evaluation.",
+      tags: ["Product Management", "A/B Testing", "Data Analytics", "Public Speaking"],
+      image: "/me-presenting.jpg",
+      icon: Lightbulb,
+      categories: ["Publicity", "Education", "Workshops"],
+      topics: ["A/B Testing", "Product Management", "Public Speaking"],
+    }
+  ];
+
+  // --- Testimonials Data ---
+  const testimonials = [
+    {
+      name: "Deyi Secondary School",
+      title: "Student",
+      date: "2015 - 2020",
+      image: "deyi-logo.png",
+      text: `Bernardino possessed a gentle disposition and had a smile for everyone. In his interactions with others, he showed sincerity and warmth. He was forthcoming in helping others and was well-liked by his peers, unassuming in his words and actions. He enjoyed the process of learning and was open to different perspectives. A diligent student, Bernardino displayed a positive learning attitude and determination to excel in his academic performance. He loved to challenge himself constantly and displayed the ability to carry out tasks with minimal supervision. He could be relied upon to do his best in whatever he embarked on.`,
+    },
+    {
+      name: "Catholic Junior College",
+      title: "Student",
+      date: "2019 - 2020",
+      image: "cj-logo.jpg",
+      text: `Bernardino consistently carried himself as a diligent and self-directed student. Bernardino often seeks new opportunities to grow. Bernardino acknowledged the importance of being a good listener as well as getting everyone in the team to feel included. He strove to influence his team positively so that, collectively, the team was consistently up to tasks. A bright and respectful individual, Bernardino has a pleasant disposition and gets along well with his peers. His analytical mind and openness to experiences enables him to push his limits and to achieve his intended goals.`,
+    },
+    {
+      name: "11C4I",
+      title: "Army Reconnaissance Trooper",
+      date: "2021 - 2023",
+      image: "11c4i-logo.png",
+      text: `His friendly character allowed him to overcome the cultural differences with his foreign counterparts. CFC Bernardino always takes the initiative to seek his Commanders and peers for advice to improve himself. His cheerful and welcoming personality enabled him to build strong working rapport with his superiors and peers. CFC Bernardino would certainly be a valuable member to any team that he may find himself part of in the future.`,
+    },
+    {
+      name: "Superbank",
+      title: "Operations (Data Science) Intern",
+      date: "2025",
+      image: "superbank-logo.webp",
+      text: `Bernard has made great strides in technical skills, diving deeper into Python, SQL, and
+machine learning workflows. He's now much more comfortable exploring complex codebases and applying
+advanced techniques to analyze and manipulate data. He’s getting much better at connecting technical findings to business insights. His
+recent presentations have shown a clearer understanding of the “why” behind the numbers, helping stakeholders
+see the business value of his work.
+`,
+    },
+  ];
+
+  // Safe arrays (guard possibly-undefined data at usage sites)
+  const eventsSafe = A(events);
+  const projectsSafe = A(projects);
+  const experiencesSafe = A(experiences);
+  const competitionsSafe = A(competitions);
+  const testimonialsSafe = A(testimonials);
+
+  // Dynamically generate filter categories from all event categories (guarded)
+  const filterCategories = Array.from(
+    new Set(eventsSafe.flatMap(event => A<string>(event.categories)))
+  ).filter((cat): cat is string => typeof cat === "string" && !!cat);
+
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+
+  // Date filter state
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  // Sort order state
+  const [dateSortOrder, setDateSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  // Get unique dates from events for dropdown (guarded)
+  const eventDates = Array.from(new Set(eventsSafe.map(e => e?.date).filter(Boolean)));
+
+  // Helper to parse month-year or month format
+  function parseEventDate(dateStr: string): Date {
+    // Try to parse as 'Month YYYY' or 'Month YYYY' or 'YYYY-MM-DD'
+    const tryDate = Date.parse(dateStr);
+    if (!isNaN(tryDate)) return new Date(tryDate);
+    // Try custom parsing for 'Month YYYY'
+    const [month, year] = dateStr.split(' ');
+    if (month && year) {
+      return new Date(`${month} 1, ${year}`);
+    }
+    return new Date(dateStr);
+  }
+
+  // Filter and sort events by category, date, and sort order (guarded)
+  const filteredEvents = eventsSafe
+    .filter(event => {
+      const categoryMatch =
+        selectedFilters.length === 0 ||
+        selectedFilters.some(filter => A<string>(event.categories).includes(filter));
+      const dateMatch = !selectedDate || event.date === selectedDate;
+      return categoryMatch && dateMatch;
+    })
+    .sort((a, b) => {
+      const dateA = parseEventDate(a.date);
+      const dateB = parseEventDate(b.date);
+      return dateSortOrder === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+    });
+
+  const toggleFilter = (category: string) => {
+    setSelectedFilters(prev => 
+      prev.includes(category)
+        ? prev.filter(f => f !== category)
+        : [...prev, category]
+    );
+  };
+
+  const clearAllFilters = () => {
+    setSelectedFilters([]);
+  };
+
+  // --- Search Bar State and Logic ---
+  const [searchQuery, setSearchQuery] = useState("");
+  // Combine all searchable content into a single array for demonstration (guarded)
+  const allContent = [
+    ...experiencesSafe.map(e => ({ ...e, type: "experience" })),
+    ...competitionsSafe.map(c => ({ ...c, type: "competition" })),
+    ...projectsSafe.map(p => ({ ...p, type: "project" })),
+    ...eventsSafe.map(ev => ({ ...ev, type: "event" })),
+  ];
+
+  const searchResults = searchQuery
+    ? allContent.filter(item =>
+        Object.values(item)
+          .join(" ")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+      )
+    : [];
+
+  function toggleTheme(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    event.preventDefault();
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+  }
+
+  // replace your nav arrays (desktop and mobile) so "Skills" points to "#about"
+  const NAV_LINKS = [
+    { href: "#about", label: "About" },
+    // point Skills to the About section
+    { href: "#about", label: "Skills" },
+    { href: "#experience", label: "Work Experience" },
+    { href: "#competitions", label: "Competitions" },
+    { href: "#projects", label: "Projects" },
+    { href: "#events", label: "Events & Community" },
+    { href: "#testimonials", label: "Testimonials" },
+    { href: "#contact", label: "Contact" },
+  ];
+
+  // Helper to safely wrap arrays
+  // export const A = <T,>(x: T[] | undefined | null): T[] => (Array.isArray(x) ? x : []);
+
+  return (
+    <div className="min-h-[60vh] pt-16 bg-gradient-to-b from-slate-900 to-background">
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between flex-nowrap gap-4">
+            <a
+              href="#top"
+              className="text-xl font-bold focus:outline-none focus:ring-2 focus:ring-primary flex-shrink-0"
+              onClick={e => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            >
+              Bernardino Lintang
+            </a>
+            {/* Desktop Nav */}
+            <div className="hidden md:flex items-center gap-6 flex-nowrap flex-1 justify-end">
+              {NAV_LINKS.map(link => (
+                <a key={`${link.href}-${link.label}`} href={link.href} className="nav-link whitespace-nowrap text-sm">
+                  {link.label}
+                </a>
+              ))}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleTheme}
+                className="hover:bg-accent flex-shrink-0"
+              >
+                {theme === "dark" ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+              <Button size="sm" variant="outline" asChild className="flex-shrink-0">
+                <a
+                  href="/bernardino-lintang-resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Resume
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <Reveal>
+        <section
+          id="hero"
+          className="relative flex items-center justify-center min-h-screen px-4 bg-background overflow-hidden"
+        >
+          {/* Interactive cursor-following grey gradient */}
+          <HeroInteractiveGradient />
+
+          <div className="container mx-auto max-w-4xl flex flex-col items-center justify-center text-center relative z-10">
+            <div className="mb-8 flex flex-col items-center">
+              <ImageWithFallback
+                src="/formal-picture.JPG"
+                alt="Professional headshot"
+                className="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-primary/10"
+                style={{ objectPosition: "center 10%" }}
+              />
+              <h1 className="text-4xl md:text-6xl mb-4">
+                Hi, I'm <span className="text-primary">Bernardino Lintang</span>
+              </h1>
+              <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
+                Aspiring Data Scientist passionate about building data-driven products.
+                I specialize in analytics, machine learning, and GenAI development, with a focus on solving problems that improve people’s everyday experiences.
+              </p>
+              <div className="flex items-center justify-center gap-2 text-muted-foreground mb-8">
+                <MapPin className="w-4 h-4" />
+                <span>Singapore, Singapore</span>
+              </div>
+              <div className="flex items-center justify-center gap-4 hero-actions">
+                {/* match left-toolbar style: icon + text, same spacing & intensity */}
+                <a
+                  href="mailto:lintangbernardino@gmail.com"
+                  className="inline-flex items-center gap-2 text-sm px-2 py-1 rounded-md hover:bg-primary/10 text-muted-foreground"
+                  aria-label="Get in touch"
+                >
+                  <Mail className="w-4 h-4" />
+                  <span>Get In Touch</span>
+                </a>
+
+                <a
+                  href="https://github.com/bernardinolintang"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm px-2 py-1 rounded-md hover:bg-primary/10 text-muted-foreground"
+                >
+                  <Github className="w-4 h-4" />
+                  <span>GitHub</span>
+                </a>
+
+                <a
+                  href="https://www.linkedin.com/in/bernardino-lintang/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm px-2 py-1 rounded-md hover:bg-primary/10 text-muted-foreground"
+                >
+                  <Linkedin className="w-4 h-4" />
+                  <span>LinkedIn</span>
+                </a>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <ChevronDown className="w-6 h-6 text-muted-foreground animate-bounce" />
+            </div>
+          </div>
+        </section>
+      </Reveal>
+
+      {/* About Section */}
+      <Reveal>
+        <section id="about" className="py-16 px-4 bg-muted/30">
+        <div className="container mx-auto max-w-4xl">
+          <Reveal variant="text" delay={0.1}>
+            <h2 className="text-3xl mb-8 text-center">About Me</h2>
+          </Reveal>
+          <div className="grid md:grid-cols-2 gap-12 items-start">
+            <div>
+              {/* About Text */}
+              <div className="space-y-6 mb-8">
+                <div>
+                  <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                    Data Scientist & AI Enthusiast
+                  </h3>
+                  <p className="text-lg leading-relaxed text-muted-foreground">
+                    I'm a passionate data scientist and analyst with hands-on experience in building machine learning models, AI solutions, and data-driven dashboards. 
+                    I enjoy working with modern data technologies and am always eager to learn new skills, explore emerging tools, and tackle complex real-world problems with data.
+                  </p>
+                </div>
+                <p className="text-lg leading-relaxed text-muted-foreground">
+                  When I'm not coding, you can find me exploring new technologies, contributing to 
+                  open-source projects, or enjoying outdoor activities like hiking and photography.
+                </p>
+              </div>
+
+              {/* Statistics Section */}
+              <div className="mb-8 p-4 md:p-6 bg-card border rounded-lg hover:shadow-lg transition-shadow duration-200">
+                <div className="flex flex-row gap-2 md:gap-4 items-center justify-between">
+                  <div className="text-center group flex-1">
+                    <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
+                      <Briefcase className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
+                      <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">2+</div>
+                    </div>
+                    <div className="text-xs md:text-sm text-muted-foreground">Years Experience</div>
+                  </div>
+                  <div className="text-center group flex-1">
+                    <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
+                      <FolderKanban className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
+                      <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">{projectsSafe.length + competitionsSafe.length}</div>
+                    </div>
+                    <div className="text-xs md:text-sm text-muted-foreground">Projects & Competitions</div>
+                  </div>
+                  <div className="text-center group flex-1">
+                    <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
+                      <Trophy className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
+                      <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">{competitionsSafe.length}</div>
+                    </div>
+                    <div className="text-xs md:text-sm text-muted-foreground">Competitions</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Call to Action */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" asChild>
+                  <a
+                    href="/bernardino-lintang-resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    View Resume
+                  </a>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <a href="#contact">
+                    <Mail className="w-4 h-4 mr-2" />
+                    Let's Connect
+                  </a>
+                </Button>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-xl mb-4">Skills & Technologies</h3>
+              <div className="space-y-4">
+                {Object.entries(skills ?? {}).map(([category, items]) => (
+                  <div key={category}>
+                    <h4 className="mb-2 text-sm text-muted-foreground">{category}</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {A(items).map((skill) => (
+                        <Badge key={skill} variant="secondary">{skill}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      </Reveal>
+
+      {/* Experience Section */}
+      <Reveal>
+        <section id="experience" className="py-16 px-4">
+          <div className="container mx-auto max-w-5xl">
+            <Reveal variant="text" delay={0.1}>
+              <h2 className="text-3xl mb-8 text-center">Work Experience</h2>
+            </Reveal>
+            <div className="relative mt-8">
+              {/* Vertical Timeline Line */}
+              <div className="absolute left-8 md:left-16 top-0 bottom-0 w-0.5 bg-border" />
+              
+              {/* Timeline Items */}
+              <div className="space-y-12">
+                {experiencesSafe.map((exp, index) => (
+                  <Reveal key={exp.title} delay={0.03 * index}>
+                    <div className="relative flex gap-6 md:gap-8">
+                      {/* Timeline Date (Left Side) */}
+                      <div className="flex-shrink-0 w-20 md:w-28 text-right pr-4">
+                        <div className="text-sm font-medium text-muted-foreground mt-1">
+                          {exp.period}
+                        </div>
+                      </div>
+                      
+                      {/* Timeline Dot */}
+                      <div className="absolute left-8 md:left-16 transform -translate-x-1/2 z-10">
+                        <div className="w-4 h-4 rounded-full bg-primary border-4 border-background timeline-dot-glow" />
+                      </div>
+                      
+                      {/* Experience Card (Right Side) */}
+                      <div className="flex-1 min-w-0">
+                        <Card className="ml-6 md:ml-8">
+                          <CardHeader>
+                            <div className="flex items-start gap-4">
+                              <div className="flex-shrink-0">
+                                <ImageWithFallback
+                                  src={exp.logo}
+                                  alt={`${exp.company} logo`}
+                                  className="w-12 h-12 rounded-lg object-cover border border-border"
+                                />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <CardTitle className="flex items-center gap-2 text-xl">
+                                  <Briefcase className="w-5 h-5 flex-shrink-0" />
+                                  <span>{exp.title}</span>
+                                </CardTitle>
+                                <CardDescription className="text-base mt-1.5">
+                                  {exp.link ? (
+                                    <a 
+                                      href={exp.link} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="hover:text-primary transition-colors inline-flex items-center gap-1"
+                                    >
+                                      {exp.company}
+                                      <ExternalLink className="w-3 h-3" />
+                                    </a>
+                                  ) : (
+                                    exp.company
+                                  )}
+                                </CardDescription>
+                                <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+                                  <MapPin className="w-4 h-4" />
+                                  <span>{exp.location}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-2">
+                              {exp.description.split('\n').filter(line => line.trim()).map((line, i) => (
+                                <p key={i} className="text-muted-foreground">{line}</p>
+                              ))}
+                            </div>
+                            <div className="mt-6">
+                              <div className="flex flex-wrap gap-2">
+                                {A(exp.technologies).map((tech) => (
+                                  <Badge key={tech} variant="outline">{tech}</Badge>
+                                ))}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </div>
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      </Reveal>
+
+
+      {/* Competitions Section */}
+      <Reveal>
+        <section id="competitions" className="py-16 px-4">
+          <div className="container mx-auto max-w-6xl">
+            <Reveal variant="text" delay={0.1}>
+              <h2 className="text-3xl mb-8 text-center">Competitions</h2>
+            </Reveal>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {competitionsSafe.map((competition, index) => (
+                <Reveal key={competition.title} delay={0.04 * index}>
+                  <Card className="overflow-hidden">
+                    <div className="aspect-video bg-muted">
+                      <ImageWithFallback
+                        src={competition.image}
+                        alt={competition.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 whitespace-pre-line leading-snug">
+                        <Trophy className="w-5 h-5" />
+                        {competition.title}
+                      </CardTitle>
+                      {competition.date && (
+                        <div className="text-sm text-muted-foreground mb-2">{competition.date}</div>
+                      )}
+                      {competition.title === "NUS Tiger Brokers Case Competition" ? (
+                        <ul className="list-disc pl-6 mb-2 text-muted-foreground">
+                          {competition.description
+                            .split('\n')
+                            .filter(line => line.trim().startsWith('-'))
+                            .map((line, idx) => (
+                              <li key={idx}>{line.replace(/^\s*-\s*/, '')}</li>
+                            ))}
+                        </ul>
+                      ) : (
+                        <CardDescription>{competition.description}</CardDescription>
+                      )}
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {A(competition.technologies).map((tech) => (
+                          <Badge key={tech} variant="secondary">{tech}</Badge>
+                        ))}
+                      </div>
+                      {competition.title === "NUS Tiger Brokers Case Competition" && (
+                        <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs">
+                          <a
+                            href="https://www.canva.com/design/DAGiX06BesA/El16LNoqmvHzcgLiJd9hzA/view?mode=prototype"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-start w-full gap-2 py-2 px-3 cursor-pointer"
+                          >
+                            <span className="flex-1 text-left">UI Work (Prototype)</span>
+                          </a>
+                        </Button>
+                      )}
+                    </CardContent>
+                  </Card>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      </Reveal>
+
+      {/* Projects Section */}
+      <Reveal>
+        <section id="projects" className="py-16 px-4 bg-muted/30">
+          <div className="container mx-auto max-w-6xl">
+            <Reveal variant="text" delay={0.1}>
+              <h2 className="text-3xl mb-8 text-center">Featured Projects</h2>
+            </Reveal>
+            <div className="grid md:grid-cols-2 gap-6 justify-center">
+              {/* Center the grid and its children */}
+              {projectsSafe.map((project, index) => (
+                <Reveal key={project.title} delay={0.04 * index}>
+          <Card className="overflow-hidden">
+            <div className="aspect-video bg-muted">
+              <ImageWithFallback
+                src={project.image}
+                alt={project.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 whitespace-pre-line leading-snug">
+                <Code className="w-5 h-5" />
+                {project.title}
+              </CardTitle>
+              <div className="text-sm text-muted-foreground mb-2">{project.date}</div>
+              <CardDescription>{project.description}</CardDescription>
+              {/* Add GitHub link for IT1244 and Taylor Swift projects */}
+              {project.title.includes("DNA-Binding Protein") && (
+                <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs">
+                  <a
+                    href="https://github.com/bernardinolintang/IT1244-Project-DNA-Binding-Protein"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-start w-full gap-2 py-2 px-3 cursor-pointer"
+                  >
+                    <span className="flex-1 text-left">GitHub Repo</span>
+                  </a>
+                </Button>
+              )}
+
+              {project.title.includes("Taylor Swift") && (
+                <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs">
+                  <a
+                    href="https://github.com/bernardinolintang/DSA2101-Taylor-Swift-Music-Analysis"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-start w-full gap-2 py-2 px-3 cursor-pointer"
+                  >
+                    <span className="flex-1 text-left">GitHub Repo</span>
+                  </a>
+                </Button>
+              )}
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {A(project.technologies).map((tech) => (
+                  <Badge key={tech} variant="secondary">{tech}</Badge>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+                </Reveal>
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <Reveal>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  asChild
+                >
+                  <a
+                    href="https://github.com/bernardinolintang"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Github className="w-4 h-4 mr-2" />
+                    View More Projects
+                  </a>
+                </Button>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+      </Reveal>
+
+      {/* Events Section */}
+      <Reveal>
+        <section id="events" className="py-16 px-4">
+          <div className="container mx-auto max-w-4xl">
+            <Reveal variant="text" delay={0.1}>
+              <h2 className="text-3xl mb-8 text-center">Events & Community</h2>
+            </Reveal>
+            <p className="text-lg text-muted-foreground mb-8 text-center max-w-2xl mx-auto">
+            Beyond my professional work, I actively grow within the developer and data community by attending talks, workshops, and industry events to expand my knowledge and stay ahead of emerging technologies.
+          </p>
+          
+          {/* Filter Controls */}
+          <Reveal delay={0.05}>
+          <Card className="mb-8">
+            <CardContent className="pt-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+                <div className="flex items-center gap-2">
+                  <Filter className="w-4 h-4" />
+                  <span>Filter by Category</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <label htmlFor="date-filter" className="text-sm text-muted-foreground">Filter by Date:</label>
+                  <select
+                    id="date-filter"
+                    className="border rounded px-2 py-1 text-sm bg-background"
+                    value={selectedDate}
+                    onChange={e => setSelectedDate(e.target.value)}
+                  >
+                    <option value="">All Dates</option>
+                    {eventDates.map(date => (
+                      <option key={date} value={date}>{date}</option>
+                    ))}
+                  </select>
+                  <label htmlFor="date-sort" className="text-sm text-muted-foreground ml-4">Sort:</label>
+                  <select
+                    id="date-sort"
+                    className="border rounded px-2 py-1 text-sm bg-background"
+                    value={dateSortOrder}
+                    onChange={e => setDateSortOrder(e.target.value as 'asc' | 'desc')}
+                  >
+                    <option value="desc">Newest First</option>
+                    <option value="asc">Oldest First</option>
+                  </select>
+                </div>
+                {selectedFilters.length > 0 && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={clearAllFilters}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="w-4 h-4 mr-1" />
+                    Clear All
+                  </Button>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {filterCategories.map((category) => (
+                  <Button
+                    key={category}
+                    variant={selectedFilters.includes(category) ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => toggleFilter(category)}
+                    className={`transition-all filter-pill ${selectedFilters.includes(category) ? "active" : ""}`}
+                    aria-pressed={selectedFilters.includes(category)}
+                  >
+                    {category}
+                    {selectedFilters.includes(category) && (
+                      <X className="w-3 h-3 ml-2" />
+                    )}
+                  </Button>
+                ))}
+              </div>
+              {(selectedFilters.length > 0 || selectedDate) && (
+                <div className="mt-4 pt-4 border-t">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    {selectedFilters.length > 0 && <><span>Active filters:</span>
+                    <div className="flex flex-wrap gap-1">
+                      {selectedFilters.map((filter) => (
+                        <Badge key={filter} variant="secondary" className="text-xs">
+                          {filter}
+                        </Badge>
+                      ))}
+                    </div></>}
+                    {selectedDate && <span>Date: {selectedDate}</span>}
+                    <span>• {filteredEvents.length} events found</span>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          </Reveal>
+
+          <div className="flex flex-col gap-6">
+            {filteredEvents.length === 0 ? (
+              <Reveal>
+                <Card className="max-w-2xl mx-auto">
+                <CardContent className="pt-6 text-center">
+                  <p className="text-muted-foreground">No events found matching the selected filters.</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={clearAllFilters}
+                    className="mt-4"
+                  >
+                    Clear Filters
+                  </Button>
+                </CardContent>
+              </Card>
+              </Reveal>
+            ) : (
+              filteredEvents.map((event, index) => {
+                 return (
+                  <Reveal key={`${event.title}-${index}`} delay={0.03 * index}>
+                   <Card
+                     className="rounded-2xl border bg-card/60 backdrop-blur hover:border-primary/20 p-4 flex flex-row items-center gap-6 max-w-2xl mx-auto"
+                   >
+                    {/* Event Image */}
+                    <ImageWithFallback
+                      src={event.image}
+                      alt={event.title}
+                      className="w-12 h-12 md:w-20 md:h-20 rounded-2xl object-cover object-center shadow-sm flex-shrink-0"
+                    />
+                    {/* Event Content */}
+                    <div className="flex-1 flex flex-col justify-between h-full">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="text-lg md:text-xl font-semibold leading-snug">
+                            {event.title}
+                          </h3>
+                           {event.link && (
+                             <a
+                               href={event.link}
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               aria-label={`Open ${event.title}`}
+                               className="ml-2 text-muted-foreground hover:text-primary transition-colors inline-flex items-center"
+                             >
+                               <ExternalLink className="w-4 h-4" />
+                             </a>
+                           )}
+                        </div>
+                        <div className="text-muted-foreground text-sm mb-1">{event.event}</div>
+                        <div className="flex flex-wrap gap-2 mb-1">
+                          <Badge variant="secondary" className="w-fit text-xs">
+                            {event.type}
+                          </Badge>
+                          {A<string>(event.categories).map((category) => (
+                            <Badge
+                              key={category}
+                              variant="outline"
+                              className={`text-xs ${
+                                selectedFilters.includes(category)
+                                  ? "bg-primary/10 border-primary/20"
+                                  : ""
+                              }`}
+                            >
+                              {category}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="text-sm md:text-base leading-relaxed text-muted-foreground max-w-prose mb-1">
+                          {event.description}
+                        </div>
+                        <div className="flex flex-wrap gap-2 mb-1">
+                          {A<string>(event.topics).map((topic) => (
+                            <Badge key={topic} variant="outline" className="text-xs">
+                              {topic}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 text-xs md:text-sm text-muted-foreground pt-3 border-t mt-4">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          {event.date}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <MapPin className="w-4 h-4" />
+                          {event.location}
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                  </Reveal>
+                );
+              })
+            )}
+          </div>
+        </div>
+      </section>
+      </Reveal>
+
+      {/* Testimonials Section */}
+      <Reveal>
+        <section id="testimonials" className="py-16 px-4 bg-muted/30">
+          <div className="container mx-auto max-w-4xl">
+            <Reveal variant="text" delay={0.1}>
+              <h2 className="text-3xl mb-8 text-center">Testimonials</h2>
+            </Reveal>
+            <div className="space-y-6">
+              {testimonialsSafe.map((testimonial, index) => (
+                <Reveal key={testimonial.name} delay={0.03 * index}>
+                  <Card>
+                    <CardHeader>
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="flex items-start gap-4 flex-1 min-w-0">
+                          <div className="flex-shrink-0">
+                            <ImageWithFallback
+                              src={testimonial.image}
+                              alt={`${testimonial.name} logo`}
+                              className="w-12 h-12 rounded-lg object-contain border border-border bg-white p-1"
+                              style={{ objectPosition: "center" }}
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <CardTitle className="flex items-center gap-2 text-xl">
+                              <Award className="w-5 h-5 flex-shrink-0" />
+                              <span className="truncate">{testimonial.name}</span>
+                            </CardTitle>
+                            <CardDescription className="text-base mt-1.5">
+                              {testimonial.title}
+                            </CardDescription>
+                          </div>
+                        </div>
+                        <div className="flex-shrink-0 text-right text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1.5 justify-end">
+                            <Calendar className="w-4 h-4" />
+                            <span>{testimonial.date}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-base leading-relaxed text-muted-foreground whitespace-pre-line">
+                        {testimonial.text}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      </Reveal>
+
+      {/* Contact Section */}
+      <Reveal>
+        <section id="contact" className="py-16 px-4">
+          <div className="container mx-auto max-w-4xl">
+            <Reveal variant="text" delay={0.1}>
+              <h2 className="text-3xl mb-8 text-center">Contact Me</h2>
+            </Reveal>
+            <p className="text-lg text-muted-foreground mb-8 text-center max-w-2xl mx-auto">
+            I’m always open to discussing new projects, innovative ideas, or opportunities to be part of your vision. 
+            Whether you have a question or just want to say hi, feel free to reach out!
+          </p>
+          <div className="flex flex-col md:flex-row gap-4 justify-center">
+            <a 
+              href="mailto:lintangbernardino@gmail.com"
+              className="inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium h-11 px-6 bg-black hover:opacity-90 mx-auto md:mx-0"
+              style={{ color: '#ffffff' }}
+            >
+              <Mail className="w-5 h-5" style={{ color: '#ffffff' }} />
+              Email Me
+            </a>
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="mx-auto md:mx-0"
+            >
+              <a
+                href="https://github.com/bernardinolintang"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Github className="w-5 h-5 mr-2" />
+                GitHub
+              </a>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="mx-auto md:mx-0"
+            >
+              <a
+                href="https://www.linkedin.com/in/bernardino-lintang/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Linkedin className="w-5 h-5 mr-2" />
+                LinkedIn
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+      </Reveal>
+
+      {/* Publicity moved into Events & Community as an event entry (see events array) */}
+
+      {/* Footer */}
+      <footer className="py-8 px-4 bg-muted/30">
+        <div className="container mx-auto max-w-4xl text-center">
+          <p className="text-sm text-muted-foreground mb-2">
+            &copy; 2025 Bernardino Lintang. All rights reserved.
+          </p>
+          <div className="flex justify-center gap-4">
+            <a
+              href="https://github.com/bernardinolintang"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Github className="w-5 h-5" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/bernardino-lintang/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
+            <a
+              href="mailto:lintangbernardino@gmail.com"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Mail className="w-5 h-5" />
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default Portfolio;
