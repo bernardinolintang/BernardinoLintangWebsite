@@ -85,7 +85,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="text-3xl font-semibold text-center text-white mb-14 tracking-tight"
+          className="text-3xl font-semibold text-center text-foreground mb-14 tracking-tight"
         >
           Testimonials
         </motion.h2>

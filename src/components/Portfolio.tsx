@@ -428,7 +428,7 @@ see the business value of his work.
           id="hero"
           className="relative flex items-center justify-center min-h-screen px-4 bg-background"
         >
-          <div className="container mx-auto max-w-4xl flex flex-col items-center justify-center text-center text-white">
+          <div className="container mx-auto max-w-4xl flex flex-col items-center justify-center text-center text-foreground">
             <div className="mb-8 flex flex-col items-center">
               <ImageWithFallback
                 src="/formal-picture.JPG"
