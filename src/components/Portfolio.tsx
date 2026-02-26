@@ -51,24 +51,18 @@ export function Portfolio() {
       company: "Superbank",
       period: "May 2025 - Aug 2025",
       location: "Jakarta, Indonesia",
-      description: `
-• Fraud Analytics: Developed Snowflake SQL pipelines and Python workflows to detect suspicious activity, reducing potential fraud exposure by 20%.
-• Stakeholder Alignment: Collaborated with risk analysts and stakeholders to align data solutions with operational needs.
-`,
+      description: `Scope: Fraud analytics and detection pipeline engineering for a digital bank serving 10M+ users.\n\n\u2022 Built Snowflake SQL pipelines and Python workflows to flag suspicious account activity, reducing potential fraud exposure by 20%.\n\u2022 Engineered 200+ detection features (device mismatch, high-frequency bursts, OS anomalies) fed into the production anomaly model.\n\u2022 Optimised queries on 50M+ record datasets by modularising complex scripts, improving processing efficiency by ~40%.\n\u2022 Collaborated directly with risk analysts and business stakeholders to align pipeline outputs with operational decision-making.`,
       technologies: ["Python", "SQL", "Snowflake"],
       logo: "/superbank-logo.webp",
       link: "https://www.linkedin.com/posts/bernardino-lintang_datascience-snowflake-sql-activity-7361775942270087169-1ZpQ?utm_source=share&utm_medium=member_desktop&rcm=ACoAADoCz-YBehyqcK0bh8mFQ1k3aFoNU9k0BSg"
     },
     {
-      title: "Artificial Intelligence Engineer Intern",
+      title: "AI Engineer Intern",
       company: "Crayon Data",
       period: "Dec 2025 - Jan 2026",
       location: "Chennai, India",
-      description: `
-• LLM-Driven Data Ingestion Platform: Built an LLM-powered ingestion pipeline that converts unstructured offer data into structured, production-ready datasets, reducing manual processing effort by over 70%.
-• Data Quality & System Reliability: Designed validation and regeneration layers enforcing schema consistency and mandatory fields, and implemented deduplication, deterministic ID assignment, and referential integrity to support scalable ingestion into a global merchant repository.
-`,
-      technologies: ["Python", "Cursor", "Agentic AI", "LLM", "Production Integration"],
+      description: `Scope: End-to-end LLM-powered data ingestion system for a global merchant offer repository.\n\n\u2022 Designed and shipped an LLM ingestion pipeline converting unstructured offer data into structured, production-ready datasets — reducing manual processing effort by 70%+.\n\u2022 Built validation and regeneration layers enforcing schema consistency, mandatory fields, and safe re-generation for business users.\n\u2022 Implemented deduplication, deterministic ID assignment, and referential integrity logic to support scalable ingestion across markets.`,
+      technologies: ["Python", "LLM", "Agentic AI", "Production Integration"],
       logo: "/crayon-data-logo.jpg",
       link: "https://www.crayondata.com/"
     },
@@ -77,11 +71,8 @@ export function Portfolio() {
       company: "CPF Board",
       period: "Jan 2026 - May 2026",
       location: "Singapore, Singapore",
-      description: `
-• Designed and implemented GenAI-powered solutions to enhance CPF Customer Contact Centre operations, improving response quality, consistency, and operational efficiency through LLM-assisted workflows.
-• Built and optimised retrieval-augmented generation (RAG) pipelines integrated with CPF’s internal knowledge bases, applying prompt engineering and evaluation techniques to ensure accurate, policy-aligned responses.
-`,
-      technologies: ["FastAPI", "Node.js", "Next.js", "Mongodb", "Postgresql", "mySQL", "Python", "OpenAI"],
+      description: `Scope: GenAI systems for Singapore's national pension fund customer contact centre.\n\n\u2022 Designed and deployed LLM-assisted workflows that improved response quality, consistency, and operational efficiency across the CPF Contact Centre.\n\u2022 Built and optimised RAG pipelines integrated with CPF's internal knowledge bases, applying prompt engineering and evaluation techniques to ensure policy-aligned, accurate responses.\n\u2022 Established evaluation frameworks to measure model accuracy, retrieval precision, and alignment with business requirements.`,
+      technologies: ["Python", "FastAPI", "OpenAI", "RAG", "Node.js", "Next.js", "PostgreSQL", "MongoDB"],
       logo: "/cpf-logo.png",
       link: "https://www.cpf.gov.sg"
     },
@@ -90,12 +81,8 @@ export function Portfolio() {
       company: "Home Team Science and Technology Agency (HTX)",
       period: "May 2026 - Aug 2026",
       location: "Singapore, Singapore",
-      description: `
-• Assisting in gathering requirements and data pipeline needs to support data scientists and AI engineers across ongoing projects.
-• Translating pipeline requirements into scripts to transform and load data into the data platform, and maintaining Infrastructure-as-Code (IaC) workflows for CI/CD pipelines and data pipelines.
-• Building lightweight monitoring tools for pipeline health and data quality (logging, basic alerting), and collaborating on frontend/backend integration tasks such as connecting deployed AI models to training data.
-`,
-      technologies: ["Python", "SQL", "IaC", "CI/CD"],
+      description: `Scope: Data platform engineering supporting AI/ML teams in Singapore's national security technology agency.\n\n\u2022 Gathering pipeline requirements from data scientists and AI engineers, translating them into transform-and-load scripts for the centralised data platform.\n\u2022 Maintaining IaC workflows for CI/CD and data pipelines; building monitoring tools for pipeline health and data quality.\n\u2022 Collaborating on frontend/backend integration to connect deployed AI models with training data sources.`,
+      technologies: ["Python", "SQL", "IaC", "CI/CD", "Docker"],
       logo: "/htx-logo.png",
       link: "https://www.htx.gov.sg"
     }
@@ -112,21 +99,21 @@ export function Portfolio() {
     {
       title: "NUS Datathon (Financial Advisory Matching, Category A), Top 5 Finalists",
       date: "Feb 2025",
-      description: "Developed a hybrid recommendation model to optimize financial advisor-client matching using Singular Value Decomposition (SVD) with Collaborative Filtering and Content-Based Filtering (cosine similarity). Our model analyzed historical policy success rates, client profiles, and advisor expertise to recommend the most suitable advisors for clients, improving personalization and engagement.",
+      description: "Problem: An insurance company's advisor-client matching was manual and suboptimal, leading to poor conversion and engagement.\n\nApproach: Built a hybrid recommendation model combining SVD-based Collaborative Filtering with Content-Based Filtering (cosine similarity), trained on historical policy success rates, client profiles, and advisor expertise.\n\nResult: Top 5 Finalist. Demonstrated measurable lift in match quality vs. baseline, improving personalization and projected policy conversion.",
       technologies: ["Python", "Pandas", "scikit-learn", "SVD", "Collaborative Filtering", "Content-Based Filtering", "Cosine Similarity"],
       image: "/nus-datathon.jpg"
     },
     {
       title: "SDS Hackathon (Medical Insurance Cost Prediction) - Top 3 Finalists",
       date: "Nov 2025",
-      description: `- Engineered and standardized features (age, BMI, smoker status, region) with interaction terms (smoker × BMI, smoker × age) to capture non-linear health-risk effects.\n- Applied and compared Ridge, Lasso, Elastic Net, Random Forest, and XGBoost models using cross-validation and grid search.\n- Quantified feature impact using Akaike Information Criterion (AIC) and SHAP values, identifying smoking status and BMI as dominant cost predictors.\n- Performed Equalized Odds fairness analysis to evaluate subgroup performance across sex, region, and smoker groups, highlighting bias in smoker-related predictions.\n- Achieved R² > 0.85 with stable residuals and interpretable SHAP patterns; presented results to an expert judging panel, earning Top 3 Finalist recognition out of 40 teams.`,
+      description: `Problem: Predict medical insurance costs accurately while understanding feature impact and ensuring fairness across demographic subgroups.\n\nApproach: Engineered interaction features (smoker × BMI, smoker × age), benchmarked Ridge/Lasso/Elastic Net/Random Forest/XGBoost via cross-validation and grid search. Used AIC and SHAP for interpretability; ran Equalized Odds fairness analysis across sex, region, and smoker groups.\n\nResult: R² > 0.85. Top 3 Finalist out of 40 teams. Identified smoking status and BMI as dominant cost predictors with stable residuals and interpretable SHAP patterns.`,
       technologies: ["Python", "scikit-learn", "XGBoost", "SHAP", "Random Forest", "Ridge Regression", "Lasso", "Elastic Net", "Fairness Analysis", "Machine Learning"],
       image: "/nus-hackathon-2025.jpg"
     },
     {
       title: "Changi Airport Group Case Challenge 2025",
       date: "Aug 2025",
-      description: `- Framed the problem: Changi needs a new large-scale attraction that is safe, inclusive, and culturally authentic to sustain its "wow" factor and global leadership.\n- Developed the concept: A gesture-activated installation where travellers are immersed into iconic Singapore scenes (hawker centres, SAF bases, landmarks), creating personalised, highly shareable digital souvenirs.\n- Ensured feasibility: Built on mature technologies (vision AI, Unity 3D, depth cameras) with privacy-by-design, inclusivity, low-maintenance operations, and scalable rollout across terminals.\n- Created impact: Drives organic media, increases dwell time, strengthens Singapore's cultural diplomacy, and opens revenue streams through partnerships, advertising, and IP collaborations.\n- Aligned with Changi's vision: Showcasing innovation, world-class excellence, and community connection while reinforcing brand leadership in safe, sustainable, and vibrant airport experiences.`,
+      description: `Problem: Changi Airport needed a new large-scale attraction that is safe, inclusive, and culturally authentic to sustain its global leadership positioning.\n\nApproach: Designed a gesture-activated AI installation using vision AI, Unity 3D, and depth cameras — immersing travellers in iconic Singapore scenes to generate personalised, shareable digital souvenirs. Built with privacy-by-design, accessibility, and low-maintenance ops.\n\nResult: Projected to drive organic media reach, increase dwell time, and open partnership/IP revenue streams. Aligned with Changi\'s vision for innovation and cultural diplomacy.`,
       technologies: ["AI", "Unity 3D", "Computer Vision", "Experience Design", "Cultural Diplomacy"],
       image: "/cag-case-challenge.png"
     }
@@ -136,26 +123,24 @@ export function Portfolio() {
     {
       title: "Multi-Model Approach for DNA-Binding Protein Classification",
       date: "Aug 2024 - Nov 2024",
-      description: `In this IT1244 Group Project, we developed and evaluated various machine learning models, including Logistic Regression, Naive Bayes, Random Forest, and Convolutional Neural Network (CNN), to classify DNA-binding proteins. Each model leveraged k-mer frequencies, amino acid composition, and embeddings for feature extraction, aiming to improve accuracy and reduce processing time. Hyperparameter tuning and class-weighted loss functions were used to address class imbalance, enhancing model performance. The CNN ultimately excelled in capturing sequence-based features, demonstrating the highest potential for complex biological data classification.`,
+      description: `Built and benchmarked Logistic Regression, Naive Bayes, Random Forest, and CNN classifiers for DNA-binding protein prediction. Engineered features from k-mer frequencies, amino acid composition, and sequence embeddings. Addressed class imbalance with weighted loss functions and hyperparameter tuning. The CNN model outperformed all baselines on sequence-based feature capture — demonstrating production-viable accuracy for biological data classification pipelines.`,
       technologies: ["Python", "scikit-learn", "TensorFlow", "CNN", "Bioinformatics"],
       image: "/it1244.png"
     },
     {
       title: "Analyzing Emotional Characteristics of Taylor Swift’s Albums and Their Impact on Reception",
       date: "Oct 2024 - Nov 2024",
-      description: `For this DSA2101 group project, we conducted a detailed analysis of Taylor Swift’s discography, examining how emotional elements within her music may influence critical and fan reception. Leveraging data science tools in R, I analyzed song attributes such as valence (positivity of music), key, and mode (major or minor) and explored how these emotional aspects correlate with Metacritic scores (critic reviews) and user scores (fan reception) for each album.`,
+      description: `Analysed Taylor Swift’s full discography using R to quantify how emotional attributes (valence, key, mode) correlate with critical and fan reception. Built reproducible EDA pipelines on Metacritic scores and audio features, identifying statistically significant patterns between musical positivity and album performance. Delivered clear data-driven storytelling with publication-ready visualisations.`,
       technologies: ["R", "Data Science", "Music Analysis", "Metacritic API"],
       image: "/dsa2101.png",
     }
   ];
 
   const skills = {
-    "Frontend": ["React", "Vue.js", "TypeScript", "Next.js", "Tailwind CSS"],
-    "Backend": ["Node.js", "Python", "Express", "FastAPI", "Java", "Flask"],
-    "Database": ["Snowflake SQL", "PostgreSQL", "MongoDB", "Firebase Firestore"],
-    "DevOps": ["Docker", "AWS"],
-    "Tools": ["Git", "Figma", "Excel"],
-    "Data Science/Analytics": ["Pandas", "NumPy", "scikit-learn", "TensorFlow", "R", "ggplot2", "Tableau", "Power BI"]
+    "Core Stack": ["Python", "SQL", "TypeScript", "FastAPI", "Node.js", "React", "Next.js"],
+    "Applied ML & AI": ["OpenAI API", "LangChain", "RAG", "Prompt Engineering", "scikit-learn", "TensorFlow", "XGBoost", "SHAP"],
+    "Data Engineering & Infrastructure": ["Snowflake", "PostgreSQL", "MongoDB", "Docker", "AWS", "IaC", "CI/CD"],
+    "Analysis & Visualization": ["Pandas", "NumPy", "R", "Tableau", "Power BI"]
   };
 
   const events = [
@@ -267,7 +252,7 @@ export function Portfolio() {
       date: "2025",
       image: "superbank-logo.webp",
       text: `Bernard has made great strides in technical skills, diving deeper into Python, SQL, and
-machine learning workflows. He's now much more comfortable exploring complex codebases and applying
+machine learning workflows. He’s now much more comfortable exploring complex codebases and applying
 advanced techniques to analyze and manipulate data. He’s getting much better at connecting technical findings to business insights. His
 recent presentations have shown a clearer understanding of the “why” behind the numbers, helping stakeholders
 see the business value of his work.
@@ -444,11 +429,10 @@ see the business value of his work.
                 style={{ objectPosition: "center 10%" }}
               />
               <h1 className="text-4xl md:text-6xl mb-4">
-                Hi, I'm <span className="text-primary">Bernardino Lintang</span>
+                <span className="text-primary">Bernardino Lintang</span>
               </h1>
               <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Aspiring Data Scientist passionate about building data-driven products.
-                I specialize in analytics, machine learning, and GenAI development, with a focus on solving problems that improve people’s everyday experiences.
+                AI Engineer building production GenAI systems, RAG pipelines, and data infrastructure. I ship LLM-powered products that actually work — with validation layers, schema enforcement, and measurable impact.
               </p>
               <div className="flex items-center justify-center gap-2 text-muted-foreground mb-8">
                 <MapPin className="w-4 h-4" />
@@ -507,16 +491,14 @@ see the business value of his work.
                 <div>
                   <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-primary" />
-                    Data Scientist & AI Enthusiast
+                    AI Engineer & Systems Builder
                   </h3>
                   <p className="text-lg leading-relaxed text-muted-foreground">
-                    I'm a passionate data scientist and analyst with hands-on experience in building machine learning models, AI solutions, and data-driven dashboards. 
-                    I enjoy working with modern data technologies and am always eager to learn new skills, explore emerging tools, and tackle complex real-world problems with data.
+                    I build production AI systems — from LLM-powered ingestion pipelines that replace manual workflows, to RAG architectures serving policy-aligned responses at scale. My work sits at the intersection of applied ML, data engineering, and GenAI product development.
                   </p>
                 </div>
                 <p className="text-lg leading-relaxed text-muted-foreground">
-                  When I'm not coding, you can find me exploring new technologies, contributing to 
-                  open-source projects, or enjoying outdoor activities like hiking and photography.
+                  I care about systems that are reliable, measurable, and actually deployed — not just prototyped. Every pipeline I build includes validation layers, observability, and a clear path to production. I think in terms of data contracts, schema enforcement, and failure modes before writing the first line of inference code.
                 </p>
               </div>
 
@@ -1036,8 +1018,7 @@ see the business value of his work.
               <h2 className="text-3xl mb-8 text-center">Contact Me</h2>
             </Reveal>
             <p className="text-lg text-muted-foreground mb-8 text-center max-w-2xl mx-auto">
-            I’m always open to discussing new projects, innovative ideas, or opportunities to be part of your vision. 
-            Whether you have a question or just want to say hi, feel free to reach out!
+            Actively seeking AI Engineer, GenAI Engineer, ML Engineer, and Data Engineer roles for 2026. If you’re building production AI systems and need someone who ships, let’s talk.
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center">
             <Button
