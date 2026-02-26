@@ -89,26 +89,43 @@ export function Portfolio() {
   ];
 
   const competitions = [
+   
     {
-      title: "NUS Tiger Brokers Case Competition",
-      date: "Mar 2025",
-      description: `Our team developed Tiger Learn, an educational app that empowers tertiary students to learn investing in an engaging and accessible way. We:\n\n- Identified the gap: Students are keen to invest but lack knowledge, confidence, and capital.\n- Designed the solution: A gamified learning app with quizzes, progress tracking, paper trading, and interactive modules covering stocks, REITs, crypto, and more.\n- Created differentiation: Added community features, mentorships, and webinars to build loyalty and position Tiger Learn as the go-to platform for student investors.\n- Planned execution: Outlined a launch timeline, marketing strategies, security measures, and a scalable revenue model.\n- Measured impact: Set KPIs for adoption, engagement, conversion to trading, and retention to show Tiger Learn's value to both users and Tiger Brokers.`,
-      technologies: ["Product Design", "Gamification", "App Development", "EdTech", "User Interface", "Business Strategy"],
-      image: "/tiger-brokers.png"
+  title: "NUS Datathon 2026 (Company Intelligence & AI Analytics), 1st Place Winner",
+  date: "Feb 2026",
+  description: "Problem: Corporate benchmarking platforms rely on static industry codes and global averages, making it difficult to contextualize firm performance or detect early operational risk.\n\nApproach: Built an end-to-end company intelligence system using feature engineering and mixed-type clustering (K-Prototypes) to segment 8,559 companies across 3 countries. Engineered 20+ operational and IT-related features (e.g., revenue per employee, IT intensity, device density) and validated cluster quality using silhouette score, PCA visualization, and statistical profiling. Developed a constrained AI Analyst using Llama 3.3 70B (Groq) with structured retrieval-augmented prompting and strict guardrails to deliver grounded, non-hallucinatory explanations through a full-stack React + FastAPI dashboard.\n\nResult: 1st Place Winner. Delivered interpretable, data-grounded company benchmarking that transforms raw firmographic data into defensible strategic insights for decision-makers.",
+  technologies: [
+    "Python",
+    "Pandas",
+    "scikit-learn",
+    "K-Prototypes",
+    "Silhouette Score",
+    "PCA",
+    "FastAPI",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "Groq API",
+    "Llama 3.3 70B",
+    "Retrieval-Augmented Prompting",
+    "Docker"
+  ],
+  image: "/nus-datathon-2026.jpg"
     },
     {
-      title: "NUS Datathon (Financial Advisory Matching, Category A), Top 5 Finalists",
-      date: "Feb 2025",
-      description: "Problem: An insurance company's advisor-client matching was manual and suboptimal, leading to poor conversion and engagement.\n\nApproach: Built a hybrid recommendation model combining SVD-based Collaborative Filtering with Content-Based Filtering (cosine similarity), trained on historical policy success rates, client profiles, and advisor expertise.\n\nResult: Top 5 Finalist. Demonstrated measurable lift in match quality vs. baseline, improving personalization and projected policy conversion.",
-      technologies: ["Python", "Pandas", "scikit-learn", "SVD", "Collaborative Filtering", "Content-Based Filtering", "Cosine Similarity"],
-      image: "/nus-datathon.jpg"
-    },
-    {
-      title: "SDS Hackathon (Medical Insurance Cost Prediction) - Top 3 Finalists",
+      title: "SDS Hackathon 2025 (Medical Insurance Cost Prediction) - Top 3 Finalists",
       date: "Nov 2025",
       description: `Problem: Predict medical insurance costs accurately while understanding feature impact and ensuring fairness across demographic subgroups.\n\nApproach: Engineered interaction features (smoker × BMI, smoker × age), benchmarked Ridge/Lasso/Elastic Net/Random Forest/XGBoost via cross-validation and grid search. Used AIC and SHAP for interpretability; ran Equalized Odds fairness analysis across sex, region, and smoker groups.\n\nResult: R² > 0.85. Top 3 Finalist out of 40 teams. Identified smoking status and BMI as dominant cost predictors with stable residuals and interpretable SHAP patterns.`,
       technologies: ["Python", "scikit-learn", "XGBoost", "SHAP", "Random Forest", "Ridge Regression", "Lasso", "Elastic Net", "Fairness Analysis", "Machine Learning"],
       image: "/nus-hackathon-2025.jpg"
+    },
+    
+    {
+      title: "NUS Datathon 2025 (Financial Advisory Matching, Category A), Top 5 Finalists",
+      date: "Feb 2025",
+      description: "Problem: An insurance company's advisor-client matching was manual and suboptimal, leading to poor conversion and engagement.\n\nApproach: Built a hybrid recommendation model combining SVD-based Collaborative Filtering with Content-Based Filtering (cosine similarity), trained on historical policy success rates, client profiles, and advisor expertise.\n\nResult: Top 5 Finalist. Demonstrated measurable lift in match quality vs. baseline, improving personalization and projected policy conversion.",
+      technologies: ["Python", "Pandas", "scikit-learn", "SVD", "Collaborative Filtering", "Content-Based Filtering", "Cosine Similarity"],
+      image: "/nus-datathon.jpg"
     },
     {
       title: "Changi Airport Group Case Challenge 2025",
@@ -116,7 +133,27 @@ export function Portfolio() {
       description: `Problem: Changi Airport needed a new large-scale attraction that is safe, inclusive, and culturally authentic to sustain its global leadership positioning.\n\nApproach: Designed a gesture-activated AI installation using vision AI, Unity 3D, and depth cameras — immersing travellers in iconic Singapore scenes to generate personalised, shareable digital souvenirs. Built with privacy-by-design, accessibility, and low-maintenance ops.\n\nResult: Projected to drive organic media reach, increase dwell time, and open partnership/IP revenue streams. Aligned with Changi\'s vision for innovation and cultural diplomacy.`,
       technologies: ["AI", "Unity 3D", "Computer Vision", "Experience Design", "Cultural Diplomacy"],
       image: "/cag-case-challenge.png"
-    }
+    },
+     {
+      title: "NUS Tiger Brokers Case Competition",
+      date: "Mar 2025",
+      description: `Our team developed Tiger Learn, an educational app that empowers tertiary students to learn investing in an engaging and accessible way. We:\n\n- Identified the gap: Students are keen to invest but lack knowledge, confidence, and capital.\n- Designed the solution: A gamified learning app with quizzes, progress tracking, paper trading, and interactive modules covering stocks, REITs, crypto, and more.\n- Created differentiation: Added community features, mentorships, and webinars to build loyalty and position Tiger Learn as the go-to platform for student investors.\n- Planned execution: Outlined a launch timeline, marketing strategies, security measures, and a scalable revenue model.\n- Measured impact: Set KPIs for adoption, engagement, conversion to trading, and retention to show Tiger Learn's value to both users and Tiger Brokers.`,
+      technologies: ["Product Design", "Gamification", "App Development", "EdTech", "User Interface", "Business Strategy"],
+      image: "/tiger-brokers.png"
+    },
+    {
+  title: "PINUS Hackathon 2026 (AI for Community, Social Trust & Engagement)",
+  date: "Jan 2026",
+  description: `Problem: Digital art platforms prioritize popularity and market speculation over cultural trust, making it difficult for collectors to understand why an artwork is meaningful or credible within a community context.
+
+Approach: Designed and implemented Atelier — an AI-powered art community platform built on taste-based social graphs rather than follower counts. Modelled users and artworks in a shared semantic embedding space using text critiques and interaction history. Developed a reputation engine combining LLM-evaluated critique depth, peer validation, curatorial consistency, and integrity signals. Built layered endorsement maps and explainable recommendation pipelines grounded in cultural relevance instead of financial metrics.
+
+Result: Delivered a functional prototype demonstrating computational modelling of community-driven trust without reliance on price signals. Successfully showcased explainable AI recommendations, transparent reputation scoring, and ethical moderation mechanisms that strengthen peer learning and cultural validation.`,
+  technologies: ["Python", "LLMs", "Text Embeddings", "Graph Modelling", "Reputation Systems", "Explainable AI", "Semantic Clustering", "Community Graphs", "AI Moderation"],
+  image: "/atelier-cover.png",
+  link: "https://github.com/bernardinolintang/pinus-hackathon-team-oreo-ai-for-arts-community"
+}
+
   ];
 
   const projects = [
@@ -133,6 +170,20 @@ export function Portfolio() {
       description: `Analysed Taylor Swift’s full discography using R to quantify how emotional attributes (valence, key, mode) correlate with critical and fan reception. Built reproducible EDA pipelines on Metacritic scores and audio features, identifying statistically significant patterns between musical positivity and album performance. Delivered clear data-driven storytelling with publication-ready visualisations.`,
       technologies: ["R", "Data Science", "Music Analysis", "Metacritic API"],
       image: "/dsa2101.png",
+    },
+    {
+      title: "DSA3101: Question Bank System",
+      date: "Aug 2025 - Nov 2025",
+      description: `Our team developed a Question Bank System for ST1131 using Flask (Python) for the backend and Streamlit for the frontend, with a PostgreSQL database for storing and managing questions. The system supports efficient question search, filtering, and question assembly creation based on various criteria such as difficulty and course type.\n\nWe implemented a modular architecture for question ingestion, using libraries like pdfplumber and python-docx for parsing uploaded files. Additionally, we created a version tracking system for questions and integrated AI-assisted question recommendations to suggest the most relevant questions based on past usage.\n\nKey Contributions:\n• Built a Flask REST API to handle question ingestion, search, and assembly creation.\n• Integrated Streamlit frontend for intuitive question assembly and export.\n• Implemented PostgreSQL database with support for full-text search and question metadata tracking.\n• Developed version control for questions, enabling instructors to track changes over time.\n• Applied AI-assisted recommendations to suggest relevant questions based on historical data.`,
+      technologies: ["Python", "Flask", "PostgreSQL", "Streamlit", "pdfplumber", "python-docx", "AI Recommendations", "Version Control"],
+      image: "/dsa3101-group.png",
+    },
+    {
+      title: "IS460 Machine Learning Project: Hybrid CNN + RAG Framework for Dermatology Decision Support",
+      date: "Aug 2024 - Nov 2024",
+      description: `Built a Hybrid Retrieval-Augmented Generation (RAG) framework integrating Convolutional Neural Networks (CNN) for skin disease diagnosis. The model leverages image classification for visual analysis and retrieval-augmented generation for detailed medical advice based on dermatology research documents. Tackled class imbalance using regularization and applied pre-trained ResNet-50 and EfficientNetV2 models for faster and more accurate predictions. Integrated an advanced embedding model to capture complex dermatology-specific features.\n\nKey Achievements:\n• CNN + RAG framework outperformed baseline models in accuracy.\n• Implemented Agentic Chunking for dynamic information retrieval.\n• Real-time decision support with disease-specific recommendations.`,
+      technologies: ["Python", "TensorFlow", "HuggingFace", "EfficientNetV2M", "ResNet-50", "PubMedBERT", "EmbeddingGemma"],
+      image: "/IS460-machine-learning-presentation.png",
     }
   ];
 
@@ -257,6 +308,21 @@ advanced techniques to analyze and manipulate data. He’s getting much better a
 recent presentations have shown a clearer understanding of the “why” behind the numbers, helping stakeholders
 see the business value of his work.
 `,
+    },
+    {
+      name: "Crayon Data",
+      title: "AI Engineer Intern",
+      date: "2025",
+      image: "crayondata_logo.jpg",
+      text: `He did a very strong job across the internship. He took on one of Crayon Data’s most complex and high-impact problem spaces — the Agentic Offer Management Portal — and handled it with depth, seriousness, and real ownership. He was methodical, thoughtful, and comfortable navigating messy, real-world complexity.
+
+He stood out as a builder who genuinely wants to understand the problem deeply before jumping to solutions. His curiosity, approachability, and ability to grasp new concepts quickly were evident, and each iteration of his work showed meaningful progress driven by deeper understanding rather than surface-level changes.
+
+His thinking consistently reflected strong systems awareness. He treated AI as a constrained tool that needs checks, auditability, and human-in-the-loop design — not as magic. His work on offer ingestion and unstructured data was grounded in real workflows and operational reality, which made his ideas feel credible and deployable.
+
+The main opportunity for growth is moving from depth to decisiveness. He identified risks, edge cases, and unknowns thoroughly, but sometimes hesitated to clearly state which ones matter most right now and which are acceptable to defer. The next level is confidently saying, “This is the risk I care about most — and this is the one I’m willing to accept.”
+
+Overall, he was a thoughtful, serious contributor who took ownership and pushed through ambiguity without freezing. With more explicit prioritisation and decision-making, he has strong potential to grow into roles that require systems thinking, operational leadership, and building at scale.`,
     },
   ];
 
@@ -716,6 +782,18 @@ see the business value of his work.
                             className="inline-flex items-center justify-start w-full gap-2 py-2 px-3 cursor-pointer"
                           >
                             <span className="flex-1 text-left">UI Work (Prototype)</span>
+                          </a>
+                        </Button>
+                      )}
+                      {competition.title === "PINUS Hackathon 2026 (AI for Community, Social Trust & Engagement)" && competition.link && (
+                        <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs">
+                          <a
+                            href={competition.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-start w-full gap-2 py-2 px-3 cursor-pointer"
+                          >
+                            <span className="flex-1 text-left">Github Link to Prototype</span>
                           </a>
                         </Button>
                       )}
