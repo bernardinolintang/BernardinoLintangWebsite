@@ -52,11 +52,8 @@ export function Portfolio() {
       period: "May 2025 - Aug 2025",
       location: "Jakarta, Indonesia",
       description: `
-• Engineered 200+ fraud detection features in Python and Snowflake SQL, enhancing the anomaly detection model’s ability to flag suspicious account behaviour.
-• Designed and standardised feature documentation templates in Excel, cataloguing 200+ features with definitions to ensure clarity, reproducibility, and audit readiness.
-• Optimised SQL queries on datasets exceeding 50M records by breaking complex scripts into modular components, improving processing efficiency by ~40%.
-• Created snapshot views of payment data in Snowflake, enabling more efficient transactional analysis and model training.
-• Created and maintained data pipelines in Snowflake, enabling real-time visibility into anomalies such as mismatched devices, OS versions, and high-frequency transaction bursts.
+• Fraud Analytics: Developed Snowflake SQL pipelines and Python workflows to detect suspicious activity, reducing potential fraud exposure by 20%.
+• Stakeholder Alignment: Collaborated with risk analysts and stakeholders to align data solutions with operational needs.
 `,
       technologies: ["Python", "SQL", "Snowflake"],
       logo: "/superbank-logo.webp",
@@ -67,30 +64,40 @@ export function Portfolio() {
       company: "Crayon Data",
       period: "Dec 2025 - Jan 2026",
       location: "Chennai, India",
-      description: `Part of the India Ready Talent Programme
-Entrepreneur in Residence (EIR) - Agentic AI Systems
-• Built an LLM-driven data ingestion platform that converts unstructured offer data into structured, production-ready datasets, cutting manual processing by 70%+.
-• Designed editable instruction and validation layers that allow business users to regenerate outputs safely while enforcing schema and mandatory field constraints.
-• Implemented deduplication, ID assignment, and referential integrity logic to support scalable ingestion into a global merchant repository.`,
+      description: `
+• LLM-Driven Data Ingestion Platform: Built an LLM-powered ingestion pipeline that converts unstructured offer data into structured, production-ready datasets, reducing manual processing effort by over 70%.
+• Data Quality & System Reliability: Designed validation and regeneration layers enforcing schema consistency and mandatory fields, and implemented deduplication, deterministic ID assignment, and referential integrity to support scalable ingestion into a global merchant repository.
+`,
       technologies: ["Python", "Cursor", "Agentic AI", "LLM", "Production Integration"],
       logo: "/crayon-data-logo.jpg",
       link: "https://www.crayondata.com/"
     },
     {
-      title: "GenAI Product Development Intern (Incoming)",
+      title: "GenAI Product Development Intern",
       company: "CPF Board",
       period: "Jan 2026 - May 2026",
       location: "Singapore, Singapore",
       description: `
-• I will design and develop Generative AI solutions to enhance customer service operations and solve real-life problems at the CPF Customer Contact Centre.
-• I will build and optimise Retrieval-Augmented Generation (RAG) systems by incorporating CPF’s internal knowledge base and documentation to improve AI responses.
-• I will maintain and enhance existing LLM technologies, with a focus on prompt engineering, functionality improvements, and user experience.
-• I will develop and implement testing frameworks to evaluate model performance, accuracy, and alignment with business requirements.
-• I will collaborate with cross-functional teams to explore innovative applications of AI/ML and contribute to CPF’s mission of improving the member experience.
+• Designed and implemented GenAI-powered solutions to enhance CPF Customer Contact Centre operations, improving response quality, consistency, and operational efficiency through LLM-assisted workflows.
+• Built and optimised retrieval-augmented generation (RAG) pipelines integrated with CPF’s internal knowledge bases, applying prompt engineering and evaluation techniques to ensure accurate, policy-aligned responses.
 `,
-      technologies: ["FastAPI", "Node.js", "Next.js", "Mongodb", "Postgresql", "mySQL", "Python","OpenAI"],
+      technologies: ["FastAPI", "Node.js", "Next.js", "Mongodb", "Postgresql", "mySQL", "Python", "OpenAI"],
       logo: "/cpf-logo.png",
       link: "https://www.cpf.gov.sg"
+    },
+    {
+      title: "Data Engineer Intern (Incoming)",
+      company: "Home Team Science and Technology Agency (HTX)",
+      period: "May 2026 - Aug 2026",
+      location: "Singapore, Singapore",
+      description: `
+• Assisting in gathering requirements and data pipeline needs to support data scientists and AI engineers across ongoing projects.
+• Translating pipeline requirements into scripts to transform and load data into the data platform, and maintaining Infrastructure-as-Code (IaC) workflows for CI/CD pipelines and data pipelines.
+• Building lightweight monitoring tools for pipeline health and data quality (logging, basic alerting), and collaborating on frontend/backend integration tasks such as connecting deployed AI models to training data.
+`,
+      technologies: ["Python", "SQL", "IaC", "CI/CD"],
+      logo: "/htx-logo.png",
+      link: "https://www.htx.gov.sg"
     }
   ];
 
