@@ -1,7 +1,7 @@
 import { useTheme } from "./ThemeProvider";
 import { useState } from "react";
 import { Reveal } from "./motion/Reveal";
-import { HeroInteractiveGradient } from "./motion/HeroInteractiveGradient";
+import { TestimonialsCarousel } from "./TestimonialsCarousel";
 import {
   Github,
   Linkedin,
@@ -426,12 +426,9 @@ see the business value of his work.
       <Reveal>
         <section
           id="hero"
-          className="relative flex items-center justify-center min-h-screen px-4 bg-background overflow-hidden"
+          className="relative flex items-center justify-center min-h-screen px-4 bg-background"
         >
-          {/* Interactive cursor-following grey gradient */}
-          <HeroInteractiveGradient />
-
-          <div className="container mx-auto max-w-4xl flex flex-col items-center justify-center text-center relative z-10">
+          <div className="container mx-auto max-w-4xl flex flex-col items-center justify-center text-center text-white">
             <div className="mb-8 flex flex-col items-center">
               <ImageWithFallback
                 src="/formal-picture.JPG"
@@ -1022,57 +1019,7 @@ see the business value of his work.
       </Reveal>
 
       {/* Testimonials Section */}
-      <Reveal>
-        <section id="testimonials" className="py-16 px-4 bg-muted/30">
-          <div className="container mx-auto max-w-4xl">
-            <Reveal variant="text" delay={0.1}>
-              <h2 className="text-3xl mb-8 text-center">Testimonials</h2>
-            </Reveal>
-            <div className="space-y-6">
-              {testimonialsSafe.map((testimonial, index) => (
-                <Reveal key={testimonial.name} delay={0.03 * index}>
-                  <Card>
-                    <CardHeader>
-                      <div className="flex justify-between items-start gap-4">
-                        <div className="flex items-start gap-4 flex-1 min-w-0">
-                          <div className="flex-shrink-0">
-                            <ImageWithFallback
-                              src={testimonial.image}
-                              alt={`${testimonial.name} logo`}
-                              className="w-12 h-12 rounded-lg object-contain border border-border bg-white p-1"
-                              style={{ objectPosition: "center" }}
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <CardTitle className="flex items-center gap-2 text-xl">
-                              <Award className="w-5 h-5 flex-shrink-0" />
-                              <span className="truncate">{testimonial.name}</span>
-                            </CardTitle>
-                            <CardDescription className="text-base mt-1.5">
-                              {testimonial.title}
-                            </CardDescription>
-                          </div>
-                        </div>
-                        <div className="flex-shrink-0 text-right text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1.5 justify-end">
-                            <Calendar className="w-4 h-4" />
-                            <span>{testimonial.date}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-base leading-relaxed text-muted-foreground whitespace-pre-line">
-                        {testimonial.text}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-      </Reveal>
+      <TestimonialsCarousel testimonials={testimonialsSafe} />
 
       {/* Contact Section */}
       <Reveal>
@@ -1086,14 +1033,19 @@ see the business value of his work.
             Whether you have a question or just want to say hi, feel free to reach out!
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center">
-            <a 
-              href="mailto:lintangbernardino@gmail.com"
-              className="inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium h-11 px-6 bg-black hover:opacity-90 mx-auto md:mx-0"
-              style={{ color: '#ffffff' }}
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="mx-auto md:mx-0"
             >
-              <Mail className="w-5 h-5" style={{ color: '#ffffff' }} />
-              Email Me
-            </a>
+              <a
+                href="mailto:lintangbernardino@gmail.com"
+              >
+                <Mail className="w-5 h-5 mr-2" />
+                Email Me
+              </a>
+            </Button>
             <Button
               size="lg"
               variant="outline"
