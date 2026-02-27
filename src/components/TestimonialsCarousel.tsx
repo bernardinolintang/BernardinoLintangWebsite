@@ -127,7 +127,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                   return (
                     <div
                       key={testimonial.name}
-                      className="flex-[0_0_84%] md:flex-[0_0_68%] min-w-0"
+                      className="flex-[0_0_92%] sm:flex-[0_0_84%] md:flex-[0_0_68%] min-w-0"
                     >
                       <motion.div
                         animate={{
@@ -162,11 +162,11 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                           aria-hidden
                         />
 
-                        <div className="relative z-10 p-8 md:p-10 flex flex-col items-center text-center">
+                        <div className="relative z-10 p-5 sm:p-8 md:p-10 flex flex-col items-center text-center">
 
-                          {/* ── FIXED IMAGE CONTAINER — always h-32, never distorts layout */}
-                          <div className="h-28 w-full flex items-center justify-center mb-7 flex-shrink-0">
-                            <div className="h-28 w-28 rounded-2xl overflow-hidden border border-zinc-700/80 bg-white flex items-center justify-center p-2.5 shadow-sm">
+                          {/* ── FIXED IMAGE CONTAINER — always h-28 on md+, smaller on mobile */}
+                          <div className="h-20 sm:h-28 w-full flex items-center justify-center mb-4 sm:mb-7 flex-shrink-0">
+                            <div className="h-20 w-20 sm:h-28 sm:w-28 rounded-2xl overflow-hidden border border-zinc-700/80 bg-white flex items-center justify-center p-2 sm:p-2.5 shadow-sm">
                               <ImageWithFallback
                                 src={testimonial.image}
                                 alt={`${testimonial.name} logo`}
@@ -176,22 +176,22 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                           </div>
 
                           {/* ── Name */}
-                          <h3 className="text-xl md:text-2xl font-semibold text-white leading-snug mb-1.5">
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white leading-snug mb-1.5">
                             {testimonial.name}
                           </h3>
 
                           {/* ── Date */}
-                          <p className="text-sm text-zinc-500 mb-6">{testimonial.date}</p>
+                          <p className="text-xs sm:text-sm text-zinc-500 mb-4 sm:mb-6">{testimonial.date}</p>
 
                           {/* Divider */}
                           <div
-                            className="w-10 h-px mb-6 flex-shrink-0"
+                            className="w-10 h-px mb-4 sm:mb-6 flex-shrink-0"
                             style={{ background: "linear-gradient(to right, transparent, rgba(113,113,122,0.6), transparent)" }}
                             aria-hidden
                           />
 
                           {/* ── FIXED TEXT AREA — min-h prevents arrow drift between slides */}
-                          <div className="min-h-[180px] flex items-start justify-center w-full">
+                          <div className="min-h-[140px] sm:min-h-[180px] flex items-start justify-center w-full">
                             <AnimatePresence mode="wait">
                               {isActive && (
                                 <motion.p
@@ -200,7 +200,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                                   animate={{ opacity: 1, y: 0 }}
                                   exit={{ opacity: 0, y: -6 }}
                                   transition={{ duration: 0.38, delay: 0.08, ease: "easeOut" }}
-                                  className="text-[0.9375rem] leading-[1.85] text-zinc-300 max-w-prose"
+                                  className="text-sm sm:text-[0.9375rem] leading-relaxed sm:leading-[1.85] text-zinc-300 max-w-prose"
                                 >
                                   {testimonial.text.trim()}
                                 </motion.p>
@@ -208,7 +208,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                             </AnimatePresence>
                             {!isActive && (
                               <p
-                                className="text-[0.9375rem] leading-[1.85] text-zinc-300 max-w-prose opacity-0 select-none pointer-events-none"
+                                className="text-sm sm:text-[0.9375rem] leading-relaxed sm:leading-[1.85] text-zinc-300 max-w-prose opacity-0 select-none pointer-events-none"
                                 aria-hidden
                               >
                                 {testimonial.text.trim()}

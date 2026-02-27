@@ -27,13 +27,28 @@ import {
   Lightbulb,
   Camera,
   FolderKanban,
-  Sparkles
+  Sparkles,
+  Lock,
+  Menu
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "./ui/sheet";
 // import data from "@/data"; // If your data file uses default export
 // Helper to safely wrap arrays (generic, but always returns T[])
 function A<T>(x: T[] | undefined | null): T[] {
@@ -127,32 +142,28 @@ export function Portfolio() {
       technologies: ["Python", "Pandas", "scikit-learn", "SVD", "Collaborative Filtering", "Content-Based Filtering", "Cosine Similarity"],
       image: "/nus-datathon.jpg"
     },
-    {
-      title: "Changi Airport Group Case Challenge 2025",
-      date: "Aug 2025",
-      description: `Problem: Changi Airport needed a new large-scale attraction that is safe, inclusive, and culturally authentic to sustain its global leadership positioning.\n\nApproach: Designed a gesture-activated AI installation using vision AI, Unity 3D, and depth cameras — immersing travellers in iconic Singapore scenes to generate personalised, shareable digital souvenirs. Built with privacy-by-design, accessibility, and low-maintenance ops.\n\nResult: Projected to drive organic media reach, increase dwell time, and open partnership/IP revenue streams. Aligned with Changi\'s vision for innovation and cultural diplomacy.`,
-      technologies: ["AI", "Unity 3D", "Computer Vision", "Experience Design", "Cultural Diplomacy"],
-      image: "/cag-case-challenge.png"
-    },
-     {
-      title: "NUS Tiger Brokers Case Competition",
-      date: "Mar 2025",
-      description: `Our team developed Tiger Learn, an educational app that empowers tertiary students to learn investing in an engaging and accessible way. We:\n\n- Identified the gap: Students are keen to invest but lack knowledge, confidence, and capital.\n- Designed the solution: A gamified learning app with quizzes, progress tracking, paper trading, and interactive modules covering stocks, REITs, crypto, and more.\n- Created differentiation: Added community features, mentorships, and webinars to build loyalty and position Tiger Learn as the go-to platform for student investors.\n- Planned execution: Outlined a launch timeline, marketing strategies, security measures, and a scalable revenue model.\n- Measured impact: Set KPIs for adoption, engagement, conversion to trading, and retention to show Tiger Learn's value to both users and Tiger Brokers.`,
-      technologies: ["Product Design", "Gamification", "App Development", "EdTech", "User Interface", "Business Strategy"],
-      image: "/tiger-brokers.png"
-    },
-    {
-  title: "PINUS Hackathon 2026 (AI for Community, Social Trust & Engagement)",
-  date: "Jan 2026",
-  description: `Problem: Digital art platforms prioritize popularity and market speculation over cultural trust, making it difficult for collectors to understand why an artwork is meaningful or credible within a community context.
-
-Approach: Designed and implemented Atelier — an AI-powered art community platform built on taste-based social graphs rather than follower counts. Modelled users and artworks in a shared semantic embedding space using text critiques and interaction history. Developed a reputation engine combining LLM-evaluated critique depth, peer validation, curatorial consistency, and integrity signals. Built layered endorsement maps and explainable recommendation pipelines grounded in cultural relevance instead of financial metrics.
-
-Result: Delivered a functional prototype demonstrating computational modelling of community-driven trust without reliance on price signals. Successfully showcased explainable AI recommendations, transparent reputation scoring, and ethical moderation mechanisms that strengthen peer learning and cultural validation.`,
-  technologies: ["Python", "LLMs", "Text Embeddings", "Graph Modelling", "Reputation Systems", "Explainable AI", "Semantic Clustering", "Community Graphs", "AI Moderation"],
-  image: "/atelier-cover.png",
-  link: "https://github.com/bernardinolintang/pinus-hackathon-team-oreo-ai-for-arts-community"
-}
+    // {
+    //   title: "Changi Airport Group Case Challenge 2025",
+    //   date: "Aug 2025",
+    //   description: `Problem: Changi Airport needed a new large-scale attraction that is safe, inclusive, and culturally authentic to sustain its global leadership positioning.\n\nApproach: Designed a gesture-activated AI installation using vision AI, Unity 3D, and depth cameras — immersing travellers in iconic Singapore scenes to generate personalised, shareable digital souvenirs. Built with privacy-by-design, accessibility, and low-maintenance ops.\n\nResult: Projected to drive organic media reach, increase dwell time, and open partnership/IP revenue streams. Aligned with Changi\'s vision for innovation and cultural diplomacy.`,
+    //   technologies: ["AI", "Unity 3D", "Computer Vision", "Experience Design", "Cultural Diplomacy"],
+    //   image: "/cag-case-challenge.png"
+    // },
+    // {
+    //   title: "NUS Tiger Brokers Case Competition",
+    //   date: "Mar 2025",
+    //   description: `Our team developed Tiger Learn, an educational app that empowers tertiary students to learn investing in an engaging and accessible way. We:\n\n- Identified the gap: Students are keen to invest but lack knowledge, confidence, and capital.\n- Designed the solution: A gamified learning app with quizzes, progress tracking, paper trading, and interactive modules covering stocks, REITs, crypto, and more.\n- Created differentiation: Added community features, mentorships, and webinars to build loyalty and position Tiger Learn as the go-to platform for student investors.\n- Planned execution: Outlined a launch timeline, marketing strategies, security measures, and a scalable revenue model.\n- Measured impact: Set KPIs for adoption, engagement, conversion to trading, and retention to show Tiger Learn's value to both users and Tiger Brokers.`,
+    //   technologies: ["Product Design", "Gamification", "App Development", "EdTech", "User Interface", "Business Strategy"],
+    //   image: "/tiger-brokers.png"
+    // },
+    // {
+    //   title: "PINUS Hackathon 2026 (AI for Community, Social Trust & Engagement)",
+    //   date: "Jan 2026",
+    //   description: `Problem: Digital art platforms prioritize popularity and market speculation over cultural trust, making it difficult for collectors to understand why an artwork is meaningful or credible within a community context.\n\nApproach: Designed and implemented Atelier — an AI-powered art community platform built on taste-based social graphs rather than follower counts. Modelled users and artworks in a shared semantic embedding space using text critiques and interaction history. Developed a reputation engine combining LLM-evaluated critique depth, peer validation, curatorial consistency, and integrity signals. Built layered endorsement maps and explainable recommendation pipelines grounded in cultural relevance instead of financial metrics.\n\nResult: Delivered a functional prototype demonstrating computational modelling of community-driven trust without reliance on price signals. Successfully showcased explainable AI recommendations, transparent reputation scoring, and ethical moderation mechanisms that strengthen peer learning and cultural validation.`,
+    //   technologies: ["Python", "LLMs", "Text Embeddings", "Graph Modelling", "Reputation Systems", "Explainable AI", "Semantic Clustering", "Community Graphs", "AI Moderation"],
+    //   image: "/atelier-cover.png",
+    //   link: "https://github.com/bernardinolintang/pinus-hackathon-team-oreo-ai-for-arts-community"
+    // }
 
   ];
 
@@ -339,6 +350,8 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
   ).filter((cat): cat is string => typeof cat === "string" && !!cat);
 
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [showResumeModal, setShowResumeModal] = useState(false);
+  const [expandedCompetitions, setExpandedCompetitions] = useState<Record<number, boolean>>({});
 
   // Date filter state
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -389,6 +402,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
   };
 
   // --- Search Bar State and Logic ---
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   // Combine all searchable content into a single array for demonstration (guarded)
   const allContent = [
@@ -433,11 +447,11 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
     <div className="min-h-[60vh] pt-16 bg-gradient-to-b from-slate-900 to-background">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between flex-nowrap gap-4">
+        <div className="container mx-auto px-4 py-4 lg:py-5">
+          <div className="flex items-center justify-center flex-nowrap gap-6">
             <a
               href="#top"
-              className="text-xl font-bold focus:outline-none focus:ring-2 focus:ring-primary flex-shrink-0"
+              className="text-lg sm:text-xl font-bold focus:outline-none focus:ring-2 focus:ring-primary flex-shrink-0"
               onClick={e => {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: "smooth" });
@@ -445,8 +459,8 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
             >
               Bernardino Lintang
             </a>
-            {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-6 flex-nowrap flex-1 justify-end">
+            {/* Desktop Nav — hidden below md */}
+            <div className="hidden md:flex items-center gap-4 xl:gap-6 flex-nowrap">
               {NAV_LINKS.map(link => (
                 <a key={`${link.href}-${link.label}`} href={link.href} className="nav-link whitespace-nowrap text-sm">
                   {link.label}
@@ -464,16 +478,6 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                   <Moon className="w-4 h-4" />
                 )}
                 <span className="sr-only">Toggle theme</span>
-              </Button>
-              <Button size="sm" variant="outline" asChild className="flex-shrink-0">
-                <a
-                  href="/bernardino-lintang-resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Resume
-                </a>
               </Button>
             </div>
           </div>
@@ -494,17 +498,17 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                 className="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-primary/10"
                 style={{ objectPosition: "center 10%" }}
               />
-              <h1 className="text-4xl md:text-6xl mb-4">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl mb-4">
                 <span className="text-primary">Bernardino Lintang</span>
               </h1>
-              <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 max-w-2xl mx-auto px-2">
                 AI Engineer building production GenAI systems, RAG pipelines, and data infrastructure. I ship LLM-powered products that actually work — with validation layers, schema enforcement, and measurable impact.
               </p>
               <div className="flex items-center justify-center gap-2 text-muted-foreground mb-8">
                 <MapPin className="w-4 h-4" />
                 <span>Singapore, Singapore</span>
               </div>
-              <div className="flex items-center justify-center gap-4 hero-actions">
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 hero-actions">
                 {/* match left-toolbar style: icon + text, same spacing & intensity */}
                 <a
                   href="mailto:lintangbernardino@gmail.com"
@@ -574,9 +578,9 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                   <div className="text-center group flex-1">
                     <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
                       <Briefcase className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
-                      <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">2+</div>
+                      <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">{experiencesSafe.length}</div>
                     </div>
-                    <div className="text-xs md:text-sm text-muted-foreground">Years Experience</div>
+                    <div className="text-xs md:text-sm text-muted-foreground">Internships</div>
                   </div>
                   <div className="text-center group flex-1">
                     <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
@@ -597,16 +601,6 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
 
               {/* Call to Action */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" asChild>
-                  <a
-                    href="/bernardino-lintang-resume.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    View Resume
-                  </a>
-                </Button>
                 <Button size="lg" variant="outline" asChild>
                   <a href="#contact">
                     <Mail className="w-4 h-4 mr-2" />
@@ -643,29 +637,29 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
               <h2 className="text-3xl mb-8 text-center">Work Experience</h2>
             </Reveal>
             <div className="relative mt-8">
-              {/* Vertical Timeline Line */}
-              <div className="absolute left-8 md:left-16 top-0 bottom-0 w-0.5 bg-border" />
+              {/* Vertical Timeline Line — hidden on mobile, visible on md+ */}
+              <div className="hidden md:block absolute left-16 top-0 bottom-0 w-0.5 bg-border" />
               
               {/* Timeline Items */}
-              <div className="space-y-12">
+              <div className="space-y-8 md:space-y-12">
                 {experiencesSafe.map((exp, index) => (
                   <Reveal key={exp.title} delay={0.03 * index}>
-                    <div className="relative flex gap-6 md:gap-8">
-                      {/* Timeline Date (Left Side) */}
-                      <div className="flex-shrink-0 w-20 md:w-28 text-right pr-4">
-                        <div className="text-sm font-medium text-muted-foreground mt-1">
+                    <div className="relative flex flex-col md:flex-row gap-2 md:gap-8">
+                      {/* Timeline Date — above card on mobile, left side on md+ */}
+                      <div className="flex-shrink-0 md:w-28 md:text-right pr-0 md:pr-4 pl-2 md:pl-0">
+                        <div className="text-xs sm:text-sm font-medium text-muted-foreground mt-0 md:mt-1">
                           {exp.period}
                         </div>
                       </div>
                       
-                      {/* Timeline Dot */}
-                      <div className="absolute left-8 md:left-16 transform -translate-x-1/2 z-10">
+                      {/* Timeline Dot — hidden on mobile */}
+                      <div className="hidden md:block absolute left-16 transform -translate-x-1/2 z-10">
                         <div className="w-4 h-4 rounded-full bg-primary border-4 border-background timeline-dot-glow" />
                       </div>
                       
-                      {/* Experience Card (Right Side) */}
+                      {/* Experience Card */}
                       <div className="flex-1 min-w-0">
-                        <Card className="ml-6 md:ml-8">
+                        <Card className="ml-0 md:ml-8">
                           <CardHeader>
                             <div className="flex items-start gap-4">
                               <div className="flex-shrink-0">
@@ -735,72 +729,62 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
             <Reveal variant="text" delay={0.1}>
               <h2 className="text-3xl mb-8 text-center">Competitions</h2>
             </Reveal>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {competitionsSafe.map((competition, index) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 items-start">
+              {competitionsSafe.map((competition, index) => {
+                const isExpanded = expandedCompetitions[index] ?? false;
+                return (
                 <Reveal key={competition.title} delay={0.04 * index}>
-                  <Card className="overflow-hidden">
-                    <div className="aspect-video bg-muted">
+                  <Card className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? '' : 'h-[600px]'}`}>
+                    <div className="aspect-video bg-muted flex-shrink-0">
                       <ImageWithFallback
                         src={competition.image}
                         alt={competition.title}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <CardHeader>
+                    <CardHeader className={`pb-2 ${isExpanded ? '' : 'flex-1 overflow-hidden'}`}>
                       <CardTitle className="flex items-center gap-2 whitespace-pre-line leading-snug">
-                        <Trophy className="w-5 h-5" />
+                        <Trophy className="w-5 h-5 flex-shrink-0" />
                         {competition.title}
                       </CardTitle>
                       {competition.date && (
                         <div className="text-sm text-muted-foreground mb-2">{competition.date}</div>
                       )}
-                      {competition.title === "NUS Tiger Brokers Case Competition" ? (
-                        <ul className="list-disc pl-6 mb-2 text-muted-foreground">
-                          {competition.description
-                            .split('\n')
-                            .filter(line => line.trim().startsWith('-'))
-                            .map((line, idx) => (
-                              <li key={idx}>{line.replace(/^\s*-\s*/, '')}</li>
-                            ))}
-                        </ul>
-                      ) : (
-                        <CardDescription>{competition.description}</CardDescription>
-                      )}
+                      <div
+                        className="text-sm text-muted-foreground overflow-hidden"
+                        style={isExpanded ? {} : { display: '-webkit-box', WebkitLineClamp: 8, WebkitBoxOrient: 'vertical' as const }}
+                      >
+                        {competition.description.split('\n\n').map((paragraph, idx) => {
+                          const boldMatch = paragraph.match(/^(Problem|Approach|Result):(.*)/);
+                          if (boldMatch) {
+                            return (
+                              <p key={idx} className={idx > 0 ? 'mt-3' : ''}>
+                                <span className="font-bold text-foreground">{boldMatch[1]}:</span>{boldMatch[2]}
+                              </p>
+                            );
+                          }
+                          return <p key={idx} className={idx > 0 ? 'mt-3' : ''}>{paragraph}</p>;
+                        })}
+                      </div>
+                      <button
+                        type="button"
+                        className="text-xs text-primary hover:underline mt-2 self-start cursor-pointer"
+                        onClick={() => setExpandedCompetitions(prev => ({ ...prev, [index]: !isExpanded }))}
+                      >
+                        {isExpanded ? 'Show less' : 'Show more...'}
+                      </button>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="flex-shrink-0 pt-0">
                       <div className="flex flex-wrap gap-2 mb-4">
                         {A(competition.technologies).map((tech) => (
                           <Badge key={tech} variant="secondary">{tech}</Badge>
                         ))}
                       </div>
-                      {competition.title === "NUS Tiger Brokers Case Competition" && (
-                        <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs">
-                          <a
-                            href="https://www.canva.com/design/DAGiX06BesA/El16LNoqmvHzcgLiJd9hzA/view?mode=prototype"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center justify-start w-full gap-2 py-2 px-3 cursor-pointer"
-                          >
-                            <span className="flex-1 text-left">UI Work (Prototype)</span>
-                          </a>
-                        </Button>
-                      )}
-                      {competition.title === "PINUS Hackathon 2026 (AI for Community, Social Trust & Engagement)" && competition.link && (
-                        <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs">
-                          <a
-                            href={competition.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center justify-start w-full gap-2 py-2 px-3 cursor-pointer"
-                          >
-                            <span className="flex-1 text-left">Github Link to Prototype</span>
-                          </a>
-                        </Button>
-                      )}
                     </CardContent>
                   </Card>
                 </Reveal>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
@@ -893,7 +877,6 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
       </Reveal>
 
       {/* Events Section */}
-      <Reveal>
         <section id="events" className="py-16 px-4">
           <div className="container mx-auto max-w-4xl">
             <Reveal variant="text" delay={0.1}>
@@ -912,11 +895,11 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                   <Filter className="w-4 h-4" />
                   <span>Filter by Category</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <label htmlFor="date-filter" className="text-sm text-muted-foreground">Filter by Date:</label>
+                <div className="flex flex-wrap items-center gap-2">
+                  <label htmlFor="date-filter" className="text-sm text-muted-foreground">Date:</label>
                   <select
                     id="date-filter"
-                    className="border rounded px-2 py-1 text-sm bg-background"
+                    className="border rounded px-2 py-1.5 text-sm bg-background min-h-[36px]"
                     value={selectedDate}
                     onChange={e => setSelectedDate(e.target.value)}
                   >
@@ -925,10 +908,10 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                       <option key={date} value={date}>{date}</option>
                     ))}
                   </select>
-                  <label htmlFor="date-sort" className="text-sm text-muted-foreground ml-4">Sort:</label>
+                  <label htmlFor="date-sort" className="text-sm text-muted-foreground ml-2 sm:ml-4">Sort:</label>
                   <select
                     id="date-sort"
-                    className="border rounded px-2 py-1 text-sm bg-background"
+                    className="border rounded px-2 py-1.5 text-sm bg-background min-h-[36px]"
                     value={dateSortOrder}
                     onChange={e => setDateSortOrder(e.target.value as 'asc' | 'desc')}
                   >
@@ -1007,13 +990,13 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                  return (
                   <Reveal key={`${event.title}-${index}`} delay={0.03 * index}>
                    <Card
-                     className="rounded-2xl border bg-card/60 backdrop-blur hover:border-primary/20 p-4 flex flex-row items-center gap-6 max-w-2xl mx-auto"
+                     className="rounded-2xl border bg-card/60 backdrop-blur hover:border-primary/20 p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 max-w-2xl mx-auto"
                    >
                     {/* Event Image */}
                     <ImageWithFallback
                       src={event.image}
                       alt={event.title}
-                      className="w-12 h-12 md:w-20 md:h-20 rounded-2xl object-cover object-center shadow-sm flex-shrink-0"
+                      className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl object-cover object-center shadow-sm flex-shrink-0"
                     />
                     {/* Event Content */}
                     <div className="flex-1 flex flex-col justify-between h-full">
@@ -1083,7 +1066,6 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
           </div>
         </div>
       </section>
-      </Reveal>
 
       {/* Testimonials Section */}
       <TestimonialsCarousel testimonials={testimonialsSafe} />
@@ -1153,7 +1135,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
       <footer className="py-8 px-4 bg-muted/30">
         <div className="container mx-auto max-w-4xl text-center">
           <p className="text-sm text-muted-foreground mb-2">
-            &copy; 2025 Bernardino Lintang. All rights reserved.
+            &copy; 2026 Bernardino Lintang. All rights reserved.
           </p>
           <div className="flex justify-center gap-4">
             <a
@@ -1181,6 +1163,59 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
           </div>
         </div>
       </footer>
+
+      {/* Resume Access Modal */}
+      <Dialog open={showResumeModal} onOpenChange={setShowResumeModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Lock className="w-5 h-5 text-primary" />
+              Resume Access
+            </DialogTitle>
+          </DialogHeader>
+
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            If you'd like a copy of my resume, feel free to contact me on{" "}
+            <a
+              href="https://www.linkedin.com/messaging/compose/?recipient=bernardino-lintang&subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline underline-offset-2 hover:text-primary/80"
+            >
+              LinkedIn
+            </a>
+            {" "}or email me at{" "}
+            <a
+              href="mailto:lintangbernardino@gmail.com?subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
+              className="text-primary underline underline-offset-2 hover:text-primary/80"
+            >
+              lintangbernardino@gmail.com
+            </a>.
+          </p>
+
+          {/* Contact buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 mt-2">
+            <Button className="flex-1" asChild>
+              <a
+                href="mailto:lintangbernardino@gmail.com?subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                Email Me
+              </a>
+            </Button>
+            <Button variant="outline" className="flex-1" asChild>
+              <a
+                href="https://www.linkedin.com/messaging/compose/?recipient=bernardino-lintang&subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Linkedin className="w-4 h-4 mr-2" />
+                Message on LinkedIn
+              </a>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

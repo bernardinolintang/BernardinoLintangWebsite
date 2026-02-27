@@ -186,4 +186,49 @@
 
 html {
   font-size: var(--font-size);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ─── Responsive Utilities ──────────────────────────────────────────────────── */
+
+/* Ensure images never overflow */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ensure all containers use border-box */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Touch targets — minimum 44px for mobile a11y */
+@media (max-width: 768px) {
+  button,
+  a,
+  select,
+  [role="button"] {
+    min-height: 36px;
+  }
+}
+
+/* Prevent horizontal overflow on small screens */
+body {
+  overflow-x: hidden;
+}
+
+/* Responsive typography scaling */
+@media (max-width: 640px) {
+  :root {
+    --font-size: 15px;
+  }
+}
+
+@media (max-width: 380px) {
+  :root {
+    --font-size: 14px;
+  }
 }
