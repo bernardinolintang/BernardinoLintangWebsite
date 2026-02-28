@@ -296,14 +296,14 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
           <button
             onClick={scrollPrev}
             aria-label="Previous testimonial"
-            className="z-20 flex w-10 h-10 rounded-full items-center justify-center border bg-card text-muted-foreground hover:text-foreground transition-all duration-200"
+            className="z-20 flex w-10 h-10 rounded-full items-center justify-center border bg-card text-muted-foreground hover:text-foreground transition-all duration-200 cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={scrollNext}
             aria-label="Next testimonial"
-            className="z-20 flex w-10 h-10 rounded-full items-center justify-center border bg-card text-muted-foreground hover:text-foreground transition-all duration-200"
+            className="z-20 flex w-10 h-10 rounded-full items-center justify-center border bg-card text-muted-foreground hover:text-foreground transition-all duration-200 cursor-pointer"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -321,7 +321,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
               onClick={() => scrollTo(index)}
               aria-label={`Go to testimonial ${index + 1}`}
               aria-current={selectedIndex === index ? "true" : undefined}
-              className="rounded-full transition-all duration-300"
+              className="rounded-full transition-all duration-300 cursor-pointer"
               style={selectedIndex === index
                 ? { width: '1.25rem', height: '0.375rem', backgroundColor: 'var(--foreground)' }
                 : { width: '0.375rem', height: '0.375rem', backgroundColor: 'var(--muted-foreground)' }

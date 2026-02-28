@@ -1,5 +1,5 @@
 import { useTheme } from "./ThemeProvider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Reveal } from "./motion/Reveal";
 import { TestimonialsCarousel } from "./TestimonialsCarousel";
 import {
@@ -11,16 +11,12 @@ import {
   Calendar,
   Code,
   Briefcase,
-  GraduationCap,
   Award,
   ChevronDown,
   Download,
-  Phone,
   Users,
   Mic,
   Trophy,
-  Heart,
-  Filter,
   X,
   Sun,
   Moon,
@@ -34,21 +30,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Separator } from "./ui/separator";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "./ui/dialog";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "./ui/sheet";
 // import data from "@/data"; // If your data file uses default export
 // Helper to safely wrap arrays (generic, but always returns T[])
 function A<T>(x: T[] | undefined | null): T[] {
@@ -62,45 +44,46 @@ export function Portfolio() {
   
   const experiences = [
     {
-      title: "Operations (Data Science) Intern",
-      company: "Superbank",
-      period: "May 2025 - Aug 2025",
-      location: "Jakarta, Indonesia",
-      description: `Scope: Fraud analytics and detection pipeline engineering for a digital bank serving 10M+ users.\n\n\u2022 Built Snowflake SQL pipelines and Python workflows to flag suspicious account activity, reducing potential fraud exposure by 20%.\n\u2022 Engineered 200+ detection features (device mismatch, high-frequency bursts, OS anomalies) fed into the production anomaly model.\n\u2022 Optimised queries on 50M+ record datasets by modularising complex scripts, improving processing efficiency by ~40%.\n\u2022 Collaborated directly with risk analysts and business stakeholders to align pipeline outputs with operational decision-making.`,
-      technologies: ["Python", "SQL", "Snowflake"],
-      logo: "/superbank-logo.webp",
-      link: "https://www.linkedin.com/posts/bernardino-lintang_datascience-snowflake-sql-activity-7361775942270087169-1ZpQ?utm_source=share&utm_medium=member_desktop&rcm=ACoAADoCz-YBehyqcK0bh8mFQ1k3aFoNU9k0BSg"
-    },
-    {
-      title: "AI Engineer Intern",
-      company: "Crayon Data",
-      period: "Dec 2025 - Jan 2026",
-      location: "Chennai, India",
-      description: `Scope: End-to-end LLM-powered data ingestion system for a global merchant offer repository.\n\n\u2022 Designed and shipped an LLM ingestion pipeline converting unstructured offer data into structured, production-ready datasets — reducing manual processing effort by 70%+.\n\u2022 Built validation and regeneration layers enforcing schema consistency, mandatory fields, and safe re-generation for business users.\n\u2022 Implemented deduplication, deterministic ID assignment, and referential integrity logic to support scalable ingestion across markets.`,
-      technologies: ["Python", "LLM", "Agentic AI", "Production Integration"],
-      logo: "/crayon-data-logo.jpg",
-      link: "https://www.crayondata.com/"
+      title: "Data Engineer Intern",
+      company: "Home Team Science and Technology Agency (HTX)",
+      period: "May 2026 - Aug 2026",
+      location: "Singapore, Singapore",
+      badge: "Incoming",
+      description: `\u2022 Gathering pipeline requirements from data scientists and AI engineers, translating them into transform-and-load scripts for the centralised data platform.\n\u2022 Maintaining IaC workflows for CI/CD and data pipelines; building monitoring tools for pipeline health and data quality.\n\u2022 Collaborating on frontend/backend integration to connect deployed AI models with training data sources.`,
+      technologies: ["Python", "SQL", "IaC", "CI/CD", "Docker"],
+      logo: "/htx-logo.png",
+      link: "https://www.htx.gov.sg"
     },
     {
       title: "GenAI Product Development Intern",
       company: "CPF Board",
       period: "Jan 2026 - May 2026",
       location: "Singapore, Singapore",
-      description: `Scope: GenAI systems for Singapore's national pension fund customer contact centre.\n\n\u2022 Designed and deployed LLM-assisted workflows that improved response quality, consistency, and operational efficiency across the CPF Contact Centre.\n\u2022 Built and optimised RAG pipelines integrated with CPF's internal knowledge bases, applying prompt engineering and evaluation techniques to ensure policy-aligned, accurate responses.\n\u2022 Established evaluation frameworks to measure model accuracy, retrieval precision, and alignment with business requirements.`,
+      description: `\u2022 Designed and deployed LLM-assisted workflows that improved response quality, consistency, and operational efficiency across the CPF Contact Centre.\n\u2022 Built and optimised RAG pipelines integrated with CPF's internal knowledge bases, applying prompt engineering and evaluation techniques to ensure policy-aligned, accurate responses.\n\u2022 Established evaluation frameworks to measure model accuracy, retrieval precision, and alignment with business requirements.`,
       technologies: ["Python", "FastAPI", "OpenAI", "RAG", "Node.js", "Next.js", "PostgreSQL", "MongoDB"],
       logo: "/cpf-logo.png",
       link: "https://www.cpf.gov.sg"
     },
     {
-      title: "Data Engineer Intern (Incoming)",
-      company: "Home Team Science and Technology Agency (HTX)",
-      period: "May 2026 - Aug 2026",
-      location: "Singapore, Singapore",
-      description: `Scope: Data platform engineering supporting AI/ML teams in Singapore's national security technology agency.\n\n\u2022 Gathering pipeline requirements from data scientists and AI engineers, translating them into transform-and-load scripts for the centralised data platform.\n\u2022 Maintaining IaC workflows for CI/CD and data pipelines; building monitoring tools for pipeline health and data quality.\n\u2022 Collaborating on frontend/backend integration to connect deployed AI models with training data sources.`,
-      technologies: ["Python", "SQL", "IaC", "CI/CD", "Docker"],
-      logo: "/htx-logo.png",
-      link: "https://www.htx.gov.sg"
-    }
+      title: "AI Engineer Intern",
+      company: "Crayon Data",
+      period: "Dec 2025 - Jan 2026",
+      location: "Chennai, India",
+      description: `\u2022 Designed and shipped an LLM ingestion pipeline converting unstructured offer data into structured, production-ready datasets — reducing manual processing effort by 70%+.\n\u2022 Built validation and regeneration layers enforcing schema consistency, mandatory fields, and safe re-generation for business users.\n\u2022 Implemented deduplication, deterministic ID assignment, and referential integrity logic to support scalable ingestion across markets.`,
+      technologies: ["Python", "LLM", "Agentic AI", "Production Integration"],
+      logo: "/crayon-data-logo.jpg",
+      link: "https://www.crayondata.com/"
+    },
+    {
+      title: "Operations (Data Science) Intern",
+      company: "Superbank",
+      period: "May 2025 - Aug 2025",
+      location: "Jakarta, Indonesia",
+      description: `\u2022 Built Snowflake SQL pipelines and Python workflows to flag suspicious account activity, reducing potential fraud exposure by 20%.\n\u2022 Engineered 200+ detection features (device mismatch, high-frequency bursts, OS anomalies) fed into the production anomaly model.\n\u2022 Optimised queries on 50M+ record datasets by modularising complex scripts, improving processing efficiency by ~40%.\n\u2022 Collaborated directly with risk analysts and business stakeholders to align pipeline outputs with operational decision-making.`,
+      technologies: ["Python", "SQL", "Snowflake"],
+      logo: "/superbank-logo.webp",
+      link: "https://www.linkedin.com/posts/bernardino-lintang_datascience-snowflake-sql-activity-7361775942270087169-1ZpQ?utm_source=share&utm_medium=member_desktop&rcm=ACoAADoCz-YBehyqcK0bh8mFQ1k3aFoNU9k0BSg"
+    },
   ];
 
   const competitions = [
@@ -169,11 +152,25 @@ export function Portfolio() {
 
   const projects = [
     {
+      title: "IS460 Machine Learning Project: Hybrid CNN + RAG Framework for Dermatology Decision Support",
+      date: "Aug 2024 - Nov 2024",
+      description: `Built a Hybrid Retrieval-Augmented Generation (RAG) framework integrating Convolutional Neural Networks (CNN) for skin disease diagnosis. The model leverages image classification for visual analysis and retrieval-augmented generation for detailed medical advice based on dermatology research documents. Tackled class imbalance using regularization and applied pre-trained ResNet-50 and EfficientNetV2 models for faster and more accurate predictions. Integrated an advanced embedding model to capture complex dermatology-specific features.\n\nKey Achievements:\n• CNN + RAG framework outperformed baseline models in accuracy.\n• Implemented Agentic Chunking for dynamic information retrieval.\n• Real-time decision support with disease-specific recommendations.`,
+      technologies: ["Python", "TensorFlow", "HuggingFace", "EfficientNetV2M", "ResNet-50", "PubMedBERT", "EmbeddingGemma"],
+      image: "/IS460-machine-learning-presentation.png",
+    },
+    {
       title: "Multi-Model Approach for DNA-Binding Protein Classification",
       date: "Aug 2024 - Nov 2024",
       description: `Built and benchmarked Logistic Regression, Naive Bayes, Random Forest, and CNN classifiers for DNA-binding protein prediction. Engineered features from k-mer frequencies, amino acid composition, and sequence embeddings. Addressed class imbalance with weighted loss functions and hyperparameter tuning. The CNN model outperformed all baselines on sequence-based feature capture — demonstrating production-viable accuracy for biological data classification pipelines.`,
       technologies: ["Python", "scikit-learn", "TensorFlow", "CNN", "Bioinformatics"],
       image: "/it1244.png"
+    },
+    {
+      title: "DSA3101: Question Bank System",
+      date: "Aug 2025 - Nov 2025",
+      description: `Built a Question Bank System for ST1131 using Flask (Python) for the backend and Streamlit for the frontend, with a PostgreSQL database for storing and managing questions. The system supports efficient question search, filtering, and assembly creation based on difficulty and course type.\n\nI implemented a modular architecture for question ingestion, using libraries like pdfplumber and python-docx for parsing uploaded files. Additionally, I created a version tracking system for questions and integrated AI-assisted question recommendations to suggest the most relevant questions based on past usage.\n\nKey Contributions:\n• Built a Flask REST API to handle question ingestion, search, and assembly creation.\n• Integrated Streamlit frontend for intuitive question assembly and export.\n• Implemented PostgreSQL database with support for full-text search and question metadata tracking.\n• Developed version control for questions, enabling instructors to track changes over time.\n• Applied AI-assisted recommendations to suggest relevant questions based on historical data.`,
+      technologies: ["Python", "Flask", "PostgreSQL", "Streamlit", "pdfplumber", "python-docx", "AI Recommendations", "Version Control"],
+      image: "/dsa3101-group.png",
     },
     {
       title: "Analyzing Emotional Characteristics of Taylor Swift’s Albums and Their Impact on Reception",
@@ -182,20 +179,6 @@ export function Portfolio() {
       technologies: ["R", "Data Science", "Music Analysis", "Metacritic API"],
       image: "/dsa2101.png",
     },
-    {
-      title: "DSA3101: Question Bank System",
-      date: "Aug 2025 - Nov 2025",
-      description: `Our team developed a Question Bank System for ST1131 using Flask (Python) for the backend and Streamlit for the frontend, with a PostgreSQL database for storing and managing questions. The system supports efficient question search, filtering, and question assembly creation based on various criteria such as difficulty and course type.\n\nWe implemented a modular architecture for question ingestion, using libraries like pdfplumber and python-docx for parsing uploaded files. Additionally, we created a version tracking system for questions and integrated AI-assisted question recommendations to suggest the most relevant questions based on past usage.\n\nKey Contributions:\n• Built a Flask REST API to handle question ingestion, search, and assembly creation.\n• Integrated Streamlit frontend for intuitive question assembly and export.\n• Implemented PostgreSQL database with support for full-text search and question metadata tracking.\n• Developed version control for questions, enabling instructors to track changes over time.\n• Applied AI-assisted recommendations to suggest relevant questions based on historical data.`,
-      technologies: ["Python", "Flask", "PostgreSQL", "Streamlit", "pdfplumber", "python-docx", "AI Recommendations", "Version Control"],
-      image: "/dsa3101-group.png",
-    },
-    {
-      title: "IS460 Machine Learning Project: Hybrid CNN + RAG Framework for Dermatology Decision Support",
-      date: "Aug 2024 - Nov 2024",
-      description: `Built a Hybrid Retrieval-Augmented Generation (RAG) framework integrating Convolutional Neural Networks (CNN) for skin disease diagnosis. The model leverages image classification for visual analysis and retrieval-augmented generation for detailed medical advice based on dermatology research documents. Tackled class imbalance using regularization and applied pre-trained ResNet-50 and EfficientNetV2 models for faster and more accurate predictions. Integrated an advanced embedding model to capture complex dermatology-specific features.\n\nKey Achievements:\n• CNN + RAG framework outperformed baseline models in accuracy.\n• Implemented Agentic Chunking for dynamic information retrieval.\n• Real-time decision support with disease-specific recommendations.`,
-      technologies: ["Python", "TensorFlow", "HuggingFace", "EfficientNetV2M", "ResNet-50", "PubMedBERT", "EmbeddingGemma"],
-      image: "/IS460-machine-learning-presentation.png",
-    }
   ];
 
   const skills = {
@@ -288,18 +271,31 @@ export function Portfolio() {
   // --- Testimonials Data ---
   const testimonials = [
     {
-      name: "Deyi Secondary School",
-      title: "Student",
-      date: "2015 - 2020",
-      image: "deyi-logo.png",
-      text: `Bernardino possessed a gentle disposition and had a smile for everyone. In his interactions with others, he showed sincerity and warmth. He was forthcoming in helping others and was well-liked by his peers, unassuming in his words and actions. He enjoyed the process of learning and was open to different perspectives. A diligent student, Bernardino displayed a positive learning attitude and determination to excel in his academic performance. He loved to challenge himself constantly and displayed the ability to carry out tasks with minimal supervision. He could be relied upon to do his best in whatever he embarked on.`,
+      name: "Crayon Data",
+      title: "AI Engineer Intern",
+      date: "2025",
+      image: "crayondata_logo.jpg",
+      text: `He did a very strong job across the internship. He took on one of Crayon Data\u2019s most complex and high-impact problem spaces \u2014 the Agentic Offer Management Portal \u2014 and handled it with depth, seriousness, and real ownership. He was methodical, thoughtful, and comfortable navigating messy, real-world complexity.
+
+He stood out as a builder who genuinely wants to understand the problem deeply before jumping to solutions. His curiosity, approachability, and ability to grasp new concepts quickly were evident, and each iteration of his work showed meaningful progress driven by deeper understanding rather than surface-level changes.
+
+His thinking consistently reflected strong systems awareness. He treated AI as a constrained tool that needs checks, auditability, and human-in-the-loop design \u2014 not as magic. His work on offer ingestion and unstructured data was grounded in real workflows and operational reality, which made his ideas feel credible and deployable.
+
+The main opportunity for growth is moving from depth to decisiveness. He identified risks, edge cases, and unknowns thoroughly, but sometimes hesitated to clearly state which ones matter most right now and which are acceptable to defer. The next level is confidently saying, \u201cThis is the risk I care about most \u2014 and this is the one I\u2019m willing to accept.\u201d
+
+Overall, he was a thoughtful, serious contributor who took ownership and pushed through ambiguity without freezing. With more explicit prioritisation and decision-making, he has strong potential to grow into roles that require systems thinking, operational leadership, and building at scale.`,
     },
     {
-      name: "Catholic Junior College",
-      title: "Student",
-      date: "2019 - 2020",
-      image: "cj-logo.jpg",
-      text: `Bernardino consistently carried himself as a diligent and self-directed student. Bernardino often seeks new opportunities to grow. Bernardino acknowledged the importance of being a good listener as well as getting everyone in the team to feel included. He strove to influence his team positively so that, collectively, the team was consistently up to tasks. A bright and respectful individual, Bernardino has a pleasant disposition and gets along well with his peers. His analytical mind and openness to experiences enables him to push his limits and to achieve his intended goals.`,
+      name: "Superbank",
+      title: "Operations (Data Science) Intern",
+      date: "2025",
+      image: "superbank-logo.webp",
+      text: `Bernard has made great strides in technical skills, diving deeper into Python, SQL, and
+machine learning workflows. He\u2019s now much more comfortable exploring complex codebases and applying
+advanced techniques to analyze and manipulate data. He\u2019s getting much better at connecting technical findings to business insights. His
+recent presentations have shown a clearer understanding of the \u201cwhy\u201d behind the numbers, helping stakeholders
+see the business value of his work.
+`,
     },
     {
       name: "11C4I",
@@ -309,31 +305,18 @@ export function Portfolio() {
       text: `His friendly character allowed him to overcome the cultural differences with his foreign counterparts. CFC Bernardino always takes the initiative to seek his Commanders and peers for advice to improve himself. His cheerful and welcoming personality enabled him to build strong working rapport with his superiors and peers. CFC Bernardino would certainly be a valuable member to any team that he may find himself part of in the future.`,
     },
     {
-      name: "Superbank",
-      title: "Operations (Data Science) Intern",
-      date: "2025",
-      image: "superbank-logo.webp",
-      text: `Bernard has made great strides in technical skills, diving deeper into Python, SQL, and
-machine learning workflows. He’s now much more comfortable exploring complex codebases and applying
-advanced techniques to analyze and manipulate data. He’s getting much better at connecting technical findings to business insights. His
-recent presentations have shown a clearer understanding of the “why” behind the numbers, helping stakeholders
-see the business value of his work.
-`,
+      name: "Catholic Junior College",
+      title: "Student",
+      date: "2019 - 2020",
+      image: "cj-logo.jpg",
+      text: `Bernardino consistently carried himself as a diligent and self-directed student. Bernardino often seeks new opportunities to grow. Bernardino acknowledged the importance of being a good listener as well as getting everyone in the team to feel included. He strove to influence his team positively so that, collectively, the team was consistently up to tasks. A bright and respectful individual, Bernardino has a pleasant disposition and gets along well with his peers. His analytical mind and openness to experiences enables him to push his limits and to achieve his intended goals.`,
     },
     {
-      name: "Crayon Data",
-      title: "AI Engineer Intern",
-      date: "2025",
-      image: "crayondata_logo.jpg",
-      text: `He did a very strong job across the internship. He took on one of Crayon Data’s most complex and high-impact problem spaces — the Agentic Offer Management Portal — and handled it with depth, seriousness, and real ownership. He was methodical, thoughtful, and comfortable navigating messy, real-world complexity.
-
-He stood out as a builder who genuinely wants to understand the problem deeply before jumping to solutions. His curiosity, approachability, and ability to grasp new concepts quickly were evident, and each iteration of his work showed meaningful progress driven by deeper understanding rather than surface-level changes.
-
-His thinking consistently reflected strong systems awareness. He treated AI as a constrained tool that needs checks, auditability, and human-in-the-loop design — not as magic. His work on offer ingestion and unstructured data was grounded in real workflows and operational reality, which made his ideas feel credible and deployable.
-
-The main opportunity for growth is moving from depth to decisiveness. He identified risks, edge cases, and unknowns thoroughly, but sometimes hesitated to clearly state which ones matter most right now and which are acceptable to defer. The next level is confidently saying, “This is the risk I care about most — and this is the one I’m willing to accept.”
-
-Overall, he was a thoughtful, serious contributor who took ownership and pushed through ambiguity without freezing. With more explicit prioritisation and decision-making, he has strong potential to grow into roles that require systems thinking, operational leadership, and building at scale.`,
+      name: "Deyi Secondary School",
+      title: "Student",
+      date: "2015 - 2020",
+      image: "deyi-logo.png",
+      text: `Bernardino possessed a gentle disposition and had a smile for everyone. In his interactions with others, he showed sincerity and warmth. He was forthcoming in helping others and was well-liked by his peers, unassuming in his words and actions. He enjoyed the process of learning and was open to different perspectives. A diligent student, Bernardino displayed a positive learning attitude and determination to excel in his academic performance. He loved to challenge himself constantly and displayed the ability to carry out tasks with minimal supervision. He could be relied upon to do his best in whatever he embarked on.`,
     },
   ];
 
@@ -352,7 +335,15 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [expandedCompetitions, setExpandedCompetitions] = useState<Record<number, boolean>>({});
+  const [expandedCompTags, setExpandedCompTags] = useState<Record<number, boolean>>({});
   const [expandedProjects, setExpandedProjects] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    if (!showResumeModal) return;
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowResumeModal(false); };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [showResumeModal]);
 
   // Date filter state
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -431,8 +422,6 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
   // replace your nav arrays (desktop and mobile) so "Skills" points to "#about"
   const NAV_LINKS = [
     { href: "#about", label: "About" },
-    // point Skills to the About section
-    { href: "#about", label: "Skills" },
     { href: "#experience", label: "Work Experience" },
     { href: "#competitions", label: "Competitions" },
     { href: "#projects", label: "Projects" },
@@ -452,7 +441,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
           <div className="flex items-center justify-between flex-nowrap gap-4">
             <a
               href="#top"
-              className="text-lg font-bold focus:outline-none focus:ring-2 focus:ring-primary flex-shrink-0"
+              className="text-lg font-bold focus:outline-none focus:ring-2 focus:ring-primary flex-shrink-0 cursor-pointer"
               onClick={e => {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: "smooth" });
@@ -472,7 +461,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                 variant="ghost"
                 size="sm"
                 onClick={toggleTheme}
-                className="hover:bg-accent flex-shrink-0"
+                className="hover:bg-accent flex-shrink-0 cursor-pointer"
               >
                 {theme === "dark" ? (
                   <Sun className="w-4 h-4" />
@@ -489,7 +478,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                 variant="ghost"
                 size="sm"
                 onClick={toggleTheme}
-                className="hover:bg-accent flex-shrink-0"
+                className="hover:bg-accent flex-shrink-0 cursor-pointer"
               >
                 {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                 <span className="sr-only">Toggle theme</span>
@@ -498,7 +487,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                 variant="ghost"
                 size="sm"
                 onClick={() => setMobileMenuOpen(prev => !prev)}
-                className="hover:bg-accent flex-shrink-0"
+                className="hover:bg-accent flex-shrink-0 cursor-pointer"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                 <span className="sr-only">Toggle menu</span>
@@ -539,7 +528,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
             <a
               key={`mobile-${link.href}-${link.label}`}
               href={link.href}
-              className="text-sm hover:bg-accent transition-colors"
+              className="text-sm hover:bg-accent transition-colors cursor-pointer"
               style={{
                 display: 'block',
                 padding: '0.625rem 1rem',
@@ -572,17 +561,20 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                 <span className="text-primary">Bernardino Lintang</span>
               </h1>
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 max-w-2xl mx-auto px-2">
-                AI Engineer building production GenAI systems, RAG pipelines, and data infrastructure. I ship LLM-powered products that actually work — with validation layers, schema enforcement, and measurable impact.
+                AI Engineer with {experiencesSafe.length} internships shipping production GenAI systems, RAG pipelines, and data infrastructure across fintech, government, and enterprise. I build LLM-powered products with validation layers, schema enforcement, and measurable impact.
               </p>
               <div className="flex items-center justify-center gap-2 text-muted-foreground mb-8">
                 <MapPin className="w-4 h-4" />
                 <span>Singapore, Singapore</span>
               </div>
-              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 hero-actions">
-                {/* match left-toolbar style: icon + text, same spacing & intensity */}
+              <div className="flex flex-wrap items-center justify-center hero-actions" style={{ gap: '1rem' }}>
+                <Button size="sm" variant="outline" className="cursor-pointer" onClick={() => setShowResumeModal(true)}>
+                  <Download className="w-4 h-4 mr-1" />
+                  View Resume
+                </Button>
                 <a
                   href="mailto:lintangbernardino@gmail.com"
-                  className="inline-flex items-center gap-2 text-sm px-2 py-1 rounded-md hover:bg-primary/10 text-muted-foreground"
+                  className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-md hover:bg-primary/10 text-muted-foreground cursor-pointer transition-colors"
                   aria-label="Get in touch"
                 >
                   <Mail className="w-4 h-4" />
@@ -593,7 +585,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                   href="https://github.com/bernardinolintang"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm px-2 py-1 rounded-md hover:bg-primary/10 text-muted-foreground"
+                  className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-md hover:bg-primary/10 text-muted-foreground cursor-pointer transition-colors"
                 >
                   <Github className="w-4 h-4" />
                   <span>GitHub</span>
@@ -603,7 +595,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                   href="https://www.linkedin.com/in/bernardino-lintang/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm px-2 py-1 rounded-md hover:bg-primary/10 text-muted-foreground"
+                  className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-md hover:bg-primary/10 text-muted-foreground cursor-pointer transition-colors"
                 >
                   <Linkedin className="w-4 h-4" />
                   <span>LinkedIn</span>
@@ -611,7 +603,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
               </div>
             </div>
             <div className="flex justify-center">
-              <ChevronDown className="w-6 h-6 text-muted-foreground animate-bounce" />
+              <ChevronDown className="w-6 h-6 text-muted-foreground" />
             </div>
           </div>
         </section>
@@ -624,58 +616,62 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
           <Reveal variant="text" delay={0.1}>
             <h2 className="text-3xl mb-8 text-center">About Me</h2>
           </Reveal>
+          {/* Statistics Section — full width above the two columns */}
+          <div className="p-4 md:p-6 bg-card border rounded-lg hover:shadow-lg transition-shadow duration-200" style={{ marginTop: '1rem', marginBottom: '3rem' }}>
+            <div className="flex flex-row gap-2 md:gap-4 items-center justify-between">
+              <div className="text-center group flex-1">
+                <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
+                  <Briefcase className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
+                  <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">{experiencesSafe.length}</div>
+                </div>
+                <div className="text-xs md:text-sm text-muted-foreground">Internships</div>
+              </div>
+              <div className="text-center group flex-1">
+                <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
+                  <FolderKanban className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
+                  <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">{projectsSafe.length}</div>
+                </div>
+                <div className="text-xs md:text-sm text-muted-foreground">Projects</div>
+              </div>
+              <div className="text-center group flex-1">
+                <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
+                  <Trophy className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
+                  <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">{competitionsSafe.length}</div>
+                </div>
+                <div className="text-xs md:text-sm text-muted-foreground">Competitions</div>
+              </div>
+            </div>
+          </div>
+
           <div className="grid md:grid-cols-2 gap-12 items-start">
             <div>
               {/* About Text */}
-              <div className="space-y-6 mb-8">
+              <div className="space-y-5 mb-8">
                 <div>
                   <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-primary" />
                     AI Engineer & Systems Builder
                   </h3>
-                  <p className="text-lg leading-relaxed text-muted-foreground">
+                  <p className="text-base leading-relaxed text-muted-foreground">
                     I build production AI systems — from LLM-powered ingestion pipelines that replace manual workflows, to RAG architectures serving policy-aligned responses at scale. My work sits at the intersection of applied ML, data engineering, and GenAI product development.
                   </p>
                 </div>
-                <p className="text-lg leading-relaxed text-muted-foreground">
-                  I care about systems that are reliable, measurable, and actually deployed — not just prototyped. Every pipeline I build includes validation layers, observability, and a clear path to production. I think in terms of data contracts, schema enforcement, and failure modes before writing the first line of inference code.
+                <p className="text-base leading-relaxed text-muted-foreground">
+                  Every pipeline I build includes validation layers, observability, and a clear path to production. I think in terms of data contracts, schema enforcement, and failure modes before writing the first line of inference code.
                 </p>
-              </div>
-
-              {/* Statistics Section */}
-              <div className="mb-8 p-4 md:p-6 bg-card border rounded-lg hover:shadow-lg transition-shadow duration-200">
-                <div className="flex flex-row gap-2 md:gap-4 items-center justify-between">
-                  <div className="text-center group flex-1">
-                    <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
-                      <Briefcase className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
-                      <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">{experiencesSafe.length}</div>
-                    </div>
-                    <div className="text-xs md:text-sm text-muted-foreground">Internships</div>
-                  </div>
-                  <div className="text-center group flex-1">
-                    <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
-                      <FolderKanban className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
-                      <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">{projectsSafe.length + competitionsSafe.length}</div>
-                    </div>
-                    <div className="text-xs md:text-sm text-muted-foreground">Projects & Competitions</div>
-                  </div>
-                  <div className="text-center group flex-1">
-                    <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
-                      <Trophy className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
-                      <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">{competitionsSafe.length}</div>
-                    </div>
-                    <div className="text-xs md:text-sm text-muted-foreground">Competitions</div>
-                  </div>
-                </div>
               </div>
 
               {/* Call to Action */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" variant="outline" asChild>
+                <Button size="lg" variant="outline" className="cursor-pointer" asChild>
                   <a href="#contact">
                     <Mail className="w-4 h-4 mr-2" />
                     Let's Connect
                   </a>
+                </Button>
+                <Button size="lg" variant="outline" className="cursor-pointer" onClick={() => setShowResumeModal(true)}>
+                  <Download className="w-4 h-4 mr-2" />
+                  View Resume
                 </Button>
               </div>
             </div>
@@ -743,6 +739,9 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                                 <CardTitle className="flex items-center gap-2 text-xl">
                                   <Briefcase className="w-5 h-5 flex-shrink-0" />
                                   <span>{exp.title}</span>
+                                  {(exp as any).badge && (
+                                    <Badge className="ml-1 text-xs">{(exp as any).badge}</Badge>
+                                  )}
                                 </CardTitle>
                                 <CardDescription className="text-base mt-1.5">
                                   {exp.link ? (
@@ -750,7 +749,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                                       href={exp.link} 
                                       target="_blank" 
                                       rel="noopener noreferrer"
-                                      className="hover:text-primary transition-colors inline-flex items-center gap-1"
+                                      className="hover:text-primary transition-colors inline-flex items-center gap-1 cursor-pointer"
                                     >
                                       {exp.company}
                                       <ExternalLink className="w-3 h-3" />
@@ -804,7 +803,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                 const isExpanded = expandedCompetitions[index] ?? false;
                 return (
                 <Reveal key={competition.title} delay={0.04 * index}>
-                  <Card className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? '' : 'h-[600px]'}`}>
+                  <Card className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? '' : 'h-[480px]'}`}>
                     <div className="aspect-video bg-muted flex-shrink-0">
                       <ImageWithFallback
                         src={competition.image}
@@ -822,7 +821,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                       )}
                       <div
                         className="text-sm text-muted-foreground overflow-hidden"
-                        style={isExpanded ? {} : { display: '-webkit-box', WebkitLineClamp: 8, WebkitBoxOrient: 'vertical' as const }}
+                        style={isExpanded ? {} : { display: '-webkit-box', WebkitLineClamp: 5, WebkitBoxOrient: 'vertical' as const }}
                       >
                         {competition.description.split('\n\n').map((paragraph, idx) => {
                           const boldMatch = paragraph.match(/^(Problem|Approach|Result):(.*)/);
@@ -846,9 +845,37 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                     </CardHeader>
                     <CardContent className="flex-shrink-0 pt-0">
                       <div className="flex flex-wrap gap-2 mb-4">
-                        {A(competition.technologies).map((tech) => (
-                          <Badge key={tech} variant="secondary">{tech}</Badge>
-                        ))}
+                        {(() => {
+                          const techs = A(competition.technologies);
+                          const tagsExpanded = expandedCompTags[index] ?? false;
+                          const visible = tagsExpanded ? techs : techs.slice(0, 6);
+                          const remaining = techs.length - 6;
+                          return (
+                            <>
+                              {visible.map((tech) => (
+                                <Badge key={tech} variant="secondary">{tech}</Badge>
+                              ))}
+                              {remaining > 0 && !tagsExpanded && (
+                                <Badge
+                                  variant="outline"
+                                  className="cursor-pointer hover:bg-accent/40 transition-colors"
+                                  onClick={() => setExpandedCompTags(prev => ({ ...prev, [index]: true }))}
+                                >
+                                  +{remaining} more
+                                </Badge>
+                              )}
+                              {remaining > 0 && tagsExpanded && (
+                                <Badge
+                                  variant="outline"
+                                  className="cursor-pointer hover:bg-accent/40 transition-colors"
+                                  onClick={() => setExpandedCompTags(prev => ({ ...prev, [index]: false }))}
+                                >
+                                  Show less
+                                </Badge>
+                              )}
+                            </>
+                          );
+                        })()}
                       </div>
                     </CardContent>
                   </Card>
@@ -873,7 +900,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                 const isExpanded = expandedProjects[index] ?? false;
                 return (
                 <Reveal key={project.title} delay={0.04 * index}>
-          <Card className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? '' : 'h-[520px]'}`}>
+          <Card className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? '' : 'h-[450px]'}`}>
             <div className="aspect-video bg-muted flex-shrink-0">
               <ImageWithFallback
                 src={project.image}
@@ -914,7 +941,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
               )}
               {/* GitHub links */}
               {project.title.includes("DNA-Binding Protein") && (
-                <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs">
+                <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs cursor-pointer">
                   <a
                     href="https://github.com/bernardinolintang/IT1244-Project-DNA-Binding-Protein"
                     target="_blank"
@@ -926,7 +953,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                 </Button>
               )}
               {project.title.includes("Taylor Swift") && (
-                <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs">
+                <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs cursor-pointer">
                   <a
                     href="https://github.com/bernardinolintang/DSA2101-Taylor-Swift-Music-Analysis"
                     target="_blank"
@@ -956,11 +983,13 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                   variant="outline"
                   size="lg"
                   asChild
+                  className="cursor-pointer"
                 >
                   <a
                     href="https://github.com/bernardinolintang"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="cursor-pointer"
                   >
                     <Github className="w-4 h-4 mr-2" />
                     View More Projects
@@ -982,86 +1011,35 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
             Beyond my professional work, I actively grow within the developer and data community by attending talks, workshops, and industry events to expand my knowledge and stay ahead of emerging technologies.
           </p>
           
-          {/* Filter Controls */}
+          {/* Filter Tags */}
           <Reveal delay={0.05}>
-          <Card className="mb-8">
-            <CardContent className="pt-6">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-                <div className="flex items-center gap-2">
-                  <Filter className="w-4 h-4" />
-                  <span>Filter by Category</span>
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <label htmlFor="date-filter" className="text-sm text-muted-foreground">Date:</label>
-                  <select
-                    id="date-filter"
-                    className="border rounded px-2 py-1.5 text-sm bg-background min-h-[36px]"
-                    value={selectedDate}
-                    onChange={e => setSelectedDate(e.target.value)}
-                  >
-                    <option value="">All Dates</option>
-                    {eventDates.map(date => (
-                      <option key={date} value={date}>{date}</option>
-                    ))}
-                  </select>
-                  <label htmlFor="date-sort" className="text-sm text-muted-foreground ml-2 sm:ml-4">Sort:</label>
-                  <select
-                    id="date-sort"
-                    className="border rounded px-2 py-1.5 text-sm bg-background min-h-[36px]"
-                    value={dateSortOrder}
-                    onChange={e => setDateSortOrder(e.target.value as 'asc' | 'desc')}
-                  >
-                    <option value="desc">Newest First</option>
-                    <option value="asc">Oldest First</option>
-                  </select>
-                </div>
-                {selectedFilters.length > 0 && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={clearAllFilters}
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="w-4 h-4 mr-1" />
-                    Clear All
-                  </Button>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {filterCategories.map((category) => (
-                  <Button
-                    key={category}
-                    variant={selectedFilters.includes(category) ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => toggleFilter(category)}
-                    className={`transition-all filter-pill ${selectedFilters.includes(category) ? "active" : ""}`}
-                    aria-pressed={selectedFilters.includes(category)}
-                  >
-                    {category}
-                    {selectedFilters.includes(category) && (
-                      <X className="w-3 h-3 ml-2" />
-                    )}
-                  </Button>
-                ))}
-              </div>
-              {(selectedFilters.length > 0 || selectedDate) && (
-                <div className="mt-4 pt-4 border-t">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    {selectedFilters.length > 0 && <><span>Active filters:</span>
-                    <div className="flex flex-wrap gap-1">
-                      {selectedFilters.map((filter) => (
-                        <Badge key={filter} variant="secondary" className="text-xs">
-                          {filter}
-                        </Badge>
-                      ))}
-                    </div></>}
-                    {selectedDate && <span>Date: {selectedDate}</span>}
-                    <span>• {filteredEvents.length} events found</span>
-                  </div>
-                </div>
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+              {filterCategories.map((category) => (
+                <Button
+                  key={category}
+                  variant={selectedFilters.includes(category) ? "default" : "outline"}
+                  size="sm"
+                  className="cursor-pointer"
+                  onClick={() => toggleFilter(category)}
+                  aria-pressed={selectedFilters.includes(category)}
+                >
+                  {category}
+                  {selectedFilters.includes(category) && (
+                    <X className="w-3 h-3 ml-1" />
+                  )}
+                </Button>
+              ))}
+              {selectedFilters.length > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearAllFilters}
+                  className="text-muted-foreground hover:text-foreground cursor-pointer"
+                >
+                  Clear
+                </Button>
               )}
-            </CardContent>
-          </Card>
+            </div>
           </Reveal>
 
           <div className="flex flex-col gap-6">
@@ -1107,7 +1085,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                                target="_blank"
                                rel="noopener noreferrer"
                                aria-label={`Open ${event.title}`}
-                               className="ml-2 text-muted-foreground hover:text-primary transition-colors inline-flex items-center"
+                               className="ml-2 text-muted-foreground hover:text-primary transition-colors inline-flex items-center cursor-pointer"
                              >
                                <ExternalLink className="w-4 h-4" />
                              </a>
@@ -1135,13 +1113,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                         <div className="text-sm md:text-base leading-relaxed text-muted-foreground max-w-prose mb-1">
                           {event.description}
                         </div>
-                        <div className="flex flex-wrap gap-2 mb-1">
-                          {A<string>(event.topics).map((topic) => (
-                            <Badge key={topic} variant="outline" className="text-xs">
-                              {topic}
-                            </Badge>
-                          ))}
-                        </div>
+                        
                       </div>
                       <div className="flex items-center gap-4 text-xs md:text-sm text-muted-foreground pt-3 border-t mt-4">
                         <div className="flex items-center gap-1">
@@ -1181,10 +1153,11 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
               size="lg"
               variant="outline"
               asChild
-              className="mx-auto md:mx-0"
+              className="mx-auto md:mx-0 cursor-pointer"
             >
               <a
                 href="mailto:lintangbernardino@gmail.com"
+                className="cursor-pointer"
               >
                 <Mail className="w-5 h-5 mr-2" />
                 Email Me
@@ -1194,12 +1167,13 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
               size="lg"
               variant="outline"
               asChild
-              className="mx-auto md:mx-0"
+              className="mx-auto md:mx-0 cursor-pointer"
             >
               <a
                 href="https://github.com/bernardinolintang"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="cursor-pointer"
               >
                 <Github className="w-5 h-5 mr-2" />
                 GitHub
@@ -1209,12 +1183,13 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
               size="lg"
               variant="outline"
               asChild
-              className="mx-auto md:mx-0"
+              className="mx-auto md:mx-0 cursor-pointer"
             >
               <a
                 href="https://www.linkedin.com/in/bernardino-lintang/"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="cursor-pointer"
               >
                 <Linkedin className="w-5 h-5 mr-2" />
                 LinkedIn
@@ -1238,7 +1213,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
               href="https://github.com/bernardinolintang"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-primary transition-colors cursor-pointer"
             >
               <Github className="w-5 h-5" />
             </a>
@@ -1246,13 +1221,13 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
               href="https://www.linkedin.com/in/bernardino-lintang/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-primary transition-colors cursor-pointer"
             >
               <Linkedin className="w-5 h-5" />
             </a>
             <a
               href="mailto:lintangbernardino@gmail.com"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-primary transition-colors cursor-pointer"
             >
               <Mail className="w-5 h-5" />
             </a>
@@ -1260,58 +1235,94 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
         </div>
       </footer>
 
-      {/* Resume Access Modal */}
-      <Dialog open={showResumeModal} onOpenChange={setShowResumeModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-xl">
+      {/* Resume Access Modal — inline-styled because Dialog CSS classes are missing from compiled Tailwind */}
+      {showResumeModal && (
+        <>
+          {/* Overlay */}
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 100,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              backdropFilter: 'blur(2px)',
+            }}
+            onClick={() => setShowResumeModal(false)}
+          />
+          {/* Modal */}
+          <div
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 101,
+              width: '90vw',
+              maxWidth: '28rem',
+              borderRadius: '0.75rem',
+              border: '1px solid var(--border)',
+              padding: '1.75rem',
+              boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
+              backgroundColor: 'var(--background)',
+              color: 'var(--foreground)',
+            }}
+          >
+            {/* Close button */}
+            <button
+              type="button"
+              onClick={() => setShowResumeModal(false)}
+              style={{
+                position: 'absolute',
+                top: '1rem',
+                right: '1rem',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: 'var(--muted-foreground)',
+                padding: '0.25rem',
+              }}
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Title */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
               <Lock className="w-5 h-5 text-primary" />
-              Resume Access
-            </DialogTitle>
-          </DialogHeader>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 600 }}>Exclusive Resume Access</h3>
+            </div>
 
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            If you'd like a copy of my resume, feel free to contact me on{" "}
-            <a
-              href="https://www.linkedin.com/messaging/compose/?recipient=bernardino-lintang&subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary underline underline-offset-2 hover:text-primary/80"
-            >
-              LinkedIn
-            </a>
-            {" "}or email me at{" "}
-            <a
-              href="mailto:lintangbernardino@gmail.com?subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
-              className="text-primary underline underline-offset-2 hover:text-primary/80"
-            >
-              lintangbernardino@gmail.com
-            </a>.
-          </p>
+            {/* Description */}
+            <p style={{ fontSize: '0.875rem', lineHeight: 1.6, color: 'var(--muted-foreground)', marginBottom: '1.25rem' }}>
+              Email me or message me on LinkedIn to request my resume — exclusive access.
+            </p>
 
-          {/* Contact buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 mt-2">
-            <Button className="flex-1" asChild>
-              <a
-                href="mailto:lintangbernardino@gmail.com?subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
-              >
-                <Mail className="w-4 h-4 mr-2" />
-                Email Me
-              </a>
-            </Button>
-            <Button variant="outline" className="flex-1" asChild>
-              <a
-                href="https://www.linkedin.com/messaging/compose/?recipient=bernardino-lintang&subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Linkedin className="w-4 h-4 mr-2" />
-                Message on LinkedIn
-              </a>
-            </Button>
+            {/* CTA buttons */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <Button className="cursor-pointer" asChild>
+                <a
+                  href="mailto:lintangbernardino@gmail.com?subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
+                  className="cursor-pointer"
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  Email Me
+                </a>
+              </Button>
+              <Button variant="outline" className="cursor-pointer" asChild>
+                <a
+                  href="https://www.linkedin.com/messaging/compose/?recipient=bernardino-lintang&subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cursor-pointer"
+                >
+                  <Linkedin className="w-4 h-4 mr-2" />
+                  Message on LinkedIn
+                </a>
+              </Button>
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </>
+      )}
     </div>
   );
 }
