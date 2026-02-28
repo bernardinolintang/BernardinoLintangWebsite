@@ -115,7 +115,8 @@ export function Portfolio() {
       date: "Nov 2025",
       description: `Problem: Predict medical insurance costs accurately while understanding feature impact and ensuring fairness across demographic subgroups.\n\nApproach: Engineered interaction features (smoker × BMI, smoker × age), benchmarked Ridge/Lasso/Elastic Net/Random Forest/XGBoost via cross-validation and grid search. Used AIC and SHAP for interpretability; ran Equalized Odds fairness analysis across sex, region, and smoker groups.\n\nResult: R² > 0.85. Top 3 Finalist out of 40 teams. Identified smoking status and BMI as dominant cost predictors with stable residuals and interpretable SHAP patterns.`,
       technologies: ["Python", "scikit-learn", "XGBoost", "SHAP", "Random Forest", "Ridge Regression", "Lasso", "Elastic Net", "Fairness Analysis", "Machine Learning"],
-      image: "/nus-hackathon-2025.jpg"
+      image: "/nus-hackathon-2025.jpg",
+      imagePosition: "50% 28%"
     },
     
     {
@@ -163,7 +164,8 @@ export function Portfolio() {
       date: "Aug 2024 - Nov 2024",
       description: `Built and benchmarked Logistic Regression, Naive Bayes, Random Forest, and CNN classifiers for DNA-binding protein prediction. Engineered features from k-mer frequencies, amino acid composition, and sequence embeddings. Addressed class imbalance with weighted loss functions and hyperparameter tuning. The CNN model outperformed all baselines on sequence-based feature capture — demonstrating production-viable accuracy for biological data classification pipelines.`,
       technologies: ["Python", "scikit-learn", "TensorFlow", "CNN", "Bioinformatics"],
-      image: "/it1244.png"
+      image: "/it1244.png",
+      imagePosition: "50% 30%"
     },
     {
       title: "DSA3101: Question Bank System",
@@ -171,6 +173,7 @@ export function Portfolio() {
       description: `Built a Question Bank System for ST1131 using Flask (Python) for the backend and Streamlit for the frontend, with a PostgreSQL database for storing and managing questions. The system supports efficient question search, filtering, and assembly creation based on difficulty and course type.\n\nI implemented a modular architecture for question ingestion, using libraries like pdfplumber and python-docx for parsing uploaded files. Additionally, I created a version tracking system for questions and integrated AI-assisted question recommendations to suggest the most relevant questions based on past usage.\n\nKey Contributions:\n• Built a Flask REST API to handle question ingestion, search, and assembly creation.\n• Integrated Streamlit frontend for intuitive question assembly and export.\n• Implemented PostgreSQL database with support for full-text search and question metadata tracking.\n• Developed version control for questions, enabling instructors to track changes over time.\n• Applied AI-assisted recommendations to suggest relevant questions based on historical data.`,
       technologies: ["Python", "Flask", "PostgreSQL", "Streamlit", "pdfplumber", "python-docx", "AI Recommendations", "Version Control"],
       image: "/dsa3101-group.png",
+      imagePosition: "50% 35%"
     },
     {
       title: "Analyzing Emotional Characteristics of Taylor Swift’s Albums and Their Impact on Reception",
@@ -178,6 +181,7 @@ export function Portfolio() {
       description: `Analysed Taylor Swift’s full discography using R to quantify how emotional attributes (valence, key, mode) correlate with critical and fan reception. Built reproducible EDA pipelines on Metacritic scores and audio features, identifying statistically significant patterns between musical positivity and album performance. Delivered clear data-driven storytelling with publication-ready visualisations.`,
       technologies: ["R", "Data Science", "Music Analysis", "Metacritic API"],
       image: "/dsa2101.png",
+      imagePosition: "50% 13%"
     },
   ];
 
@@ -804,11 +808,12 @@ see the business value of his work.
                 return (
                 <Reveal key={competition.title} delay={0.04 * index}>
                   <Card className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? '' : 'h-[480px]'}`}>
-                    <div className="aspect-video bg-muted flex-shrink-0">
+                    <div className="bg-muted flex-shrink-0" style={{ height: '160px' }}>
                       <ImageWithFallback
                         src={competition.image}
                         alt={competition.title}
                         className="w-full h-full object-cover"
+                        style={{ objectPosition: (competition as any).imagePosition || 'center' }}
                       />
                     </div>
                     <CardHeader className={`pb-2 ${isExpanded ? '' : 'flex-1 overflow-hidden'}`}>
@@ -901,11 +906,12 @@ see the business value of his work.
                 return (
                 <Reveal key={project.title} delay={0.04 * index}>
           <Card className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? '' : 'h-[450px]'}`}>
-            <div className="aspect-video bg-muted flex-shrink-0">
+            <div className="bg-muted flex-shrink-0" style={{ height: '160px' }}>
               <ImageWithFallback
                 src={project.image}
                 alt={project.title}
                 className="w-full h-full object-cover"
+                style={{ objectPosition: (project as any).imagePosition || 'center' }}
               />
             </div>
             <CardHeader className={`pb-2 ${isExpanded ? '' : 'flex-1 overflow-hidden'}`}>
