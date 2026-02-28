@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+
+const TEXT_CLAMP_LINES = 10;
+const CARD_COLLAPSED_HEIGHT = 380;
+const SHOW_MORE_CHAR_THRESHOLD = 700;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -28,6 +32,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [expandedSlides, setExpandedSlides] = useState<Record<number, boolean>>({});
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Navigation callbacks
@@ -85,7 +90,8 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="text-3xl font-semibold text-center text-foreground mb-14 tracking-tight"
+          className="text-3xl font-semibold text-center text-foreground tracking-tight"
+          style={{ marginBottom: '3rem' }}
         >
           Testimonials
         </motion.h2>
@@ -121,18 +127,19 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
 
             {/* EMBLA VIEWPORT — only clipping happens here */}
             <div ref={emblaRef} className="overflow-hidden">
-              <div className="flex gap-4 md:gap-5">
+              <div style={{ display: 'flex', gap: '1.25rem' }}>
                 {testimonials.map((testimonial, index) => {
                   const isActive = selectedIndex === index;
+                  const isExpanded = expandedSlides[index] ?? false;
+                  const isLongText = testimonial.text.trim().length > SHOW_MORE_CHAR_THRESHOLD;
                   return (
                     <div
                       key={testimonial.name}
-                      className="flex-[0_0_92%] sm:flex-[0_0_84%] md:flex-[0_0_68%] min-w-0"
+                      style={{ flex: '0 0 540px', maxWidth: '88vw', minWidth: 0 }}
                     >
                       <motion.div
                         animate={{
-                          scale:   isActive ? 1    : 0.95,
-                          opacity: isActive ? 1    : 0.45,
+                          opacity: isActive ? 1 : 0.4,
                         }}
                         transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
                         onClick={() => !isActive && scrollTo(index)}
@@ -141,8 +148,12 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                         aria-label={isActive ? undefined : `Go to ${testimonial.name} testimonial`}
                         onKeyDown={(e) => { if (!isActive && e.key === "Enter") scrollTo(index); }}
                         className="relative rounded-2xl border border-zinc-800 bg-zinc-900 shadow-xl overflow-hidden cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-shadow duration-300 hover:shadow-2xl"
+                        style={{
+                          height: isExpanded ? 'auto' : `${CARD_COLLAPSED_HEIGHT}px`,
+                          minHeight: `${CARD_COLLAPSED_HEIGHT}px`,
+                          transition: 'height 300ms ease',
+                        }}
                       >
-                        {/* Active glow */}
                         <AnimatePresence>
                           {isActive && (
                             <motion.div
@@ -162,36 +173,35 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                           aria-hidden
                         />
 
-                        <div className="relative z-10 p-5 sm:p-8 md:p-10 flex flex-col items-center text-center">
+                        <div style={{ position: 'relative', zIndex: 10, padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
 
-                          {/* ── FIXED IMAGE CONTAINER — always h-28 on md+, smaller on mobile */}
-                          <div className="h-20 sm:h-28 w-full flex items-center justify-center mb-4 sm:mb-7 flex-shrink-0">
-                            <div className="h-20 w-20 sm:h-28 sm:w-28 rounded-2xl overflow-hidden border border-zinc-700/80 bg-white flex items-center justify-center p-2 sm:p-2.5 shadow-sm">
+                          {/* Header: logo + name/date in a row */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', marginBottom: '1rem', flexShrink: 0 }}>
+                            <div style={{ width: '2.75rem', height: '2.75rem', borderRadius: '0.625rem', overflow: 'hidden', border: '1px solid rgba(63,63,70,0.8)', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.2rem', flexShrink: 0 }}>
                               <ImageWithFallback
                                 src={testimonial.image}
                                 alt={`${testimonial.name} logo`}
                                 className="max-h-full max-w-full object-contain"
                               />
                             </div>
+                            <div style={{ minWidth: 0 }}>
+                              <h3 style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#fff', lineHeight: 1.3, marginBottom: '0.125rem' }}>
+                                {testimonial.name}
+                              </h3>
+                              <p style={{ fontSize: '0.8125rem', color: 'rgb(113,113,122)' }}>
+                                {testimonial.title} · {testimonial.date}
+                              </p>
+                            </div>
                           </div>
-
-                          {/* ── Name */}
-                          <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white leading-snug mb-1.5">
-                            {testimonial.name}
-                          </h3>
-
-                          {/* ── Date */}
-                          <p className="text-xs sm:text-sm text-zinc-500 mb-4 sm:mb-6">{testimonial.date}</p>
 
                           {/* Divider */}
                           <div
-                            className="w-10 h-px mb-4 sm:mb-6 flex-shrink-0"
-                            style={{ background: "linear-gradient(to right, transparent, rgba(113,113,122,0.6), transparent)" }}
+                            style={{ width: '100%', height: '1px', marginBottom: '0.875rem', flexShrink: 0, background: 'linear-gradient(to right, transparent, rgba(113,113,122,0.3), transparent)' }}
                             aria-hidden
                           />
 
-                          {/* ── FIXED TEXT AREA — min-h prevents arrow drift between slides */}
-                          <div className="min-h-[140px] sm:min-h-[180px] flex items-start justify-center w-full">
+                          {/* Testimonial text */}
+                          <div style={{ flex: 1, overflow: 'hidden', minHeight: 0 }}>
                             <AnimatePresence mode="wait">
                               {isActive && (
                                 <motion.p
@@ -200,7 +210,17 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                                   animate={{ opacity: 1, y: 0 }}
                                   exit={{ opacity: 0, y: -6 }}
                                   transition={{ duration: 0.38, delay: 0.08, ease: "easeOut" }}
-                                  className="text-sm sm:text-[0.9375rem] leading-relaxed sm:leading-[1.85] text-zinc-300 max-w-prose"
+                                  style={{
+                                    fontSize: '0.8625rem',
+                                    lineHeight: 1.8,
+                                    color: 'rgb(212,212,216)',
+                                    ...(!isExpanded ? {
+                                      display: '-webkit-box',
+                                      WebkitLineClamp: TEXT_CLAMP_LINES,
+                                      WebkitBoxOrient: 'vertical' as const,
+                                      overflow: 'hidden',
+                                    } : {}),
+                                  }}
                                 >
                                   {testimonial.text.trim()}
                                 </motion.p>
@@ -208,13 +228,58 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                             </AnimatePresence>
                             {!isActive && (
                               <p
-                                className="text-sm sm:text-[0.9375rem] leading-relaxed sm:leading-[1.85] text-zinc-300 max-w-prose opacity-0 select-none pointer-events-none"
+                                style={{
+                                  fontSize: '0.8625rem',
+                                  lineHeight: 1.8,
+                                  color: 'rgb(212,212,216)',
+                                  opacity: 0,
+                                  userSelect: 'none',
+                                  pointerEvents: 'none',
+                                  display: '-webkit-box',
+                                  WebkitLineClamp: TEXT_CLAMP_LINES,
+                                  WebkitBoxOrient: 'vertical' as const,
+                                  overflow: 'hidden',
+                                }}
                                 aria-hidden
                               >
                                 {testimonial.text.trim()}
                               </p>
                             )}
                           </div>
+
+                          {/* Show more / less button */}
+                          {isActive && isLongText && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setExpandedSlides(prev => ({ ...prev, [index]: !isExpanded }));
+                              }}
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.25rem',
+                                marginTop: '0.75rem',
+                                padding: 0,
+                                border: 'none',
+                                background: 'none',
+                                color: 'rgb(161,161,170)',
+                                fontSize: '0.8125rem',
+                                fontWeight: 500,
+                                cursor: 'pointer',
+                                flexShrink: 0,
+                                transition: 'color 150ms',
+                              }}
+                              onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                              onMouseLeave={e => (e.currentTarget.style.color = 'rgb(161,161,170)')}
+                            >
+                              {isExpanded ? (
+                                <>Show less <ChevronUp style={{ width: '0.875rem', height: '0.875rem' }} /></>
+                              ) : (
+                                <>Show more <ChevronDown style={{ width: '0.875rem', height: '0.875rem' }} /></>
+                              )}
+                            </button>
+                          )}
 
                         </div>
                       </motion.div>

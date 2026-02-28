@@ -903,13 +903,15 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                   return <p key={idx} className={idx > 0 ? 'mt-3' : ''}>{paragraph}</p>;
                 })}
               </div>
-              <button
-                type="button"
-                className="text-xs text-primary hover:underline mt-2 self-start cursor-pointer"
-                onClick={() => setExpandedProjects(prev => ({ ...prev, [index]: !isExpanded }))}
-              >
-                {isExpanded ? 'Show less' : 'Show more...'}
-              </button>
+              {project.description.length > 400 && (
+                <button
+                  type="button"
+                  className="text-xs text-primary hover:underline mt-2 self-start cursor-pointer"
+                  onClick={() => setExpandedProjects(prev => ({ ...prev, [index]: !isExpanded }))}
+                >
+                  {isExpanded ? 'Show less' : 'Show more...'}
+                </button>
+              )}
               {/* GitHub links */}
               {project.title.includes("DNA-Binding Protein") && (
                 <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs">

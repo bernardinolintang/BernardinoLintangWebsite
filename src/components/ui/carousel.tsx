@@ -108,7 +108,7 @@ function Carousel({
     
     const updateScrollSnaps = () => {
       setScrollSnaps(api.scrollSnapList());
-      onSelect(api);
+    onSelect(api);
     };
     
     updateScrollSnaps();
