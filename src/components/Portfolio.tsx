@@ -352,6 +352,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [expandedCompetitions, setExpandedCompetitions] = useState<Record<number, boolean>>({});
+  const [expandedProjects, setExpandedProjects] = useState<Record<number, boolean>>({});
 
   // Date filter state
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -447,11 +448,11 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
     <div className="min-h-[60vh] pt-16 bg-gradient-to-b from-slate-900 to-background">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b">
-        <div className="container mx-auto px-4 py-4 lg:py-5">
-          <div className="flex items-center justify-center flex-nowrap gap-6">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between flex-nowrap gap-4">
             <a
               href="#top"
-              className="text-lg sm:text-xl font-bold focus:outline-none focus:ring-2 focus:ring-primary flex-shrink-0"
+              className="text-lg font-bold focus:outline-none focus:ring-2 focus:ring-primary flex-shrink-0"
               onClick={e => {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: "smooth" });
@@ -459,8 +460,9 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
             >
               Bernardino Lintang
             </a>
-            {/* Desktop Nav — hidden below md */}
-            <div className="hidden md:flex items-center gap-4 xl:gap-6 flex-nowrap">
+
+            {/* Desktop Nav — hidden below lg (1024px) */}
+            <div className="hidden lg:flex items-center gap-4 xl:gap-6 flex-nowrap">
               {NAV_LINKS.map(link => (
                 <a key={`${link.href}-${link.label}`} href={link.href} className="nav-link whitespace-nowrap text-sm">
                   {link.label}
@@ -480,9 +482,77 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                 <span className="sr-only">Toggle theme</span>
               </Button>
             </div>
+
+            {/* Hamburger — visible below lg */}
+            <div className="flex lg:hidden items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleTheme}
+                className="hover:bg-accent flex-shrink-0"
+              >
+                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setMobileMenuOpen(prev => !prev)}
+                className="hover:bg-accent flex-shrink-0"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
+
+      {/* Mobile drawer overlay */}
+      {mobileMenuOpen && (
+        <div
+          style={{ position: 'fixed', inset: 0, zIndex: 40, background: 'rgba(0,0,0,0.4)' }}
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile drawer */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          width: '280px',
+          maxWidth: '80vw',
+          zIndex: 45,
+          transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 250ms ease-in-out',
+        }}
+        className="bg-background border-r"
+      >
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border)' }}>
+          <span style={{ fontWeight: 600, fontSize: '1.05rem' }}>Navigation</span>
+        </div>
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px', padding: '0.5rem' }}>
+          {NAV_LINKS.map(link => (
+            <a
+              key={`mobile-${link.href}-${link.label}`}
+              href={link.href}
+              className="text-sm hover:bg-accent transition-colors"
+              style={{
+                display: 'block',
+                padding: '0.625rem 1rem',
+                borderRadius: '0.5rem',
+                fontWeight: 500,
+              }}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </div>
 
       {/* Hero Section */}
       <Reveal>
@@ -797,26 +867,50 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
             <Reveal variant="text" delay={0.1}>
               <h2 className="text-3xl mb-8 text-center">Featured Projects</h2>
             </Reveal>
-            <div className="grid md:grid-cols-2 gap-6 justify-center">
+            <div className="grid md:grid-cols-2 gap-6 justify-center items-start">
               {/* Center the grid and its children */}
-              {projectsSafe.map((project, index) => (
+              {projectsSafe.map((project, index) => {
+                const isExpanded = expandedProjects[index] ?? false;
+                return (
                 <Reveal key={project.title} delay={0.04 * index}>
-          <Card className="overflow-hidden">
-            <div className="aspect-video bg-muted">
+          <Card className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? '' : 'h-[520px]'}`}>
+            <div className="aspect-video bg-muted flex-shrink-0">
               <ImageWithFallback
                 src={project.image}
                 alt={project.title}
                 className="w-full h-full object-cover"
               />
             </div>
-            <CardHeader>
+            <CardHeader className={`pb-2 ${isExpanded ? '' : 'flex-1 overflow-hidden'}`}>
               <CardTitle className="flex items-center gap-2 whitespace-pre-line leading-snug">
-                <Code className="w-5 h-5" />
+                <Code className="w-5 h-5 flex-shrink-0" />
                 {project.title}
               </CardTitle>
               <div className="text-sm text-muted-foreground mb-2">{project.date}</div>
-              <CardDescription>{project.description}</CardDescription>
-              {/* Add GitHub link for IT1244 and Taylor Swift projects */}
+              <div
+                className="text-sm text-muted-foreground overflow-hidden"
+                style={isExpanded ? {} : { display: '-webkit-box', WebkitLineClamp: 6, WebkitBoxOrient: 'vertical' as const }}
+              >
+                {project.description.split('\n\n').map((paragraph, idx) => {
+                  const boldMatch = paragraph.match(/^(Problem|Approach|Result):(.*)/);
+                  if (boldMatch) {
+                    return (
+                      <p key={idx} className={idx > 0 ? 'mt-3' : ''}>
+                        <span className="font-bold text-foreground">{boldMatch[1]}:</span>{boldMatch[2]}
+                      </p>
+                    );
+                  }
+                  return <p key={idx} className={idx > 0 ? 'mt-3' : ''}>{paragraph}</p>;
+                })}
+              </div>
+              <button
+                type="button"
+                className="text-xs text-primary hover:underline mt-2 self-start cursor-pointer"
+                onClick={() => setExpandedProjects(prev => ({ ...prev, [index]: !isExpanded }))}
+              >
+                {isExpanded ? 'Show less' : 'Show more...'}
+              </button>
+              {/* GitHub links */}
               {project.title.includes("DNA-Binding Protein") && (
                 <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs">
                   <a
@@ -829,7 +923,6 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                   </a>
                 </Button>
               )}
-
               {project.title.includes("Taylor Swift") && (
                 <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs">
                   <a
@@ -843,7 +936,7 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
                 </Button>
               )}
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-shrink-0 pt-0">
               <div className="flex flex-wrap gap-2 mb-4">
                 {A(project.technologies).map((tech) => (
                   <Badge key={tech} variant="secondary">{tech}</Badge>
@@ -852,7 +945,8 @@ Overall, he was a thoughtful, serious contributor who took ownership and pushed 
             </CardContent>
           </Card>
                 </Reveal>
-              ))}
+                );
+              })}
             </div>
             <div className="text-center mt-8">
               <Reveal>
