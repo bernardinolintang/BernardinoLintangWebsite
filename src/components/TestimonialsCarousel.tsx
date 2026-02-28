@@ -75,13 +75,13 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
     <section
       id="testimonials"
       aria-label="Testimonials"
-      className="relative py-24 overflow-hidden bg-zinc-950"
+      className="relative py-24 overflow-hidden bg-background"
     >
       {/* ── Background ───────────────────────────────────────────────────── */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(120,119,198,0.07),transparent)]" />
       </div>
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-zinc-700/40 to-transparent" aria-hidden />
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: '1px', background: 'linear-gradient(to right, transparent, var(--border), transparent)' }} aria-hidden />
 
       <div className="relative mx-auto max-w-6xl px-4">
         {/* ── Heading ───────────────────────────────────────────────────── */}
@@ -90,8 +90,8 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="text-3xl font-semibold text-center text-foreground tracking-tight"
-          style={{ marginBottom: '3rem' }}
+          className="text-3xl font-semibold text-center tracking-tight"
+          style={{ marginBottom: '3rem', color: 'var(--foreground)' }}
         >
           Testimonials
         </motion.h2>
@@ -116,12 +116,12 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
             {/* Edge fade masks — relative to overflow viewport */}
             <div
               className="absolute left-0 top-0 bottom-0 w-12 md:w-20 z-10 pointer-events-none"
-              style={{ background: "linear-gradient(to right, rgb(9 9 11), transparent)" }}
+              style={{ background: "linear-gradient(to right, var(--background), transparent)" }}
               aria-hidden
             />
             <div
               className="absolute right-0 top-0 bottom-0 w-12 md:w-20 z-10 pointer-events-none"
-              style={{ background: "linear-gradient(to left, rgb(9 9 11), transparent)" }}
+              style={{ background: "linear-gradient(to left, var(--background), transparent)" }}
               aria-hidden
             />
 
@@ -147,7 +147,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                         role="button"
                         aria-label={isActive ? undefined : `Go to ${testimonial.name} testimonial`}
                         onKeyDown={(e) => { if (!isActive && e.key === "Enter") scrollTo(index); }}
-                        className="relative rounded-2xl border border-zinc-800 bg-zinc-900 shadow-xl overflow-hidden cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-shadow duration-300 hover:shadow-2xl"
+                        className="relative rounded-2xl border bg-card shadow-xl overflow-hidden cursor-pointer outline-none transition-shadow duration-300 hover:shadow-2xl"
                         style={{
                           height: isExpanded ? 'auto' : `${CARD_COLLAPSED_HEIGHT}px`,
                           minHeight: `${CARD_COLLAPSED_HEIGHT}px`,
@@ -169,7 +169,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                           )}
                         </AnimatePresence>
                         <div
-                          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-zinc-600/40 to-transparent pointer-events-none"
+                          style={{ position: 'absolute', left: 0, right: 0, top: 0, height: '1px', background: 'linear-gradient(to right, transparent, var(--border), transparent)', pointerEvents: 'none' }}
                           aria-hidden
                         />
 
@@ -185,10 +185,10 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                               />
                             </div>
                             <div style={{ minWidth: 0 }}>
-                              <h3 style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#fff', lineHeight: 1.3, marginBottom: '0.125rem' }}>
+                              <h3 style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--foreground)', lineHeight: 1.3, marginBottom: '0.125rem' }}>
                                 {testimonial.name}
                               </h3>
-                              <p style={{ fontSize: '0.8125rem', color: 'rgb(113,113,122)' }}>
+                              <p style={{ fontSize: '0.8125rem', color: 'var(--muted-foreground)' }}>
                                 {testimonial.title} · {testimonial.date}
                               </p>
                             </div>
@@ -213,7 +213,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                                   style={{
                                     fontSize: '0.8625rem',
                                     lineHeight: 1.8,
-                                    color: 'rgb(212,212,216)',
+                                    color: 'var(--muted-foreground)',
                                     ...(!isExpanded ? {
                                       display: '-webkit-box',
                                       WebkitLineClamp: TEXT_CLAMP_LINES,
@@ -231,7 +231,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                                 style={{
                                   fontSize: '0.8625rem',
                                   lineHeight: 1.8,
-                                  color: 'rgb(212,212,216)',
+                                  color: 'var(--muted-foreground)',
                                   opacity: 0,
                                   userSelect: 'none',
                                   pointerEvents: 'none',
@@ -263,15 +263,15 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
                                 padding: 0,
                                 border: 'none',
                                 background: 'none',
-                                color: 'rgb(161,161,170)',
+                                color: 'var(--muted-foreground)',
                                 fontSize: '0.8125rem',
                                 fontWeight: 500,
                                 cursor: 'pointer',
                                 flexShrink: 0,
                                 transition: 'color 150ms',
                               }}
-                              onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                              onMouseLeave={e => (e.currentTarget.style.color = 'rgb(161,161,170)')}
+                              onMouseEnter={e => (e.currentTarget.style.color = 'var(--foreground)')}
+                              onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted-foreground)')}
                             >
                               {isExpanded ? (
                                 <>Show less <ChevronUp style={{ width: '0.875rem', height: '0.875rem' }} /></>
@@ -296,14 +296,14 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
           <button
             onClick={scrollPrev}
             aria-label="Previous testimonial"
-            className="z-20 flex w-10 h-10 rounded-full items-center justify-center bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700 hover:border-zinc-500 shadow-lg backdrop-blur-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+            className="z-20 flex w-10 h-10 rounded-full items-center justify-center border bg-card text-muted-foreground hover:text-foreground transition-all duration-200"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={scrollNext}
             aria-label="Next testimonial"
-            className="z-20 flex w-10 h-10 rounded-full items-center justify-center bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-700 hover:border-zinc-500 shadow-lg backdrop-blur-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+            className="z-20 flex w-10 h-10 rounded-full items-center justify-center border bg-card text-muted-foreground hover:text-foreground transition-all duration-200"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -321,17 +321,17 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
               onClick={() => scrollTo(index)}
               aria-label={`Go to testimonial ${index + 1}`}
               aria-current={selectedIndex === index ? "true" : undefined}
-              className={`rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 ${
-                selectedIndex === index
-                  ? "w-5 h-1.5 bg-white"
-                  : "w-1.5 h-1.5 bg-zinc-600 hover:bg-zinc-400"
-              }`}
+              className="rounded-full transition-all duration-300"
+              style={selectedIndex === index
+                ? { width: '1.25rem', height: '0.375rem', backgroundColor: 'var(--foreground)' }
+                : { width: '0.375rem', height: '0.375rem', backgroundColor: 'var(--muted-foreground)' }
+              }
             />
           ))}
         </div>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-zinc-700/40 to-transparent" aria-hidden />
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '1px', background: 'linear-gradient(to right, transparent, var(--border), transparent)' }} aria-hidden />
     </section>
   );
 }
