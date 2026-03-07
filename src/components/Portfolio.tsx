@@ -25,7 +25,8 @@ import {
   FolderKanban,
   Sparkles,
   Lock,
-  Menu
+  Menu,
+  PlayCircle
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -153,6 +154,15 @@ export function Portfolio() {
 
   const projects = [
     {
+      title: "CoverCraft - AI Cover Letter Generator",
+      date: "Mar 2026",
+      description: "AI-powered tool that generates personalised cover letters in seconds. Upload your resume to auto-fill your profile, paste a job description, and the AI agent generates a tailored cover letter instantly.",
+      technologies: ["AI", "LLM", "Groq", "TypeScript", "Vercel", "AI Agent"],
+      video: "/Cover Letter Maker AI Agent Demo Video.mp4",
+      liveDemo: "https://cover-letter-maker-one.vercel.app/",
+      github: "https://github.com/bernardinolintang/Cover-Letter-Maker",
+    },
+    {
       title: "IS460 Machine Learning Project: Hybrid CNN + RAG Framework for Dermatology Decision Support",
       date: "Aug 2024 - Nov 2024",
       description: `Built a Hybrid Retrieval-Augmented Generation (RAG) framework integrating Convolutional Neural Networks (CNN) for skin disease diagnosis. The model leverages image classification for visual analysis and retrieval-augmented generation for detailed medical advice based on dermatology research documents. Tackled class imbalance using regularization and applied pre-trained ResNet-50 and EfficientNetV2 models for faster and more accurate predictions. Integrated an advanced embedding model to capture complex dermatology-specific features.\n\nKey Achievements:\n• CNN + RAG framework outperformed baseline models in accuracy.\n• Implemented Agentic Chunking for dynamic information retrieval.\n• Real-time decision support with disease-specific recommendations.`,
@@ -165,7 +175,8 @@ export function Portfolio() {
       description: `Built and benchmarked Logistic Regression, Naive Bayes, Random Forest, and CNN classifiers for DNA-binding protein prediction. Engineered features from k-mer frequencies, amino acid composition, and sequence embeddings. Addressed class imbalance with weighted loss functions and hyperparameter tuning. The CNN model outperformed all baselines on sequence-based feature capture — demonstrating production-viable accuracy for biological data classification pipelines.`,
       technologies: ["Python", "scikit-learn", "TensorFlow", "CNN", "Bioinformatics"],
       image: "/it1244.png",
-      imagePosition: "50% 30%"
+      imagePosition: "50% 30%",
+      github: "https://github.com/bernardinolintang/IT1244-Project-DNA-Binding-Protein"
     },
     {
       title: "DSA3101: Question Bank System",
@@ -181,7 +192,8 @@ export function Portfolio() {
       description: `Analysed Taylor Swift’s full discography using R to quantify how emotional attributes (valence, key, mode) correlate with critical and fan reception. Built reproducible EDA pipelines on Metacritic scores and audio features, identifying statistically significant patterns between musical positivity and album performance. Delivered clear data-driven storytelling with publication-ready visualisations.`,
       technologies: ["R", "Data Science", "Music Analysis", "Metacritic API"],
       image: "/dsa2101.png",
-      imagePosition: "50% 13%"
+      imagePosition: "50% 13%",
+      github: "https://github.com/bernardinolintang/DSA2101-Taylor-Swift-Music-Analysis"
     },
   ];
 
@@ -341,13 +353,18 @@ see the business value of his work.
   const [expandedCompetitions, setExpandedCompetitions] = useState<Record<number, boolean>>({});
   const [expandedCompTags, setExpandedCompTags] = useState<Record<number, boolean>>({});
   const [expandedProjects, setExpandedProjects] = useState<Record<number, boolean>>({});
+  const [activeProjectVideo, setActiveProjectVideo] = useState<{ src: string; title: string } | null>(null);
 
   useEffect(() => {
-    if (!showResumeModal) return;
-    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowResumeModal(false); };
+    if (!showResumeModal && !activeProjectVideo) return;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      setShowResumeModal(false);
+      setActiveProjectVideo(null);
+    };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
-  }, [showResumeModal]);
+  }, [showResumeModal, activeProjectVideo]);
 
   // Date filter state
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -657,7 +674,7 @@ see the business value of his work.
                     AI Engineer & Systems Builder
                   </h3>
                   <p className="text-base leading-relaxed text-muted-foreground">
-                    I build production AI systems — from LLM-powered ingestion pipelines that replace manual workflows, to RAG architectures serving policy-aligned responses at scale. My work sits at the intersection of applied ML, data engineering, and GenAI product development.
+                    I build production AI systems; from LLM-powered ingestion pipelines that replace manual workflows, to RAG architectures serving policy-aligned responses at scale. My work sits at the intersection of applied ML, data engineering, and GenAI product development.
                   </p>
                 </div>
                 <p className="text-base leading-relaxed text-muted-foreground">
@@ -907,12 +924,35 @@ see the business value of his work.
                 <Reveal key={project.title} delay={0.04 * index}>
           <Card className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? '' : 'h-[450px]'}`}>
             <div className="bg-muted flex-shrink-0" style={{ height: '160px' }}>
-              <ImageWithFallback
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover"
-                style={{ objectPosition: (project as any).imagePosition || 'center' }}
-              />
+              {(project as any).video ? (
+                <button
+                  type="button"
+                  onClick={() => setActiveProjectVideo({ src: (project as any).video, title: project.title })}
+                  className="w-full h-full relative group cursor-pointer"
+                  aria-label={`Play demo video for ${project.title}`}
+                >
+                  <video
+                    src={(project as any).video}
+                    className="w-full h-full object-cover"
+                    muted
+                    playsInline
+                    preload="metadata"
+                  />
+                  <div className="absolute inset-0 bg-black/35 group-hover:bg-black/45 transition-colors flex items-center justify-center">
+                    <div className="flex items-center gap-2 text-white font-medium">
+                      <PlayCircle className="w-6 h-6" />
+                      <span>Watch Demo</span>
+                    </div>
+                  </div>
+                </button>
+              ) : (
+                <ImageWithFallback
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition: (project as any).imagePosition || 'center' }}
+                />
+              )}
             </div>
             <CardHeader className={`pb-2 ${isExpanded ? '' : 'flex-1 overflow-hidden'}`}>
               <CardTitle className="flex items-center gap-2 whitespace-pre-line leading-snug">
@@ -945,31 +985,34 @@ see the business value of his work.
                   {isExpanded ? 'Show less' : 'Show more...'}
                 </button>
               )}
-              {/* GitHub links */}
-              {project.title.includes("DNA-Binding Protein") && (
-                <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs cursor-pointer">
-                  <a
-                    href="https://github.com/bernardinolintang/IT1244-Project-DNA-Binding-Protein"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-start w-full gap-2 py-2 px-3 cursor-pointer"
-                  >
-                    <span className="flex-1 text-left">GitHub Repo</span>
-                  </a>
-                </Button>
-              )}
-              {project.title.includes("Taylor Swift") && (
-                <Button size="sm" variant="outline" asChild className="inline-block mt-2 w-full max-w-xs cursor-pointer">
-                  <a
-                    href="https://github.com/bernardinolintang/DSA2101-Taylor-Swift-Music-Analysis"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-start w-full gap-2 py-2 px-3 cursor-pointer"
-                  >
-                    <span className="flex-1 text-left">GitHub Repo</span>
-                  </a>
-                </Button>
-              )}
+              <div className="flex flex-wrap gap-2 mt-2">
+                {(project as any).liveDemo && (
+                  <Button size="sm" variant="outline" asChild className="cursor-pointer">
+                    <a
+                      href={(project as any).liveDemo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 cursor-pointer"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Live Demo
+                    </a>
+                  </Button>
+                )}
+                {(project as any).github && (
+                  <Button size="sm" variant="outline" asChild className="cursor-pointer">
+                    <a
+                      href={(project as any).github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 cursor-pointer"
+                    >
+                      <Github className="w-4 h-4" />
+                      GitHub
+                    </a>
+                  </Button>
+                )}
+              </div>
             </CardHeader>
             <CardContent className="flex-shrink-0 pt-0">
               <div className="flex flex-wrap gap-2 mb-4">
@@ -1240,6 +1283,73 @@ see the business value of his work.
           </div>
         </div>
       </footer>
+
+      {/* Project Video Modal */}
+      {activeProjectVideo && (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 102,
+              backgroundColor: 'rgba(0,0,0,0.75)',
+              backdropFilter: 'blur(3px)',
+            }}
+            onClick={() => setActiveProjectVideo(null)}
+          />
+          <div
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 103,
+              width: '92vw',
+              maxWidth: '60rem',
+              borderRadius: '0.75rem',
+              border: '1px solid var(--border)',
+              padding: '1rem',
+              boxShadow: '0 25px 50px -12px rgba(0,0,0,0.35)',
+              backgroundColor: 'var(--background)',
+              color: 'var(--foreground)',
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setActiveProjectVideo(null)}
+              style={{
+                position: 'absolute',
+                top: '0.75rem',
+                right: '0.75rem',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: 'var(--muted-foreground)',
+                padding: '0.25rem',
+              }}
+              aria-label="Close video"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', paddingRight: '2rem' }}>
+              {activeProjectVideo.title}
+            </h3>
+            <video
+              src={activeProjectVideo.src}
+              controls
+              autoPlay
+              playsInline
+              style={{
+                width: '100%',
+                maxHeight: '75vh',
+                borderRadius: '0.5rem',
+                backgroundColor: '#000',
+              }}
+            />
+          </div>
+        </>
+      )}
 
       {/* Resume Access Modal — inline-styled because Dialog CSS classes are missing from compiled Tailwind */}
       {showResumeModal && (
