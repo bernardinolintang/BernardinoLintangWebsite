@@ -92,7 +92,7 @@ export function Portfolio() {
     {
   title: "NUS Datathon 2026 (Company Intelligence & AI Analytics), 1st Place Winner",
   date: "Feb 2026",
-  description: "Problem: Corporate benchmarking platforms rely on static industry codes and global averages, making it difficult to contextualize firm performance or detect early operational risk.\n\nApproach: Built an end-to-end company intelligence system using feature engineering and mixed-type clustering (K-Prototypes) to segment 8,559 companies across 3 countries. Engineered 20+ operational and IT-related features (e.g., revenue per employee, IT intensity, device density) and validated cluster quality using silhouette score, PCA visualization, and statistical profiling. Developed a constrained AI Analyst using Llama 3.3 70B (Groq) with structured retrieval-augmented prompting and strict guardrails to deliver grounded, non-hallucinatory explanations through a full-stack React + FastAPI dashboard.\n\nResult: 1st Place Winner. Delivered interpretable, data-grounded company benchmarking that transforms raw firmographic data into defensible strategic insights for decision-makers.",
+  description: "Problem: Corporate benchmarking platforms rely on static industry codes and global averages, making it difficult to contextualize firm performance or detect early operational risk.\n\nApproach: Built an end-to-end company intelligence system using feature engineering and mixed-type clustering (K-Prototypes) to segment 8,559 companies across 3 countries. Engineered 20+ operational and IT-related features (e.g., revenue per employee, IT intensity, device density) and validated cluster quality using silhouette score, PCA visualization, and statistical profiling. Developed a constrained AI Analyst using Llama 3.3 70B (Groq) with structured retrieval-augmented prompting and strict guardrails to deliver grounded, non-hallucinatory explanations through a full-stack React + FastAPI dashboard.\n\nResult: Top 1 Finalist out of 76 teams. Delivered interpretable, data-grounded company benchmarking that transforms raw firmographic data into defensible strategic insights for decision-makers.",
   technologies: [
     "Python",
     "Pandas",
@@ -112,6 +112,25 @@ export function Portfolio() {
   image: "/nus-datathon-2026.jpg"
     },
     {
+      title: "MeDo Vibe Coding Hackathon (BTO Lens),  Top 3 Finalists",
+      date: "Apr 2026",
+      description:
+        "Problem: BTO applicants make one of the largest financial decisions of their lives — $300,000–$600,000+ committed over 25 years — using static PDFs, flat floor plans, and forum threads. No tool lets them visualise what living in an unbuilt site will actually feel like: how sunlight hits each facade, how far amenities are, or which project genuinely fits their household's priorities.\n\nApproach: Built BTO Lens, an AI-powered decision-support platform for Singapore's BTO housing market. Engineered a procedural 3D building massing engine in Three.js that auto-generates block geometry from HDB storey count and site footprint — no manual modelling required. Implemented hour-by-hour sunlight and shadow simulation via SunCalc.js with real-time facade exposure analysis. Integrated a toggleable amenity layer system via OneMap API (MRT, schools, hawker centres, childcare, healthcare, parks). Built a rules-based liveability scoring engine (0–100) with four preset household profiles, dynamically re-weighted from natural language input parsed by Claude API. Added a two-project side-by-side comparison flow with AI-generated trade-off narrative. Architected as a client-heavy React SPA with lightweight backend, built end-to-end using MeDo's full-stack generation platform.\n\nResult: Top 3 Finalist out of 40 teams.. Delivered a transparent, explainable decision-support tool that transforms static BTO launch data into spatial, personalised, and human-readable insights — turning a $500,000 housing decision from guesswork into a grounded, interactive experience.",
+      technologies: [
+        "React",
+        "Three.js",
+        "SunCalc.js",
+        "OneMap API",
+        "Claude API",
+        "JavaScript",
+        "Tailwind CSS",
+        "MeDo",
+        "Node.js"
+      ],
+      image: "/MeDO%20Hackathon%20Group%20Photo.jpg",
+      liveDemo: "https://app-b1iajvpvw0zl.appmedo.com/"
+    },
+    {
       title: "SDS Hackathon 2025 (Medical Insurance Cost Prediction) - Top 3 Finalists",
       date: "Nov 2025",
       description: `Problem: Predict medical insurance costs accurately while understanding feature impact and ensuring fairness across demographic subgroups.\n\nApproach: Engineered interaction features (smoker × BMI, smoker × age), benchmarked Ridge/Lasso/Elastic Net/Random Forest/XGBoost via cross-validation and grid search. Used AIC and SHAP for interpretability; ran Equalized Odds fairness analysis across sex, region, and smoker groups.\n\nResult: R² > 0.85. Top 3 Finalist out of 40 teams. Identified smoking status and BMI as dominant cost predictors with stable residuals and interpretable SHAP patterns.`,
@@ -119,11 +138,10 @@ export function Portfolio() {
       image: "/nus-hackathon-2025.jpg",
       imagePosition: "50% 28%"
     },
-    
     {
       title: "NUS Datathon 2025 (Financial Advisory Matching, Category A), Top 5 Finalists",
       date: "Feb 2025",
-      description: "Problem: An insurance company's advisor-client matching was manual and suboptimal, leading to poor conversion and engagement.\n\nApproach: Built a hybrid recommendation model combining SVD-based Collaborative Filtering with Content-Based Filtering (cosine similarity), trained on historical policy success rates, client profiles, and advisor expertise.\n\nResult: Top 5 Finalist. Demonstrated measurable lift in match quality vs. baseline, improving personalization and projected policy conversion.",
+      description: "Problem: An insurance company's advisor-client matching was manual and suboptimal, leading to poor conversion and engagement.\n\nApproach: Built a hybrid recommendation model combining SVD-based Collaborative Filtering with Content-Based Filtering (cosine similarity), trained on historical policy success rates, client profiles, and advisor expertise.\n\nResult: Top 5 Finalist out of 40 teams. Demonstrated measurable lift in match quality vs. baseline, improving personalization and projected policy conversion.",
       technologies: ["Python", "Pandas", "scikit-learn", "SVD", "Collaborative Filtering", "Content-Based Filtering", "Cosine Similarity"],
       image: "/nus-datathon.jpg"
     },
@@ -823,17 +841,27 @@ see the business value of his work.
               {competitionsSafe.map((competition, index) => {
                 const isExpanded = expandedCompetitions[index] ?? false;
                 return (
-                <Reveal key={competition.title} delay={0.04 * index}>
-                  <Card className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? '' : 'h-[480px]'}`}>
+                <Reveal
+                  key={competition.title}
+                  delay={0.04 * index}
+                  className={
+                    index === 3
+                      ? "sm:col-span-2 sm:flex sm:justify-center lg:col-span-1 lg:block lg:col-start-2"
+                      : undefined
+                  }
+                >
+                  <Card
+                    className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? "" : "h-[480px]"}`}
+                  >
                     <div className="bg-muted flex-shrink-0" style={{ height: '160px' }}>
                       <ImageWithFallback
                         src={competition.image}
                         alt={competition.title}
                         className="w-full h-full object-cover"
-                        style={{ objectPosition: (competition as any).imagePosition || 'center' }}
+                        style={{ objectPosition: (competition as any).imagePosition || "center" }}
                       />
                     </div>
-                    <CardHeader className={`pb-2 ${isExpanded ? '' : 'flex-1 overflow-hidden'}`}>
+                    <CardHeader className={`pb-2 ${isExpanded ? "" : "flex-1 overflow-hidden"}`}>
                       <CardTitle className="flex items-center gap-2 whitespace-pre-line leading-snug">
                         <Trophy className="w-5 h-5 flex-shrink-0" />
                         {competition.title}
@@ -843,27 +871,50 @@ see the business value of his work.
                       )}
                       <div
                         className="text-sm text-muted-foreground overflow-hidden"
-                        style={isExpanded ? {} : { display: '-webkit-box', WebkitLineClamp: 5, WebkitBoxOrient: 'vertical' as const }}
+                        style={isExpanded ? {} : { display: "-webkit-box", WebkitLineClamp: 5, WebkitBoxOrient: "vertical" as const }}
                       >
-                        {competition.description.split('\n\n').map((paragraph, idx) => {
+                        {competition.description.split("\n\n").map((paragraph, idx) => {
                           const boldMatch = paragraph.match(/^(Problem|Approach|Result):(.*)/);
                           if (boldMatch) {
                             return (
-                              <p key={idx} className={idx > 0 ? 'mt-3' : ''}>
-                                <span className="font-bold text-foreground">{boldMatch[1]}:</span>{boldMatch[2]}
+                              <p key={idx} className={idx > 0 ? "mt-3" : ""}>
+                                <span className="font-bold text-foreground">{boldMatch[1]}:</span>
+                                {boldMatch[2]}
                               </p>
                             );
                           }
-                          return <p key={idx} className={idx > 0 ? 'mt-3' : ''}>{paragraph}</p>;
+                          return (
+                            <p key={idx} className={idx > 0 ? "mt-3" : ""}>
+                              {paragraph}
+                            </p>
+                          );
                         })}
                       </div>
                       <button
                         type="button"
                         className="text-xs text-primary hover:underline mt-2 self-start cursor-pointer"
-                        onClick={() => setExpandedCompetitions(prev => ({ ...prev, [index]: !isExpanded }))}
+                        onClick={() => setExpandedCompetitions((prev) => ({ ...prev, [index]: !isExpanded }))}
                       >
-                        {isExpanded ? 'Show less' : 'Show more...'}
+                        {isExpanded ? "Show less" : "Show more..."}
                       </button>
+                      {(competition as { liveDemo?: string }).liveDemo && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                          className="mt-3 h-9 w-fit cursor-pointer self-start rounded-xl border-white/30 bg-transparent px-4 font-semibold text-foreground shadow-none hover:bg-white/5"
+                        >
+                          <a
+                            href={(competition as { liveDemo: string }).liveDemo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            Live Demo
+                          </a>
+                        </Button>
+                      )}
                     </CardHeader>
                     <CardContent className="flex-shrink-0 pt-0">
                       <div className="flex flex-wrap gap-2 mb-4">
@@ -917,12 +968,13 @@ see the business value of his work.
               <h2 className="text-3xl mb-8 text-center">Featured Projects</h2>
             </Reveal>
             <div className="grid md:grid-cols-2 gap-6 justify-center items-start">
-              {/* Center the grid and its children */}
               {projectsSafe.map((project, index) => {
                 const isExpanded = expandedProjects[index] ?? false;
                 return (
                 <Reveal key={project.title} delay={0.04 * index}>
-          <Card className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? '' : 'h-[450px]'}`}>
+          <Card
+            className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? "" : "h-[450px]"}`}
+          >
             <div className="bg-muted flex-shrink-0" style={{ height: '160px' }}>
               {(project as any).video ? (
                 <button
@@ -954,7 +1006,7 @@ see the business value of his work.
                 />
               )}
             </div>
-            <CardHeader className={`pb-2 ${isExpanded ? '' : 'flex-1 overflow-hidden'}`}>
+            <CardHeader className={`pb-2 ${isExpanded ? "" : "flex-1 overflow-hidden"}`}>
               <CardTitle className="flex items-center gap-2 whitespace-pre-line leading-snug">
                 <Code className="w-5 h-5 flex-shrink-0" />
                 {project.title}
