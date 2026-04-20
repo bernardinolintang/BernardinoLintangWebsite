@@ -176,9 +176,20 @@ export function Portfolio() {
       date: "Mar 2026",
       description: "AI-powered tool that generates personalised cover letters in seconds. Upload your resume to auto-fill your profile, paste a job description, and the AI agent generates a tailored cover letter instantly.",
       technologies: ["AI", "LLM", "Groq", "TypeScript", "Vercel", "AI Agent"],
+      image: "/Cover Letter Maker Image.png",
       video: "/Cover Letter Maker AI Agent Demo Video.mp4",
       liveDemo: "https://cover-letter-maker-one.vercel.app/",
       github: "https://github.com/bernardinolintang/Cover-Letter-Maker",
+    },
+    {
+      title: "AF Tracker SG",
+      date: "Apr 2026",
+      description: "Built a full-stack gym visit tracker for all Anytime Fitness outlets in Singapore. Users can browse every AF location on an interactive Google Map, mark gyms as visited, and track progress across regions. Features real-time stats, regional breakdowns, and a shareable branded progress card. Deployed on Cloudflare Pages with Supabase for auth and data persistence.",
+      technologies: ["React", "TypeScript", "TanStack", "Supabase", "Google Maps", "Tailwind", "Cloudflare"],
+      image: "/AF Tracker Image.png",
+      imagePosition: "75% 40%",
+      liveDemo: "https://af-journey-map.vercel.app/",
+      github: "https://github.com/bernardinolintang/af-journey-map",
     },
     {
       title: "IS460 Machine Learning Project: Hybrid CNN + RAG Framework for Dermatology Decision Support",
@@ -976,7 +987,7 @@ see the business value of his work.
             className={`overflow-hidden flex flex-col transition-all duration-300 ${isExpanded ? "" : "h-[450px]"}`}
           >
             <div className="bg-muted flex-shrink-0" style={{ height: '160px' }}>
-              {(project as any).video ? (
+              {(project as any).video && !(project as any).image ? (
                 <button
                   type="button"
                   onClick={() => setActiveProjectVideo({ src: (project as any).video, title: project.title })}
