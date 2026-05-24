@@ -68,7 +68,7 @@ export function Portfolio() {
     {
       title: "AI Engineer Intern",
       company: "Crayon Data",
-      period: "Dec 2025 - Jan 2026",
+      period: "Dec 2025 – Jan 2026",
       location: "Chennai, India",
       description: `\u2022 Designed and shipped an LLM ingestion pipeline converting unstructured offer data into structured, production-ready datasets — reducing manual processing effort by 70%+.\n\u2022 Built validation and regeneration layers enforcing schema consistency, mandatory fields, and safe re-generation for business users.\n\u2022 Implemented deduplication, deterministic ID assignment, and referential integrity logic to support scalable ingestion across markets.`,
       technologies: ["Python", "LLM", "Agentic AI", "Production Integration"],
@@ -110,6 +110,28 @@ export function Portfolio() {
     "Docker"
   ],
   image: "/nus-datathon-2026.jpg"
+    },
+    {
+      title: "Micron x AISG National AI Student Challenge (SmartLogParser), 2nd Place",
+      date: "May 2026",
+      description:
+        "Problem: Semiconductor fabs run hundreds of machines simultaneously, each producing logs in completely different formats and vendor-specific conventions. JSON, XML, CSV, syslog, key-value pairs, plain text, and binary files all coexist with no shared schema. Engineers manually interpret each vendor's syntax to diagnose faults or detect drift; a slow, brittle process that blocks downstream analytics and ML pipelines entirely.\n\nApproach: Built SmartLogParser, an end-to-end AI-powered pipeline that ingests, normalises, and structures semiconductor tool logs across all major formats. Engineered format-specific parsers with an LLM fallback layer (Groq API + Ollama) to handle novel or malformed inputs no rule-based system could anticipate. Implemented SHA-256 deduplication, a dead letter queue for failed ingestion, stability scoring, and golden run baseline comparison to surface anomalies and process drift automatically. Architected a FastAPI and SQLAlchemy backend with a React 18 TypeScript frontend, deployed against Supabase PostgreSQL in production.\n\nResult: 2nd place out of 17 teams. Delivered a working prototype that transforms raw, heterogeneous tool logs into clean, queryable, structured data, turning hours of manual engineering triage into an automated intelligence layer ready for anomaly detection, alarm correlation, and yield analysis at scale.",
+      technologies: [
+        "Python",
+        "FastAPI",
+        "SQLAlchemy",
+        "React",
+        "TypeScript",
+        "Supabase",
+        "PostgreSQL",
+        "Groq API",
+        "Ollama",
+        "LLM",
+        "Anomaly Detection",
+        "ETL"
+      ],
+      image: "/national%20ai%20challenge%202nd%20place.jpg",
+      liveDemo: "https://smart-log-parser.vercel.app/"
     },
     {
       title: "MeDo Vibe Coding Hackathon (BTO Lens),  Top 3 Finalists",
@@ -192,9 +214,9 @@ export function Portfolio() {
       github: "https://github.com/bernardinolintang/af-journey-map",
     },
     {
-      title: "IS460 Machine Learning Project: Hybrid CNN + RAG Framework for Dermatology Decision Support",
+      title: "Hybrid CNN + RAG Framework for Dermatology Decision Support",
       date: "Aug 2024 - Nov 2024",
-      description: `Built a Hybrid Retrieval-Augmented Generation (RAG) framework integrating Convolutional Neural Networks (CNN) for skin disease diagnosis. The model leverages image classification for visual analysis and retrieval-augmented generation for detailed medical advice based on dermatology research documents. Tackled class imbalance using regularization and applied pre-trained ResNet-50 and EfficientNetV2 models for faster and more accurate predictions. Integrated an advanced embedding model to capture complex dermatology-specific features.\n\nKey Achievements:\n• CNN + RAG framework outperformed baseline models in accuracy.\n• Implemented Agentic Chunking for dynamic information retrieval.\n• Real-time decision support with disease-specific recommendations.`,
+      description: `IS460 Machine Learning Project — Built a Hybrid Retrieval-Augmented Generation (RAG) framework integrating Convolutional Neural Networks (CNN) for skin disease diagnosis. The model leverages image classification for visual analysis and retrieval-augmented generation for detailed medical advice based on dermatology research documents. Tackled class imbalance using regularization and applied pre-trained ResNet-50 and EfficientNetV2 models for faster and more accurate predictions. Integrated an advanced embedding model to capture complex dermatology-specific features.\n\nKey Achievements:\n• CNN + RAG framework outperformed baseline models in accuracy.\n• Implemented Agentic Chunking for dynamic information retrieval.\n• Real-time decision support with disease-specific recommendations.`,
       technologies: ["Python", "TensorFlow", "HuggingFace", "EfficientNetV2M", "ResNet-50", "PubMedBERT", "EmbeddingGemma"],
       image: "/IS460-machine-learning-presentation.png",
     },
@@ -208,9 +230,9 @@ export function Portfolio() {
       github: "https://github.com/bernardinolintang/IT1244-Project-DNA-Binding-Protein"
     },
     {
-      title: "DSA3101: Question Bank System",
+      title: "Academic Question Bank & Assessment Platform",
       date: "Aug 2025 - Nov 2025",
-      description: `Built a Question Bank System for ST1131 using Flask (Python) for the backend and Streamlit for the frontend, with a PostgreSQL database for storing and managing questions. The system supports efficient question search, filtering, and assembly creation based on difficulty and course type.\n\nI implemented a modular architecture for question ingestion, using libraries like pdfplumber and python-docx for parsing uploaded files. Additionally, I created a version tracking system for questions and integrated AI-assisted question recommendations to suggest the most relevant questions based on past usage.\n\nKey Contributions:\n• Built a Flask REST API to handle question ingestion, search, and assembly creation.\n• Integrated Streamlit frontend for intuitive question assembly and export.\n• Implemented PostgreSQL database with support for full-text search and question metadata tracking.\n• Developed version control for questions, enabling instructors to track changes over time.\n• Applied AI-assisted recommendations to suggest relevant questions based on historical data.`,
+      description: `DSA3101 — Built a Question Bank System for ST1131 using Flask (Python) for the backend and Streamlit for the frontend, with a PostgreSQL database for storing and managing questions. The system supports efficient question search, filtering, and assembly creation based on difficulty and course type.\n\nI implemented a modular architecture for question ingestion, using libraries like pdfplumber and python-docx for parsing uploaded files. Additionally, I created a version tracking system for questions and integrated AI-assisted question recommendations to suggest the most relevant questions based on past usage.\n\nKey Contributions:\n• Built a Flask REST API to handle question ingestion, search, and assembly creation.\n• Integrated Streamlit frontend for intuitive question assembly and export.\n• Implemented PostgreSQL database with support for full-text search and question metadata tracking.\n• Developed version control for questions, enabling instructors to track changes over time.\n• Applied AI-assisted recommendations to suggest relevant questions based on historical data.`,
       technologies: ["Python", "Flask", "PostgreSQL", "Streamlit", "pdfplumber", "python-docx", "AI Recommendations", "Version Control"],
       image: "/dsa3101-group.png",
       imagePosition: "50% 35%"
@@ -234,43 +256,42 @@ export function Portfolio() {
   };
 
   const events = [
-    {
-      title: "Participant",
-      type: ["Workshop"],
-      event: "NUS SME X AWS Workshop: An Introduction to Generative AI on Cloud",
-      date: "March 2025",
-      location: "Singapore, Singapore",
-      description: "Built a financial insights AI agent on AWS Bedrock by setting up an S3 knowledge base with the Fannie Mae Selling Guide, enabling foundation models, configuring action groups (loan calculator, MLS lookup), and testing retrieval-augmented generation for mortgage-related queries.",
-      topics: ["AWS Bedrock", "AI Agent", "Retrieval-Augmented Generation", "S3", "Foundation Models", "Action Groups", "Cloud", "Financial Services"],
-      categories: ["AI/ML", "Cloud", "Workshop", "Finance"],
-      icon: Award,
-      image: "/aws-workshop-group.jpg",
-    },
-    {
-      title: "Participant",
-      type: ["Tour"],
-      event: "Google Office Tour",
-      date: "April 2025",
-      location: "Singapore, Singapore",
-      description: "Visited Google’s Singapore office for an exclusive tour, gaining insights into Google’s workplace culture, innovation practices, and cutting-edge technologies.",
-      topics: ["Workplace Culture", "Innovation", "Tech Industry", "Office Tour", "Networking"],
-      categories: ["Corporate", "Technology", "Networking"],
-      icon: Users,
-      image: "/google-office-tour-portrait.jpg",
-    },
-    {
-      title: "Participant",
-      type: ["Case Study"],
-      event: "PwC Career Compass Day",
-      date: "September 2025",
-      location: "Singapore, Singapore",
-      description: "Participated in PwC Career Compass Day, working with a team on a case study simulating a client engagement. Contributed to analysis, structured recommendations, and co-presented to a panel, showcasing collaboration, critical thinking, and communication skills under time pressure.",
-      topics: ["Teamwork", "Case Study", "Communication", "Critical Thinking", "Collaboration"],
-      categories: ["Corporate", "Case Study", "Teamwork"],
-      icon: Mic,
-      image: "/pwc-career-compass-day.jpg",
-      //link: "https://reactconf.com/2024/speakers"
-    },
+    // {
+    //   title: "Participant",
+    //   type: ["Workshop"],
+    //   event: "NUS SME X AWS Workshop: An Introduction to Generative AI on Cloud",
+    //   date: "March 2025",
+    //   location: "Singapore, Singapore",
+    //   description: "Built a financial insights AI agent on AWS Bedrock by setting up an S3 knowledge base with the Fannie Mae Selling Guide, enabling foundation models, configuring action groups (loan calculator, MLS lookup), and testing retrieval-augmented generation for mortgage-related queries.",
+    //   topics: ["AWS Bedrock", "AI Agent", "Retrieval-Augmented Generation", "S3", "Foundation Models", "Action Groups", "Cloud", "Financial Services"],
+    //   categories: ["AI/ML", "Cloud", "Workshop", "Finance"],
+    //   icon: Award,
+    //   image: "/aws-workshop-group.jpg",
+    // },
+    // {
+    //   title: "Participant",
+    //   type: ["Tour"],
+    //   event: "Google Office Tour",
+    //   date: "April 2025",
+    //   location: "Singapore, Singapore",
+    //   description: "Visited Google’s Singapore office for an exclusive tour, gaining insights into Google’s workplace culture, innovation practices, and cutting-edge technologies.",
+    //   topics: ["Workplace Culture", "Innovation", "Tech Industry", "Office Tour", "Networking"],
+    //   categories: ["Corporate", "Technology", "Networking"],
+    //   icon: Users,
+    //   image: "/google-office-tour-portrait.jpg",
+    // },
+    // {
+    //   title: "Participant",
+    //   type: ["Case Study"],
+    //   event: "PwC Career Compass Day",
+    //   date: "September 2025",
+    //   location: "Singapore, Singapore",
+    //   description: "Participated in PwC Career Compass Day, working with a team on a case study simulating a client engagement. Contributed to analysis, structured recommendations, and co-presented to a panel, showcasing collaboration, critical thinking, and communication skills under time pressure.",
+    //   topics: ["Teamwork", "Case Study", "Communication", "Critical Thinking", "Collaboration"],
+    //   categories: ["Corporate", "Case Study", "Teamwork"],
+    //   icon: Mic,
+    //   image: "/pwc-career-compass-day.jpg",
+    // },
     // Publicity / Creative Portfolio as an event-like entry so it appears in Events & Community filters
     {
       title: "Publicity & Creative Portfolio",
@@ -611,7 +632,7 @@ see the business value of his work.
                 <span className="text-primary">Bernardino Lintang</span>
               </h1>
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 max-w-2xl mx-auto px-2">
-                AI Engineer with {experiencesSafe.length} internships shipping production GenAI systems, RAG pipelines, and data infrastructure across fintech, government, and enterprise. I build LLM-powered products with validation layers, schema enforcement, and measurable impact.
+                I ship RAG and agentic systems that survive real user traffic — deployed inside CPF's Contact Centre, national AI competitions (1st of 76 teams; 2nd of 17 teams), and a fintech fraud detection pipeline. Four internships across government, fintech, and enterprise AI.
               </p>
               <div className="flex items-center justify-center gap-2 text-muted-foreground mb-8">
                 <MapPin className="w-4 h-4" />
@@ -671,24 +692,24 @@ see the business value of his work.
             <div className="flex flex-row gap-2 md:gap-4 items-center justify-between">
               <div className="text-center group flex-1">
                 <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
-                  <Briefcase className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
-                  <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">{experiencesSafe.length}</div>
+                  <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
+                  <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">70%+</div>
                 </div>
-                <div className="text-xs md:text-sm text-muted-foreground">Internships</div>
+                <div className="text-xs md:text-sm text-muted-foreground">Manual Processing Reduced</div>
               </div>
               <div className="text-center group flex-1">
                 <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
-                  <FolderKanban className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
-                  <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">{projectsSafe.length}</div>
+                  <Code className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
+                  <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">20%</div>
                 </div>
-                <div className="text-xs md:text-sm text-muted-foreground">Projects</div>
+                <div className="text-xs md:text-sm text-muted-foreground">Fraud Exposure Reduced</div>
               </div>
               <div className="text-center group flex-1">
                 <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-1 md:mb-2">
                   <Trophy className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:scale-110 transition-transform duration-200" />
-                  <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">{competitionsSafe.length}</div>
+                  <div className="text-xl md:text-3xl font-bold text-primary group-hover:scale-105 transition-transform duration-200">1st / 76</div>
                 </div>
-                <div className="text-xs md:text-sm text-muted-foreground">Competitions</div>
+                <div className="text-xs md:text-sm text-muted-foreground">NUS Datathon 2026</div>
               </div>
             </div>
           </div>
