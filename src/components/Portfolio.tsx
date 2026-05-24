@@ -49,7 +49,6 @@ export function Portfolio() {
       company: "Home Team Science and Technology Agency (HTX)",
       period: "May 2026 - Aug 2026",
       location: "Singapore, Singapore",
-      badge: "Incoming",
       description: `\u2022 Gathering pipeline requirements from data scientists and AI engineers, translating them into transform-and-load scripts for the centralised data platform.\n\u2022 Maintaining IaC workflows for CI/CD and data pipelines; building monitoring tools for pipeline health and data quality.\n\u2022 Collaborating on frontend/backend integration to connect deployed AI models with training data sources.`,
       technologies: ["Python", "SQL", "IaC", "CI/CD", "Docker"],
       logo: "/htx-logo.png",
