@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(unzip -o -q \"Bernard-Website-AppleLight.zip\" -d \"Bernard-Website-AppleLight\")",
+      "Bash(cp __TRACKED_VAR__/src/components/Portfolio.tsx src/components/Portfolio.tsx)",
+      "Bash(cp __TRACKED_VAR__/src/apple.css src/apple.css)",
+      "Bash(cp __TRACKED_VAR__/src/components/ThemeProvider.tsx src/components/ThemeProvider.tsx)",
+      "Bash(cp __TRACKED_VAR__/EDITING-GUIDE.md EDITING-GUIDE.md)",
+      "Bash(cp -rf __TRACKED_VAR__/public/. public/)",
+      "PowerShell(npm install 2>&1)",
+      "PowerShell(npm run build 2>&1)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:5173/\" -UseBasicParsing -TimeoutSec 10; \"HTTP $\\($r.StatusCode\\) — page length $\\($r.Content.Length\\) bytes\" } catch { \"ERROR: $\\($_.Exception.Message\\)\" })",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:5173/)",
+      "Bash(awk 'NR>=44 && NR<=95' \"src/components/Portfolio.OLD-backup.tsx.txt\")",
+      "Bash(curl -s -o /dev/null -w \"dev server: HTTP %{http_code}\\\\n\" http://localhost:5173/)"
+    ]
+  }
+}
