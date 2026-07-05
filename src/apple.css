@@ -65,29 +65,29 @@ body {
 @media (max-width: 680px) { .al-section { padding: 64px 0; } }
 
 /* ---------- hero ---------- */
-.al-hero { padding: 96px 0 88px; text-align: center; }
+.al-hero { padding: 64px 0 48px; text-align: center; }
 .al-avatar {
-  width: 108px; height: 108px; border-radius: 50%; object-fit: cover;
-  object-position: center 30%; /* show a higher slice so the face sits centred, not high */
-  margin: 0 auto 24px; display: block; box-shadow: var(--al-shadow);
+  width: 96px; height: 96px; border-radius: 50%; object-fit: cover;
+  object-position: center 30%;
+  margin: 0 auto 16px; display: block; box-shadow: var(--al-shadow);
 }
 .al-hero h1 {
-  font-size: clamp(40px, 7vw, 72px); font-weight: 700;
-  letter-spacing: -.02em; line-height: 1.06; max-width: 860px; margin: 0 auto 8px;
+  font-size: clamp(36px, 6.5vw, 64px); font-weight: 700;
+  letter-spacing: -.02em; line-height: 1.08; max-width: 860px; margin: 0 auto 6px;
 }
 .al-grad-text {
   background: var(--al-grad);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .al-eyebrow {
-  font-size: 14px; font-weight: 600; color: var(--al-ink-2);
-  letter-spacing: .06em; margin-bottom: 20px;
+  font-size: 13px; font-weight: 600; color: var(--al-ink-2);
+  letter-spacing: .06em; margin-bottom: 14px;
 }
 .al-hero p {
-  font-size: clamp(17px, 2.3vw, 21px); color: var(--al-ink-2);
-  max-width: 660px; margin: 20px auto 34px;
+  font-size: clamp(16px, 2vw, 19px); color: var(--al-ink-2);
+  max-width: 560px; margin: 14px auto 22px; line-height: 1.45;
 }
-.al-cta-row { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; align-items: center; }
+.al-cta-row { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; align-items: center; margin-bottom: 4px; }
 .al-btn {
   display: inline-block; background: var(--al-accent); color: #fff !important;
   padding: 12px 24px; border-radius: 980px; font-size: 16px; font-weight: 500;
@@ -99,13 +99,16 @@ body {
 .al-link::after { content: " ›"; }
 
 /* ---------- stat band ---------- */
-.al-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; padding: 60px 0 0; }
+.al-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; padding: 32px 0 0; }
 .al-stat b {
-  display: block; font-size: clamp(32px, 5vw, 54px); font-weight: 700; letter-spacing: -.02em;
+  display: block; font-size: clamp(28px, 4.5vw, 48px); font-weight: 700; letter-spacing: -.02em;
   background: var(--al-grad); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.al-stat span { font-size: 13px; color: var(--al-ink-2); display: block; margin-top: 6px; line-height: 1.35; }
-@media (max-width: 680px) { .al-stats { grid-template-columns: repeat(2, 1fr); gap: 32px 8px; } }
+.al-stat span { font-size: 12.5px; color: var(--al-ink-2); display: block; margin-top: 4px; line-height: 1.3; }
+@media (max-width: 680px) {
+  .al-hero { padding: 48px 0 40px; }
+  .al-stats { grid-template-columns: repeat(2, 1fr); gap: 24px 8px; padding-top: 28px; }
+}
 
 /* ---------- headings ---------- */
 .al h2 {
@@ -258,6 +261,64 @@ body {
   from { opacity: 0; transform: translate(-50%,-46%) scale(.96) }
   to   { opacity: 1; transform: translate(-50%,-50%) scale(1) }
 }
+
+/* ---------- hero: AI PM signal line + pill row ---------- */
+.al-hero-note {
+  font-size: 14.5px; color: var(--al-ink-2); max-width: 640px;
+  margin: -14px auto 22px; line-height: 1.5;
+}
+.al-pill-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 0 auto; max-width: 720px; }
+.al-pill {
+  font-size: 12.5px; font-weight: 500; color: var(--al-ink);
+  background: rgba(0,113,227,.07); border: 1px solid rgba(0,113,227,.14);
+  border-radius: 980px; padding: 5px 13px;
+}
+.al-hero .al-pill-row.al-rv { transition-delay: .5s; }
+
+/* ---------- product-focused chips (distinct from tech tags) ---------- */
+.al-pm-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+.al-pm-tag {
+  font-size: 11.5px; font-weight: 600; letter-spacing: .01em;
+  color: #6b34c9; background: rgba(125,60,240,.08);
+  border: 1px solid rgba(125,60,240,.16); border-radius: 980px; padding: 4px 11px;
+}
+
+/* ---------- card subtitle + inline product angle ---------- */
+.al-subtitle { font-size: 15px; font-weight: 500; color: var(--al-ink); margin: 6px 0 2px; }
+.al-angle {
+  font-size: 13.5px; color: var(--al-ink-2); margin-top: 12px; line-height: 1.5;
+  padding: 10px 14px; background: var(--al-bg-alt); border-radius: 12px;
+  border-left: 3px solid var(--al-accent);
+}
+.al-alt .al-angle { background: #ececf1; }
+.al-angle b { color: var(--al-ink); font-weight: 600; }
+
+/* ---------- compact case-study rundown inside cards ---------- */
+.al-rundown { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.al-rundown-row { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: baseline; }
+.al-rundown-row dt {
+  font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--al-accent); padding-top: 1px;
+}
+.al-rundown-row dd { font-size: 14px; color: var(--al-ink-2); line-height: 1.5; }
+@media (max-width: 480px) {
+  .al-rundown-row { grid-template-columns: 1fr; gap: 2px; }
+}
+
+/* ---------- case-study modal (wider, scrollable variant) ---------- */
+.al-modal-lg { max-width: 640px; max-height: 88vh; overflow-y: auto; padding: 34px 36px; }
+.al-modal-lg .al-badge { margin-bottom: 8px; }
+.al-modal-lg h3 { font-size: 24px; margin-bottom: 4px; }
+.al-modal-lg .al-date { margin: 2px 0 18px; }
+.al-case-sec { margin-bottom: 18px; }
+.al-case-sec:last-of-type { margin-bottom: 6px; }
+.al-case-sec h4 {
+  font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--al-accent); margin-bottom: 5px;
+}
+.al-case-sec p { font-size: 14.5px; color: var(--al-ink-2); line-height: 1.55; margin: 0; }
+.al-modal-lg .al-links-row { margin-top: 22px; }
+@media (max-width: 560px) { .al-modal-lg { padding: 28px 22px; } }
 
 @media (prefers-reduced-motion: reduce) {
   .al-rv { opacity: 1; transform: none; transition: none; }

@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
 import "../apple.css";
 
+type CompetitionCard = {
+  title: string; badge: string; date: string; description: string; tags: string[];
+  image?: string; subtitle?: string; pmTags?: string[]; angle?: string; liveDemo?: string;
+  imgPos?: string;
+  caseStudy?: {
+    problem: string; users: string; role: string; productDecision: string;
+    aiWorkflow: string; impact: string; learned: string;
+  };
+};
+
 /* Small reveal-on-scroll hook (no dependencies) */
 function useReveal() {
   useEffect(() => {
@@ -39,6 +49,7 @@ export default function Portfolio() {
   useReveal();
   const [menu, setMenu] = useState(false);
   const [showResume, setShowResume] = useState(false);
+  const [caseStudy, setCaseStudy] = useState<CompetitionCard | null>(null);
 
   /* Scroll-progress bar: write scroll fraction into a CSS var */
   useEffect(() => {
@@ -56,10 +67,14 @@ export default function Portfolio() {
     };
   }, []);
 
-  /* Close the resume modal on Escape, and lock body scroll while open */
+  /* Close any open modal on Escape, and lock body scroll while open */
   useEffect(() => {
-    if (!showResume) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setShowResume(false);
+    if (!showResume && !caseStudy) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setShowResume(false);
+      setCaseStudy(null);
+    };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -67,11 +82,14 @@ export default function Portfolio() {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [showResume]);
+  }, [showResume, caseStudy]);
 
   /* ======================= DATA ======================= */
 
-  const experiences = [
+  const experiences: {
+    title: string; company: string; period: string; logo?: string;
+    bullets: string[]; angle?: string; tags: string[];
+  }[] = [
     {
       title: "Data Engineer Intern",
       company: "Home Team Science and Technology Agency (HTX)",
@@ -82,6 +100,7 @@ export default function Portfolio() {
         "Maintaining IaC workflows for CI/CD and data pipelines; building monitoring tools for pipeline health and data quality.",
         "Collaborating on frontend/backend integration to connect deployed AI models with training data sources.",
       ],
+      angle: "Translated data scientist and AI engineer needs into reliable pipelines they can build on, not just scripts.",
       tags: ["Python", "SQL", "IaC", "CI/CD", "Docker"],
     },
     {
@@ -94,6 +113,7 @@ export default function Portfolio() {
         "Built and optimised RAG pipelines integrated with CPF's internal knowledge bases, applying prompt engineering and evaluation techniques to ensure policy-aligned, accurate responses.",
         "Established evaluation frameworks to measure model accuracy, retrieval precision, and alignment with business requirements.",
       ],
+      angle: "Designed LLM workflows around what contact centre agents actually struggle with, balancing accuracy, trust, and policy alignment.",
       tags: ["Python", "FastAPI", "OpenAI", "RAG", "Next.js", "PostgreSQL", "MongoDB"],
     },
     {
@@ -106,6 +126,7 @@ export default function Portfolio() {
         "Built validation and regeneration layers enforcing schema consistency, mandatory fields, and safe re-generation for business users.",
         "Implemented deduplication, deterministic ID assignment, and referential integrity logic to support scalable ingestion across markets.",
       ],
+      angle: "Turned a manual operational bottleneck into a tool business users can trust, with validation and safe regeneration built in.",
       tags: ["Python", "LLM", "Agentic AI", "Production Integration"],
     },
     {
@@ -119,28 +140,62 @@ export default function Portfolio() {
         "Optimised queries on 50M+ record datasets by modularising complex scripts, improving processing efficiency by ~40%.",
         "Collaborated directly with risk analysts and business stakeholders to align pipeline outputs with operational decision-making.",
       ],
+      angle: "Built fraud signals around what risk analysts actually need to act on, not just model metrics.",
       tags: ["Python", "SQL", "Snowflake"],
     },
   ];
 
-  const competitions = [
+  const competitions: CompetitionCard[] = [
     {
       title: "BlazeReport: SCDF × Dell Lifesavers Innovation Challenge",
       badge: "1st Runner-Up · 87 teams",
       date: "Jul 2026",
+      subtitle: "AI fire investigation reporting system for SCDF officers.",
       description:
-        "Agentic fire-investigation report generator for SCDF. Built MERaLiON multilingual speech transcription for investigator interviews, LLM-drafted structured incident reports, and automated fire-pattern analysis, deployed on OpenShift clusters. Developed through direct iteration with SCDF fire investigators, with the live demo transcribing multilingual (including Cantonese) testimony in real time.",
+        "Built with Team Komodo Tech, BlazeReport helps officers turn voice notes, witness statements, scene photos, floor plans, and supporting documents into a structured fire investigation report. MERaLiON handles multilingual transcription (including Cantonese in the live demo), an LLM drafts the structured report, and fire pattern analysis runs on cluster, deployed on OpenShift.",
       tags: ["MERaLiON", "LLM", "OpenShift", "Agentic AI", "Speech-to-Text"],
+      pmTags: ["AI PM", "Workflow Design", "Human in the loop", "GovTech", "User Testing"],
       image: "/blazereport-scdf.jpg",
+      caseStudy: {
+        problem:
+          "Fire investigators capture evidence across many formats, from voice notes and photos to floor plans and burn charts. Then they spend hours rewriting and reconnecting everything into a final report.",
+        users:
+          "Tested with 20+ SCDF officers across frontline commanders, staff officers, and fire investigators.",
+        role: "Team lead · Product strategy · Workflow design · AI integration · Pitch",
+        productDecision:
+          "Designed a human in the loop workflow where AI drafts, but officers review, correct, and approve before export. That way the tool speeds officers up without replacing their judgement.",
+        aiWorkflow:
+          "Local speech transcription (MERaLiON), field extraction, photo intelligence, and report QA, all chosen around secure on cluster deployment constraints rather than raw model capability.",
+        impact:
+          "Turned scattered field evidence into a connected report workflow, from scene capture through to commander review.",
+        learned:
+          "In GovTech, trust and reviewability matter more than automation. Officers adopt AI faster when it stays a draft they control.",
+      },
     },
     {
       title: "NUS Datathon 2026: Company Intelligence & AI Analytics",
       badge: "1st Place · 76 teams",
       date: "Feb 2026",
+      subtitle: "Company intelligence that turns raw firmographic data into decisions.",
       description:
         "Problem: Corporate benchmarking platforms rely on static industry codes and global averages, making it difficult to contextualise firm performance or detect early operational risk.\n\nApproach: Built an end-to-end company intelligence system using feature engineering and mixed-type clustering (K-Prototypes) to segment 8,559 companies across 3 countries. Engineered 20+ operational and IT-related features and validated cluster quality using silhouette score, PCA, and statistical profiling. Developed a constrained AI Analyst using Llama 3.3 70B (Groq) with retrieval-augmented prompting and strict guardrails for grounded, non-hallucinatory explanations through a React + FastAPI dashboard.\n\nResult: 1st of 76 teams. Interpretable, data-grounded benchmarking that turns raw firmographic data into defensible strategic insight.",
       tags: ["K-Prototypes", "Llama 3.3 70B", "scikit-learn", "PCA", "FastAPI", "React", "Docker"],
+      pmTags: ["Product Strategy", "AI Evaluation", "Data Modelling", "Decision Support"],
       image: "/nus-datathon-2026.jpg",
+      caseStudy: {
+        problem:
+          "Analysts benchmark firms against static industry codes and global averages, which hides real operational differences and early risk signals.",
+        users: "Strategy and analyst teams who need defensible, explainable comparisons they can stand behind, not a black box.",
+        role: "Data modelling · AI evaluation · Product framing · Dashboard UX",
+        productDecision:
+          "Constrained the AI Analyst with retrieval-augmented prompting and guardrails so every explanation is grounded in the data, prioritising trustworthy answers over impressive-sounding ones.",
+        aiWorkflow:
+          "Mixed-type clustering to segment 8,559 companies, validated with silhouette score, PCA, and statistical profiling; a guarded Llama 3.3 70B layer for grounded, non-hallucinatory narratives.",
+        impact:
+          "1st of 76 teams. Interpretable, data-grounded benchmarking that turns firmographic data into strategy people can defend.",
+        learned:
+          "For decision-support AI, interpretability is the product. Users trust an answer they can trace back to the data.",
+      },
     },
     {
       title: "Micron × AISG National AI Student Challenge: SmartLogParser",
@@ -149,6 +204,7 @@ export default function Portfolio() {
       description:
         "Problem: Semiconductor fabs run hundreds of machines, each producing logs in different formats (JSON, XML, CSV, syslog, key-value, plain text, binary) with no shared schema. Engineers manually interpret each vendor's syntax to diagnose faults, which is slow and brittle.\n\nApproach: Built SmartLogParser, an end-to-end pipeline that ingests, normalises, and structures tool logs across all major formats, with an LLM fallback layer (Groq + Ollama) for novel or malformed inputs. Implemented SHA-256 deduplication, a dead-letter queue, stability scoring, and golden-run baseline comparison for automatic drift detection. FastAPI + SQLAlchemy backend, React 18 + TypeScript frontend, Supabase PostgreSQL in production.\n\nResult: 2nd of 17 teams. Turns hours of manual triage into an automated intelligence layer ready for anomaly detection and yield analysis.",
       tags: ["FastAPI", "SQLAlchemy", "React", "Supabase", "Groq API", "Ollama", "ETL"],
+      angle: "Designed around engineers drowning in mismatched log formats by automating triage instead of adding another dashboard.",
       image: "/national%20ai%20challenge%202nd%20place.jpg",
       liveDemo: "https://smart-log-parser.vercel.app/",
     },
@@ -159,6 +215,7 @@ export default function Portfolio() {
       description:
         "Problem: BTO applicants make one of the largest financial decisions of their lives using static PDFs, flat floor plans, and forum threads, with no way to visualise what living in an unbuilt site will actually feel like.\n\nApproach: Built BTO Lens, an AI decision-support platform. Engineered a procedural 3D building-massing engine in Three.js that auto-generates block geometry from HDB storey count and site footprint, hour-by-hour sunlight/shadow simulation via SunCalc.js, a toggleable amenity layer via OneMap API, and a rules-based liveability scoring engine (0 to 100) re-weighted from natural-language input parsed by Claude API. Added a two-project side-by-side comparison with AI-generated trade-off narrative.\n\nResult: Top 3 of 40 teams. Turns a $500,000 housing decision from guesswork into a grounded, interactive experience.",
       tags: ["React", "Three.js", "SunCalc.js", "OneMap API", "Claude API", "Node.js"],
+      angle: "Designed around a real user decision: helping BTO applicants feel an unbuilt home before committing $500k.",
       image: "/MeDO%20Hackathon%20Group%20Photo.jpg",
       liveDemo: "https://app-b1iajvpvw0zl.appmedo.com/",
     },
@@ -169,6 +226,7 @@ export default function Portfolio() {
       description:
         "Problem: Predict medical insurance costs accurately while understanding feature impact and ensuring fairness across demographic subgroups.\n\nApproach: Engineered interaction features (smoker × BMI, smoker × age); benchmarked Ridge / Lasso / Elastic Net / Random Forest / XGBoost via cross-validation and grid search. Used AIC and SHAP for interpretability, and ran Equalised Odds fairness analysis across sex, region, and smoker groups.\n\nResult: R² > 0.85, Top 3 of 40 teams. Identified smoking status and BMI as dominant cost predictors with stable residuals and interpretable SHAP patterns.",
       tags: ["scikit-learn", "XGBoost", "SHAP", "Random Forest", "Fairness Analysis"],
+      angle: "Prioritised interpretability and fairness, so predictions could actually be trusted and acted on, not just scored.",
       image: "/nus-hackathon-2025.jpg",
       imgPos: "center 20%",
     },
@@ -179,17 +237,24 @@ export default function Portfolio() {
       description:
         "Problem: An insurance company's advisor-client matching was manual and suboptimal, leading to poor conversion and engagement.\n\nApproach: Built a hybrid recommendation model combining SVD-based collaborative filtering with content-based filtering (cosine similarity), trained on historical policy success rates, client profiles, and advisor expertise.\n\nResult: Top 5 of 40 teams. Measurable lift in match quality vs. baseline, improving personalisation and projected policy conversion.",
       tags: ["scikit-learn", "SVD", "Collaborative Filtering", "Cosine Similarity"],
+      angle: "Framed around a business outcome where better advisor client fit drives conversion, not just a higher model score.",
       image: "/nus-datathon.jpg",
     },
   ];
 
-  const projects = [
+  const projects: {
+    title: string; date: string; description: string; tags: string[]; image?: string;
+    liveDemo?: string; github?: string; problem?: string; productDecision?: string; pmTags?: string[];
+  }[] = [
     {
       title: "Careerlingo: Duolingo-style AI Career Coach",
       date: "LinkedIn Career Trailblazer Camp · Top 5 Finalist",
       description:
         "Bite-size daily lessons that coach job-seekers through their career search, instead of one-off resume reviews. Built with team LingoLabs (Jovan, Ray, Kyle).",
+      productDecision:
+        "Chose bite size daily coaching over one off resume reviews to build a habit instead of a one time fix.",
       tags: ["AI", "LLM", "Product", "EdTech"],
+      pmTags: ["Behaviour Design", "Career Tech"],
       image: "/careerlingo.jpg",
       liveDemo: "https://careerlingo-mvp-web-1781622317264.chatand.build/",
     },
@@ -198,7 +263,10 @@ export default function Portfolio() {
       date: "Mar 2026",
       description:
         "AI tool that writes personalised cover letters in seconds. Upload your resume to auto-fill your profile, paste a job description, and it generates a tailored letter for you.",
+      productDecision:
+        "Auto fill from a resume upload removes the blank page problem before users even start typing.",
       tags: ["LLM", "Groq", "TypeScript", "AI Agent"],
+      pmTags: ["Workflow Fit", "Human Review"],
       image: "/Cover Letter Maker Image.jpg",
       liveDemo: "https://cover-letter-maker-one.vercel.app/",
       github: "https://github.com/bernardinolintang/Cover-Letter-Maker",
@@ -208,6 +276,8 @@ export default function Portfolio() {
       date: "Apr 2026",
       description:
         "Full-stack gym-visit tracker for every Anytime Fitness outlet in Singapore. Browse all AF locations on an interactive Google Map, mark gyms as visited, and track progress across regions with real-time stats, regional breakdowns, and a shareable branded progress card. Deployed on Cloudflare Pages with Supabase for auth and data.",
+      productDecision:
+        "Made progress shareable and region based, turning a simple tracker into something motivating enough to keep using.",
       tags: ["React", "TypeScript", "Supabase", "Google Maps", "Cloudflare"],
       image: "/AF Tracker Image.jpg",
       liveDemo: "https://af-journey-map.vercel.app/",
@@ -218,7 +288,10 @@ export default function Portfolio() {
       date: "IS460 Machine Learning · Aug to Nov 2024",
       description:
         "Hybrid Retrieval-Augmented Generation framework integrating CNNs for skin-disease diagnosis. Image classification for visual analysis, retrieval-augmented generation for detailed medical advice from dermatology research. Tackled class imbalance with regularisation, used pre-trained ResNet-50 and EfficientNetV2, and integrated an advanced embedding model. Implemented Agentic Chunking for dynamic retrieval; outperformed baseline models in accuracy.",
+      productDecision:
+        "Paired image classification with retrieval so advice is grounded in dermatology literature, not model guesswork.",
       tags: ["TensorFlow", "HuggingFace", "EfficientNetV2M", "ResNet-50", "PubMedBERT"],
+      pmTags: ["Retrieval Quality", "Human Review", "Evaluation"],
       image: "/IS460-machine-learning-presentation.jpg",
     },
     {
@@ -226,6 +299,8 @@ export default function Portfolio() {
       date: "IT1244 · Aug to Nov 2024",
       description:
         "Built and benchmarked Logistic Regression, Naive Bayes, Random Forest, and CNN classifiers for DNA-binding protein prediction. Engineered features from k-mer frequencies, amino acid composition, and sequence embeddings; addressed class imbalance with weighted loss and hyperparameter tuning. The CNN outperformed all baselines on sequence-based feature capture.",
+      productDecision:
+        "Benchmarked simple baselines before deep models, so the added complexity of a CNN was justified by real gains.",
       tags: ["scikit-learn", "TensorFlow", "CNN", "Bioinformatics"],
       image: "/it1244.png",
       github: "https://github.com/bernardinolintang/IT1244-Project-DNA-Binding-Protein",
@@ -235,7 +310,11 @@ export default function Portfolio() {
       date: "DSA3101 · Aug to Nov 2025",
       description:
         "Question Bank System for ST1131: Flask backend, Streamlit frontend, PostgreSQL database, supporting efficient search, filtering, and assembly creation by difficulty and course type. Modular ingestion using pdfplumber and python-docx, a version-tracking system for questions, and AI-assisted recommendations based on past usage. Built a Flask REST API for ingestion, search, and assembly, with full-text search and metadata tracking.",
+      problem: "Assessment questions were scattered across modules and formats, making them hard to reuse.",
+      productDecision:
+        "Built a searchable, filterable, difficulty-aware workflow so instructors can assemble assessments faster.",
       tags: ["Flask", "PostgreSQL", "Streamlit", "pdfplumber", "AI Recommendations"],
+      pmTags: ["Admin Workflow", "Search UX", "Education Tools"],
       image: "/dsa3101-group.jpg",
     },
     {
@@ -265,7 +344,7 @@ export default function Portfolio() {
       tags: ["Product Management", "A/B Testing", "Data Analytics", "Public Speaking"],
       image: "/me-presenting.jpg",
     },
-    /* Hidden for now — to restore, uncomment this card.
+    /* Hidden for now. To restore, uncomment this card.
     {
       title: "Marketing Head for Science Club Welfare",
       date: "Oct 2024 to Aug 2025",
@@ -349,24 +428,25 @@ export default function Portfolio() {
       {/* HERO */}
       <header className="al-hero al-wrap" id="top">
         <img className="al-avatar al-rv" src="/formal-picture.JPG" alt="Bernardino Lintang" />
-        <div className="al-eyebrow al-rv">BERNARDINO LINTANG · AI &amp; DATA ENGINEER</div>
+        <div className="al-eyebrow al-rv">BERNARDINO LINTANG · AI PRODUCT BUILDER</div>
         <h1 className="al-rv">
-          I ship AI systems that <span className="al-grad-text">survive real users.</span>
+          I build AI products that <span className="al-grad-text">survive real users.</span>
         </h1>
         <p className="al-rv">
-          RAG and agentic systems deployed inside CPF's Contact Centre, a fintech fraud pipeline, and
-          national AI competitions. Four internships across government, fintech, and enterprise AI.
+          I turn messy workflows into tested, deployable AI products, from product strategy and UX
+          through to data and engineering.
         </p>
         <div className="al-cta-row al-rv">
-          <a className="al-btn" href="#contact">Get in touch</a>
-          <button type="button" className="al-link" onClick={() => setShowResume(true)}>View resume</button>
+          <a className="al-btn" href="#competitions">View my work</a>
+          <button type="button" className="al-link" onClick={() => setShowResume(true)}>Resume</button>
+          <a className="al-link" href="#contact">Contact</a>
         </div>
 
         <div className="al-stats">
           <div className="al-stat al-rv"><b>1st / 76</b><span>NUS Datathon 2026</span></div>
-          <div className="al-stat al-rv"><b>2nd / 87</b><span>SCDF × Dell Lifesavers Challenge</span></div>
-          <div className="al-stat al-rv"><b>70%+</b><span>manual processing reduced,<br />production LLM pipeline</span></div>
-          <div className="al-stat al-rv"><b>~20%</b><span>fraud exposure reduced,<br />fintech detection pipeline</span></div>
+          <div className="al-stat al-rv"><b>2nd / 87</b><span>SCDF × Dell Challenge</span></div>
+          <div className="al-stat al-rv"><b>4+</b><span>AI products shipped</span></div>
+          <div className="al-stat al-rv"><b>70%+</b><span>Manual workflow reduced</span></div>
         </div>
       </header>
 
@@ -430,6 +510,9 @@ export default function Portfolio() {
                 <ul className="al-bullets">
                   {x.bullets.map((b, i) => <li key={i}>{b}</li>)}
                 </ul>
+                {x.angle && (
+                  <p className="al-angle"><b>Product angle:</b> {x.angle}</p>
+                )}
                 <div className="al-tags">
                   {x.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
                 </div>
@@ -450,14 +533,35 @@ export default function Portfolio() {
                 <div className="al-media-body">
                   <span className="al-badge">{c.badge}</span>
                   <h3>{c.title}</h3>
+                  {c.subtitle && <div className="al-subtitle">{c.subtitle}</div>}
                   <div className="al-date">{c.date}</div>
                   <Desc text={c.description} />
+                  {c.caseStudy && (
+                    <dl className="al-rundown">
+                      <div className="al-rundown-row"><dt>Problem</dt><dd>{c.caseStudy.problem}</dd></div>
+                      <div className="al-rundown-row"><dt>Users</dt><dd>{c.caseStudy.users}</dd></div>
+                      <div className="al-rundown-row"><dt>Impact</dt><dd>{c.caseStudy.impact}</dd></div>
+                    </dl>
+                  )}
+                  {c.angle && (
+                    <p className="al-angle"><b>Product angle:</b> {c.angle}</p>
+                  )}
                   <div className="al-tags">
                     {c.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
                   </div>
-                  {c.liveDemo && (
+                  {c.pmTags && (
+                    <div className="al-pm-tags">
+                      {c.pmTags.map((t) => <span className="al-pm-tag" key={t}>{t}</span>)}
+                    </div>
+                  )}
+                  {(c.caseStudy || c.liveDemo) && (
                     <div className="al-links-row">
-                      <a className="al-link" href={c.liveDemo} target="_blank" rel="noreferrer">Live demo</a>
+                      {c.caseStudy && (
+                        <button type="button" className="al-link" onClick={() => setCaseStudy(c)}>
+                          Case study
+                        </button>
+                      )}
+                      {c.liveDemo && <a className="al-link" href={c.liveDemo} target="_blank" rel="noreferrer">Live demo</a>}
                     </div>
                   )}
                 </div>
@@ -479,9 +583,21 @@ export default function Portfolio() {
                   <h3>{p.title}</h3>
                   <div className="al-date">{p.date}</div>
                   <Desc text={p.description} />
+                  {(p.problem || p.productDecision) && (
+                    <p className="al-angle">
+                      {p.productDecision
+                        ? <><b>Product decision:</b> {p.productDecision}</>
+                        : <><b>Problem:</b> {p.problem}</>}
+                    </p>
+                  )}
                   <div className="al-tags">
                     {p.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
                   </div>
+                  {p.pmTags && (
+                    <div className="al-pm-tags">
+                      {p.pmTags.map((t) => <span className="al-pm-tag" key={t}>{t}</span>)}
+                    </div>
+                  )}
                   {(p.liveDemo || p.github) && (
                     <div className="al-links-row">
                       {p.liveDemo && <a className="al-link" href={p.liveDemo} target="_blank" rel="noreferrer">Live demo</a>}
@@ -558,6 +674,37 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
+
+      {/* CASE STUDY MODAL */}
+      {caseStudy && caseStudy.caseStudy && (
+        <>
+          <div className="al-modal-overlay" onClick={() => setCaseStudy(null)} />
+          <div className="al-modal al-modal-lg" role="dialog" aria-modal="true" aria-labelledby="al-case-title">
+            <button className="al-modal-close" aria-label="Close" onClick={() => setCaseStudy(null)}>×</button>
+            <span className="al-badge">{caseStudy.badge}</span>
+            <h3 id="al-case-title">{caseStudy.title}</h3>
+            {caseStudy.subtitle && <div className="al-subtitle">{caseStudy.subtitle}</div>}
+            <div className="al-date">{caseStudy.date}</div>
+            <div className="al-case-sec"><h4>Problem</h4><p>{caseStudy.caseStudy.problem}</p></div>
+            <div className="al-case-sec"><h4>Users</h4><p>{caseStudy.caseStudy.users}</p></div>
+            <div className="al-case-sec"><h4>My role</h4><p>{caseStudy.caseStudy.role}</p></div>
+            <div className="al-case-sec"><h4>Product decision</h4><p>{caseStudy.caseStudy.productDecision}</p></div>
+            <div className="al-case-sec"><h4>AI workflow</h4><p>{caseStudy.caseStudy.aiWorkflow}</p></div>
+            <div className="al-case-sec"><h4>Impact</h4><p>{caseStudy.caseStudy.impact}</p></div>
+            <div className="al-case-sec"><h4>What I learned</h4><p>{caseStudy.caseStudy.learned}</p></div>
+            {caseStudy.pmTags && (
+              <div className="al-pm-tags">
+                {caseStudy.pmTags.map((t) => <span className="al-pm-tag" key={t}>{t}</span>)}
+              </div>
+            )}
+            {caseStudy.liveDemo && (
+              <div className="al-links-row">
+                <a className="al-link" href={caseStudy.liveDemo} target="_blank" rel="noreferrer">Live demo</a>
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
       {/* RESUME ACCESS MODAL */}
       {showResume && (
