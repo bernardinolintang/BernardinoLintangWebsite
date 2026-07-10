@@ -8,7 +8,9 @@ function cardImages(item: { image?: string; images?: string[] }) {
 
 type CompetitionCard = {
   title: string; badge: string; date: string; description: string; tags: string[];
-  image?: string; images?: string[]; subtitle?: string; pmTags?: string[]; angle?: string; liveDemo?: string;
+  image?: string; images?: string[]; imagePositions?: string[];
+  subtitle?: string; pmTags?: string[]; angle?: string; liveDemo?: string;
+  article?: string; articleLabel?: string;
   imgPos?: string;
   caseStudy?: {
     problem: string; users: string; role: string; productDecision: string;
@@ -94,6 +96,7 @@ export default function Portfolio() {
   const experiences: {
     title: string; company: string; period: string; logo?: string;
     bullets: string[]; angle?: string; tags: string[];
+    links?: { href: string; label: string }[];
   }[] = [
     {
       title: "Data Engineer Intern",
@@ -101,9 +104,8 @@ export default function Portfolio() {
       period: "May 2026 to Aug 2026 · Singapore",
       logo: "/htx-logo.png",
       bullets: [
-        "Gathering pipeline requirements from data scientists and AI engineers, translating them into transform-and-load scripts for the centralised data platform.",
-        "Maintaining IaC workflows for CI/CD and data pipelines; building monitoring tools for pipeline health and data quality.",
-        "Collaborating on frontend/backend integration to connect deployed AI models with training data sources.",
+        "Built an enterprise RAG pipeline for NGINE/AIDATAPLATFORM, covering document/image ingestion, recursive chunking, embedding generation, Milvus vector retrieval, and reranking across text and image models.",
+        "Validated BGE-M3, MXBAI, Qwen3, SigLIP, and reranker services; identified gateway reliability, vector schema, MLflow integration, and re-ingestion blockers affecting retrieval quality.",
       ],
       angle: "Translated data scientist and AI engineer needs into reliable pipelines they can build on, not just scripts.",
       tags: ["Python", "SQL", "IaC", "CI/CD", "Docker"],
@@ -133,6 +135,9 @@ export default function Portfolio() {
       ],
       angle: "Turned a manual operational bottleneck into a tool business users can trust, with validation and safe regeneration built in.",
       tags: ["Python", "LLM", "Agentic AI", "Production Integration"],
+      links: [
+        { href: "https://chs.nus.edu.sg/2026/05/04/from-jakarta-to-chennai/", label: "NUS feature" },
+      ],
     },
     {
       title: "Operations (Data Science) Intern",
@@ -147,6 +152,10 @@ export default function Portfolio() {
       ],
       angle: "Built fraud signals around what risk analysts actually need to act on, not just model metrics.",
       tags: ["Python", "SQL", "Snowflake"],
+      links: [
+        { href: "https://www.linkedin.com/feed/update/urn:li:activity:7369261981427511296/", label: "LinkedIn post" },
+        { href: "https://chs.nus.edu.sg/2026/05/04/from-jakarta-to-chennai/", label: "NUS feature" },
+      ],
     },
   ];
 
@@ -160,7 +169,30 @@ export default function Portfolio() {
         "Built with Team Komodo Tech, BlazeReport helps officers turn voice notes, witness statements, scene photos, floor plans, and supporting documents into a structured fire investigation report. MERaLiON handles multilingual transcription (including Cantonese in the live demo), an LLM drafts the structured report, and fire pattern analysis runs on cluster, deployed on OpenShift.",
       tags: ["MERaLiON", "LLM", "OpenShift", "Agentic AI", "Speech-to-Text"],
       pmTags: ["AI PM", "Workflow Design", "Human in the loop", "GovTech", "User Testing"],
-      image: "/blazereport-scdf.jpg",
+      images: [
+        "/scdf%20(2).png",
+        "/scdf%20(1).jpg",
+        "/scdf%20(1).png",
+        "/scdf%20(11).jpg",
+        "/scdf%20(15).jpg",
+        "/scdf%20(16).jpg",
+        "/scdf%20(17).jpg",
+        "/scdf%20(18).jpg",
+        "/SCDF%20Hackathon%20Slides%20Start.jpg",
+        "/SCDF%20Hackathon%20Slides%20End.jpg",
+      ],
+      imagePositions: [
+        "center center",  // scdf (2) — main group photo
+        "center 38%",     // scdf (1).jpg — portrait stage shot
+        "center 45%",     // scdf (1).png — wide group on stage
+        "center center",  // scdf (11) — presentation
+        "center 75%",     // scdf (15) — portrait stage shot
+        "center center",  // scdf (16) — team with awards
+        "center 40%",     // scdf (17) — portrait stage shot
+        "center center",  // scdf (18) — demo scene
+        "center center",  // slides start
+        "center center",  // slides end
+      ],
       caseStudy: {
         problem:
           "Fire investigators capture evidence across many formats, from voice notes and photos to floor plans and burn charts. Then they spend hours rewriting and reconnecting everything into a final report.",
@@ -187,6 +219,7 @@ export default function Portfolio() {
       tags: ["K-Prototypes", "Llama 3.3 70B", "scikit-learn", "PCA", "FastAPI", "React", "Docker"],
       pmTags: ["Product Strategy", "AI Evaluation", "Data Modelling", "Decision Support"],
       image: "/nus-datathon-2026.jpg",
+      liveDemo: "https://nus-datathon-2026.vercel.app/",
       caseStudy: {
         problem:
           "Analysts benchmark firms against static industry codes and global averages, which hides real operational differences and early risk signals.",
@@ -204,10 +237,10 @@ export default function Portfolio() {
     },
     {
       title: "Micron × AISG National AI Student Challenge: SmartLogParser",
-      badge: "2nd Place · 17 teams",
+      badge: "1st Runner-Up · 17 teams",
       date: "May 2026",
       description:
-        "Problem: Semiconductor fabs run hundreds of machines, each producing logs in different formats (JSON, XML, CSV, syslog, key-value, plain text, binary) with no shared schema. Engineers manually interpret each vendor's syntax to diagnose faults, which is slow and brittle.\n\nApproach: Built SmartLogParser, an end-to-end pipeline that ingests, normalises, and structures tool logs across all major formats, with an LLM fallback layer (Groq + Ollama) for novel or malformed inputs. Implemented SHA-256 deduplication, a dead-letter queue, stability scoring, and golden-run baseline comparison for automatic drift detection. FastAPI + SQLAlchemy backend, React 18 + TypeScript frontend, Supabase PostgreSQL in production.\n\nResult: 2nd of 17 teams. Turns hours of manual triage into an automated intelligence layer ready for anomaly detection and yield analysis.",
+        "Problem: Semiconductor fabs run hundreds of machines, each producing logs in different formats (JSON, XML, CSV, syslog, key-value, plain text, binary) with no shared schema. Engineers manually interpret each vendor's syntax to diagnose faults, which is slow and brittle.\n\nApproach: Built SmartLogParser, an end-to-end pipeline that ingests, normalises, and structures tool logs across all major formats, with an LLM fallback layer (Groq + Ollama) for novel or malformed inputs. Implemented SHA-256 deduplication, a dead-letter queue, stability scoring, and golden-run baseline comparison for automatic drift detection. FastAPI + SQLAlchemy backend, React 18 + TypeScript frontend, Supabase PostgreSQL in production.\n\nResult: 1st Runner-Up of 17 teams. Turns hours of manual triage into an automated intelligence layer ready for anomaly detection and yield analysis.",
       tags: ["FastAPI", "SQLAlchemy", "React", "Supabase", "Groq API", "Ollama", "ETL"],
       angle: "Designed around engineers drowning in mismatched log formats by automating triage instead of adding another dashboard.",
       image: "/national%20ai%20challenge%202nd%20place.jpg",
@@ -215,10 +248,10 @@ export default function Portfolio() {
     },
     {
       title: "MeDo Vibe Coding Hackathon: BTO Lens",
-      badge: "Top 3 · 40 teams",
+      badge: "2nd Runner-Up · 40 teams",
       date: "Apr 2026",
       description:
-        "Problem: BTO applicants make one of the largest financial decisions of their lives using static PDFs, flat floor plans, and forum threads, with no way to visualise what living in an unbuilt site will actually feel like.\n\nApproach: Built BTO Lens, an AI decision-support platform. Engineered a procedural 3D building-massing engine in Three.js that auto-generates block geometry from HDB storey count and site footprint, hour-by-hour sunlight/shadow simulation via SunCalc.js, a toggleable amenity layer via OneMap API, and a rules-based liveability scoring engine (0 to 100) re-weighted from natural-language input parsed by Claude API. Added a two-project side-by-side comparison with AI-generated trade-off narrative.\n\nResult: Top 3 of 40 teams. Turns a $500,000 housing decision from guesswork into a grounded, interactive experience.",
+        "Problem: BTO applicants make one of the largest financial decisions of their lives using static PDFs, flat floor plans, and forum threads, with no way to visualise what living in an unbuilt site will actually feel like.\n\nApproach: Built BTO Lens, an AI decision-support platform. Engineered a procedural 3D building-massing engine in Three.js that auto-generates block geometry from HDB storey count and site footprint, hour-by-hour sunlight/shadow simulation via SunCalc.js, a toggleable amenity layer via OneMap API, and a rules-based liveability scoring engine (0 to 100) re-weighted from natural-language input parsed by Claude API. Added a two-project side-by-side comparison with AI-generated trade-off narrative.\n\nResult: 2nd Runner-Up of 40 teams. Turns a $500,000 housing decision from guesswork into a grounded, interactive experience.",
       tags: ["React", "Three.js", "SunCalc.js", "OneMap API", "Claude API", "Node.js"],
       angle: "Designed around a real user decision: helping BTO applicants feel an unbuilt home before committing $500k.",
       image: "/MeDO%20Hackathon%20Group%20Photo.jpg",
@@ -226,21 +259,54 @@ export default function Portfolio() {
     },
     {
       title: "SDS Hackathon 2025: Medical Insurance Cost Prediction",
-      badge: "Top 3 · 40 teams",
+      badge: "2nd Runner-Up · 40 teams",
       date: "Nov 2025",
       description:
-        "Problem: Predict medical insurance costs accurately while understanding feature impact and ensuring fairness across demographic subgroups.\n\nApproach: Engineered interaction features (smoker × BMI, smoker × age); benchmarked Ridge / Lasso / Elastic Net / Random Forest / XGBoost via cross-validation and grid search. Used AIC and SHAP for interpretability, and ran Equalised Odds fairness analysis across sex, region, and smoker groups.\n\nResult: R² > 0.85, Top 3 of 40 teams. Identified smoking status and BMI as dominant cost predictors with stable residuals and interpretable SHAP patterns.",
+        "Problem: Predict medical insurance costs accurately while understanding feature impact and ensuring fairness across demographic subgroups.\n\nApproach: Engineered interaction features (smoker × BMI, smoker × age); benchmarked Ridge / Lasso / Elastic Net / Random Forest / XGBoost via cross-validation and grid search. Used AIC and SHAP for interpretability, and ran Equalised Odds fairness analysis across sex, region, and smoker groups.\n\nResult: R² > 0.85, 2nd Runner-Up of 40 teams. Identified smoking status and BMI as dominant cost predictors with stable residuals and interpretable SHAP patterns.",
       tags: ["scikit-learn", "XGBoost", "SHAP", "Random Forest", "Fairness Analysis"],
       angle: "Prioritised interpretability and fairness, so predictions could actually be trusted and acted on, not just scored.",
       image: "/nus-hackathon-2025.jpg",
       imgPos: "center 20%",
     },
     {
+      title: "Careerlingo: Duolingo-style AI Career Coach",
+      badge: "Top 5 Finalists · 14 teams",
+      date: "June 2026",
+      subtitle: "LinkedIn Career Trailblazer Camp - AI Hackathon",
+      description:
+        "Bite-size daily lessons that coach job-seekers through their career search, instead of one-off resume reviews. Built with team LingoLabs (Jovan, Ray, Kyle).",
+      angle:
+        "Chose bite size daily coaching over one off resume reviews to build a habit instead of a one time fix.",
+      tags: ["AI", "LLM", "Product", "EdTech"],
+      pmTags: ["Behaviour Design", "Career Tech"],
+      images: [
+        "/linkedin%206.jpg",
+        "/linkedin%201.jpg",
+        "/linkedin%202.jpg",
+        "/linkedin%203.jpg",
+        "/linkedin%204.jpg",
+        "/linkedin%205.jpg",
+        "/linkedin%207.jpg",
+      ],
+      imagePositions: [
+        "center 38%",
+        "center 55%",
+        "center 26%",
+        "center 54%",
+        "center 30%",
+        "",
+        "",
+      ],
+      liveDemo: "https://careerlingo-mvp-web-1781622317264.chatand.build/",
+      article: "https://www.linkedin.com/pulse/linkedin-career-trailblazer-camp-chatandbuild-helps-students-hxjuc",
+      articleLabel: "LinkedIn article",
+    },
+    {
       title: "NUS Datathon 2025: Financial Advisory Matching",
-      badge: "Top 5 · 40 teams",
+      badge: "Top 5 Finalists · 40 teams",
       date: "Feb 2025",
       description:
-        "Problem: An insurance company's advisor-client matching was manual and suboptimal, leading to poor conversion and engagement.\n\nApproach: Built a hybrid recommendation model combining SVD-based collaborative filtering with content-based filtering (cosine similarity), trained on historical policy success rates, client profiles, and advisor expertise.\n\nResult: Top 5 of 40 teams. Measurable lift in match quality vs. baseline, improving personalisation and projected policy conversion.",
+        "Problem: An insurance company's advisor-client matching was manual and suboptimal, leading to poor conversion and engagement.\n\nApproach: Built a hybrid recommendation model combining SVD-based collaborative filtering with content-based filtering (cosine similarity), trained on historical policy success rates, client profiles, and advisor expertise.\n\nResult: Top 5 Finalists of 40 teams. Measurable lift in match quality vs. baseline, improving personalisation and projected policy conversion.",
       tags: ["scikit-learn", "SVD", "Collaborative Filtering", "Cosine Similarity"],
       angle: "Framed around a business outcome where better advisor client fit drives conversion, not just a higher model score.",
       image: "/nus-datathon.jpg",
@@ -252,31 +318,6 @@ export default function Portfolio() {
     imagePositions?: string[];
     liveDemo?: string; github?: string; problem?: string; productDecision?: string; pmTags?: string[];
   }[] = [
-    {
-      title: "Careerlingo: Duolingo-style AI Career Coach",
-      date: "LinkedIn Career Trailblazer Camp · Top 5 Finalist",
-      description:
-        "Bite-size daily lessons that coach job-seekers through their career search, instead of one-off resume reviews. Built with team LingoLabs (Jovan, Ray, Kyle).",
-      productDecision:
-        "Chose bite size daily coaching over one off resume reviews to build a habit instead of a one time fix.",
-      tags: ["AI", "LLM", "Product", "EdTech"],
-      pmTags: ["Behaviour Design", "Career Tech"],
-      images: [
-        "/linkedin%201.jpg",
-        "/linkedin%202.jpg",
-        "/linkedin%203.jpg",
-        "/linkedin%204.jpg",
-        "/linkedin%205.jpg",
-        "/linkedin%206.jpg",
-        "/linkedin%207.jpg",
-      ],
-      imagePositions: [
-        "center 72%",
-        "42% center",
-        "center 68%",
-      ],
-      liveDemo: "https://careerlingo-mvp-web-1781622317264.chatand.build/",
-    },
     {
       title: "CoverCraft: AI Cover Letter Generator",
       date: "Mar 2026",
@@ -301,6 +342,18 @@ export default function Portfolio() {
       image: "/AF Tracker Image.jpg",
       liveDemo: "https://af-journey-map.vercel.app/",
       github: "https://github.com/bernardinolintang/af-journey-map",
+    },
+    {
+      title: "Eksplorasi",
+      date: "Jul 2026",
+      description:
+        "Personal outdoor-exploration tracker for 100+ parks, trails, reservoirs, wetlands, islands, and heritage spots across Singapore. Browse every location on an interactive map, mark places as visited or want-to-go, jot per-spot notes, and follow your progress with category and regional breakdowns, synced filters across map and list views, and a wishlist-first “suggest next place” picker. Built with Next.js and local-first persistence — no account or backend required.",
+      productDecision:
+        "Added visited / want-to-go / notes on each place, turning a location checklist into a personal exploration journal rather than a static directory.",
+      tags: ["Next.js", "TypeScript", "Tailwind CSS", "Google Maps", "Leaflet"],
+      image: "/Eksplorasi%20Cover%20Page.png",
+      liveDemo: "https://eksplorasi.vercel.app/",
+      github: "https://github.com/bernardinolintang?tab=repositories",
     },
     {
       title: "Hybrid CNN + RAG Framework for Dermatology Decision Support",
@@ -535,6 +588,15 @@ export default function Portfolio() {
                 <div className="al-tags">
                   {x.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
                 </div>
+                {x.links && x.links.length > 0 && (
+                  <div className="al-links-row">
+                    {x.links.map((l) => (
+                      <a className="al-link" key={l.href} href={l.href} target="_blank" rel="noreferrer">
+                        {l.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -549,7 +611,12 @@ export default function Portfolio() {
             {competitions.map((c) => (
               <div className="al-card al-media-card al-rv" key={c.title}>
                 {cardImages(c).length > 0 && (
-                  <CardImageCarousel images={cardImages(c)} alt={c.title} imgPos={c.imgPos} />
+                  <CardImageCarousel
+                    images={cardImages(c)}
+                    alt={c.title}
+                    imgPos={c.imgPos}
+                    imagePositions={c.imagePositions}
+                  />
                 )}
                 <div className="al-media-body">
                   <span className="al-badge">{c.badge}</span>
@@ -575,7 +642,7 @@ export default function Portfolio() {
                       {c.pmTags.map((t) => <span className="al-pm-tag" key={t}>{t}</span>)}
                     </div>
                   )}
-                  {(c.caseStudy || c.liveDemo) && (
+                  {(c.caseStudy || c.liveDemo || c.article) && (
                     <div className="al-links-row">
                       {c.caseStudy && (
                         <button type="button" className="al-link" onClick={() => setCaseStudy(c)}>
@@ -583,6 +650,11 @@ export default function Portfolio() {
                         </button>
                       )}
                       {c.liveDemo && <a className="al-link" href={c.liveDemo} target="_blank" rel="noreferrer">Live demo</a>}
+                      {c.article && (
+                        <a className="al-link" href={c.article} target="_blank" rel="noreferrer">
+                          {c.articleLabel ?? "Article"}
+                        </a>
+                      )}
                     </div>
                   )}
                 </div>
