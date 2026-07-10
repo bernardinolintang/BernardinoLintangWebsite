@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import "../apple.css";
+import { CardImageCarousel } from "./CardImageCarousel";
+
+function cardImages(item: { image?: string; images?: string[] }) {
+  return item.images ?? (item.image ? [item.image] : []);
+}
 
 type CompetitionCard = {
   title: string; badge: string; date: string; description: string; tags: string[];
-  image?: string; subtitle?: string; pmTags?: string[]; angle?: string; liveDemo?: string;
+  image?: string; images?: string[]; subtitle?: string; pmTags?: string[]; angle?: string; liveDemo?: string;
   imgPos?: string;
   caseStudy?: {
     problem: string; users: string; role: string; productDecision: string;
@@ -243,7 +248,7 @@ export default function Portfolio() {
   ];
 
   const projects: {
-    title: string; date: string; description: string; tags: string[]; image?: string;
+    title: string; date: string; description: string; tags: string[]; image?: string; images?: string[];
     liveDemo?: string; github?: string; problem?: string; productDecision?: string; pmTags?: string[];
   }[] = [
     {
@@ -255,7 +260,15 @@ export default function Portfolio() {
         "Chose bite size daily coaching over one off resume reviews to build a habit instead of a one time fix.",
       tags: ["AI", "LLM", "Product", "EdTech"],
       pmTags: ["Behaviour Design", "Career Tech"],
-      image: "/careerlingo.jpg",
+      images: [
+        "/linkedin%201.jpg",
+        "/linkedin%202.jpg",
+        "/linkedin%203.jpg",
+        "/linkedin%204.jpg",
+        "/linkedin%205.jpg",
+        "/linkedin%206.jpg",
+        "/linkedin%207.jpg",
+      ],
       liveDemo: "https://careerlingo-mvp-web-1781622317264.chatand.build/",
     },
     {
@@ -529,7 +542,9 @@ export default function Portfolio() {
           <div className="al-grid-2">
             {competitions.map((c) => (
               <div className="al-card al-media-card al-rv" key={c.title}>
-                {c.image && <img src={c.image} alt={c.title} loading="lazy" style={(c as any).imgPos ? { objectPosition: (c as any).imgPos } : undefined} />}
+                {cardImages(c).length > 0 && (
+                  <CardImageCarousel images={cardImages(c)} alt={c.title} imgPos={c.imgPos} />
+                )}
                 <div className="al-media-body">
                   <span className="al-badge">{c.badge}</span>
                   <h3>{c.title}</h3>
@@ -578,7 +593,9 @@ export default function Portfolio() {
           <div className="al-grid-2">
             {projects.map((p) => (
               <div className="al-card al-media-card al-rv" key={p.title}>
-                {p.image && <img src={p.image} alt={p.title} loading="lazy" onError={(e) => ((e.target as HTMLImageElement).style.display = "none")} />}
+                {cardImages(p).length > 0 && (
+                  <CardImageCarousel images={cardImages(p)} alt={p.title} />
+                )}
                 <div className="al-media-body">
                   <h3>{p.title}</h3>
                   <div className="al-date">{p.date}</div>
@@ -618,7 +635,9 @@ export default function Portfolio() {
           <div className="al-grid-2">
             {events.map((ev) => (
               <div className="al-card al-media-card al-rv" key={ev.title}>
-                {ev.image && <img src={ev.image} alt={ev.title} loading="lazy" />}
+                {cardImages(ev).length > 0 && (
+                  <CardImageCarousel images={cardImages(ev)} alt={ev.title} />
+                )}
                 <div className="al-media-body">
                   <h3>{ev.title}</h3>
                   <div className="al-date">{ev.date}</div>

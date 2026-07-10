@@ -154,6 +154,38 @@ body {
 .al-media-card img { width: 100%; height: 220px; object-fit: cover; display: block;
   transition: transform .5s cubic-bezier(.22,1,.36,1); }
 .al-media-card:hover img { transform: scale(1.03); }
+
+.al-card-carousel { position: relative; flex-shrink: 0; }
+.al-card-carousel__viewport { overflow: hidden; }
+.al-card-carousel__track { display: flex; }
+.al-card-carousel__slide { flex: 0 0 100%; min-width: 0; }
+.al-card-carousel__slide img { width: 100%; height: 220px; object-fit: cover; display: block;
+  transition: transform .5s cubic-bezier(.22,1,.36,1); }
+.al-media-card:hover .al-card-carousel__slide img { transform: scale(1.03); }
+.al-card-carousel__btn {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border: none; border-radius: 50%;
+  background: rgba(255,255,255,.92); color: var(--al-ink);
+  box-shadow: 0 2px 10px rgba(15,23,42,.18); cursor: pointer;
+  opacity: 0; transition: opacity .2s ease, background .2s ease, transform .2s ease;
+}
+.al-card-carousel__btn--prev { left: 10px; }
+.al-card-carousel__btn--next { right: 10px; }
+.al-card-carousel:hover .al-card-carousel__btn,
+.al-card-carousel:focus-within .al-card-carousel__btn { opacity: 1; }
+.al-card-carousel__btn:hover { background: #fff; transform: translateY(-50%) scale(1.06); }
+.al-card-carousel__dots {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 5px; z-index: 2; pointer-events: none;
+}
+.al-card-carousel__dots span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,.55); transition: width .2s ease, background .2s ease;
+}
+.al-card-carousel__dots span.active {
+  width: 16px; border-radius: 999px; background: rgba(255,255,255,.95);
+}
 .al-media-body { padding: 26px 28px 28px; display: flex; flex-direction: column; flex: 1; }
 .al-badge {
   display: inline-block; align-self: flex-start; font-size: 12px; font-weight: 600; letter-spacing: .04em;
@@ -325,6 +357,7 @@ body {
   .al-media-card, .al-media-card img, .al-stack .al-card, .al-btn { transition: none; }
   .al-media-card:hover, .al-stack .al-card:hover, .al-btn:hover { transform: none; box-shadow: var(--al-shadow); }
   .al-media-card:hover img { transform: none; }
+  .al-media-card:hover .al-card-carousel__slide img { transform: none; }
   .al-progress { display: none; }
   .al-modal, .al-modal-overlay { animation: none; }
 }
