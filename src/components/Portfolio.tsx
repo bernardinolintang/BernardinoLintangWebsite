@@ -249,6 +249,7 @@ export default function Portfolio() {
 
   const projects: {
     title: string; date: string; description: string; tags: string[]; image?: string; images?: string[];
+    imagePositions?: string[];
     liveDemo?: string; github?: string; problem?: string; productDecision?: string; pmTags?: string[];
   }[] = [
     {
@@ -268,6 +269,11 @@ export default function Portfolio() {
         "/linkedin%205.jpg",
         "/linkedin%206.jpg",
         "/linkedin%207.jpg",
+      ],
+      imagePositions: [
+        "center 72%",
+        "42% center",
+        "center 68%",
       ],
       liveDemo: "https://careerlingo-mvp-web-1781622317264.chatand.build/",
     },
@@ -594,7 +600,11 @@ export default function Portfolio() {
             {projects.map((p) => (
               <div className="al-card al-media-card al-rv" key={p.title}>
                 {cardImages(p).length > 0 && (
-                  <CardImageCarousel images={cardImages(p)} alt={p.title} />
+                  <CardImageCarousel
+                    images={cardImages(p)}
+                    alt={p.title}
+                    imagePositions={p.imagePositions}
+                  />
                 )}
                 <div className="al-media-body">
                   <h3>{p.title}</h3>

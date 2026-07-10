@@ -155,13 +155,12 @@ body {
   transition: transform .5s cubic-bezier(.22,1,.36,1); }
 .al-media-card:hover img { transform: scale(1.03); }
 
-.al-card-carousel { position: relative; flex-shrink: 0; }
-.al-card-carousel__viewport { overflow: hidden; }
-.al-card-carousel__track { display: flex; }
-.al-card-carousel__slide { flex: 0 0 100%; min-width: 0; }
-.al-card-carousel__slide img { width: 100%; height: 220px; object-fit: cover; display: block;
-  transition: transform .5s cubic-bezier(.22,1,.36,1); }
-.al-media-card:hover .al-card-carousel__slide img { transform: scale(1.03); }
+.al-card-carousel { position: relative; flex-shrink: 0; overflow: hidden; isolation: isolate; }
+.al-card-carousel__viewport { overflow: hidden; width: 100%; }
+.al-card-carousel__track { display: flex; touch-action: pan-y pinch-zoom; }
+.al-card-carousel__slide { flex: 0 0 100%; min-width: 0; overflow: hidden; }
+.al-card-carousel__slide img { width: 100%; height: 220px; object-fit: cover; display: block; }
+.al-media-card:hover .al-card-carousel__slide img { transform: none; }
 .al-card-carousel__btn {
   position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
   display: flex; align-items: center; justify-content: center;

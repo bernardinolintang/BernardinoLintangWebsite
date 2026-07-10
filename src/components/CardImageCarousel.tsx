@@ -6,9 +6,10 @@ type CardImageCarouselProps = {
   images: string[];
   alt: string;
   imgPos?: string;
+  imagePositions?: string[];
 };
 
-export function CardImageCarousel({ images, alt, imgPos }: CardImageCarouselProps) {
+export function CardImageCarousel({ images, alt, imgPos, imagePositions }: CardImageCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const multi = images.length > 1;
@@ -57,17 +58,20 @@ export function CardImageCarousel({ images, alt, imgPos }: CardImageCarouselProp
     <div className="al-card-carousel">
       <div className="al-card-carousel__viewport" ref={emblaRef}>
         <div className="al-card-carousel__track">
-          {images.map((src, i) => (
+          {images.map((src, i) => {
+            const position = imagePositions?.[i] ?? imgPos;
+            return (
             <div className="al-card-carousel__slide" key={src}>
               <img
                 src={src}
                 alt={`${alt} — photo ${i + 1} of ${images.length}`}
                 loading={i === 0 ? "eager" : "lazy"}
-                style={imgPos ? { objectPosition: imgPos } : undefined}
+                style={position ? { objectPosition: position } : undefined}
                 onError={(e) => ((e.target as HTMLImageElement).style.display = "none")}
               />
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
       <button
