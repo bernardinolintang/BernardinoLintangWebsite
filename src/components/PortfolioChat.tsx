@@ -1,0 +1,537 @@
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { track } from "@vercel/analytics";
+import { jsPDF } from "jspdf";
+
+/* ============ Types mirrored from the API response ============ */
+
+type Source = {
+  id: string;
+  title: string;
+  type: string;
+  badge?: string;
+  url: string;
+  demoUrl?: string;
+};
+
+type RecommendedAction = { label: string; url: string };
+
+type Message = {
+  role: "user" | "assistant" | "divider";
+  text: string;
+  sources?: Source[];
+  recommendedAction?: RecommendedAction;
+  isSummary?: boolean;
+  feedback?: "up" | "down";
+};
+
+type RecruiterMode = "ai-product" | "data-science" | "analytics" | "engineering" | "everything";
+
+const MODES: { id: RecruiterMode; label: string }[] = [
+  { id: "ai-product", label: "AI Product" },
+  { id: "data-science", label: "Data Science" },
+  { id: "analytics", label: "Analytics" },
+  { id: "engineering", label: "Engineering" },
+  { id: "everything", label: "Everything" },
+];
+
+const SUGGESTED_QUESTIONS: Record<RecruiterMode, string[]> = {
+  "ai-product": [
+    "What is Bernard's strongest AI project?",
+    "Show evidence of product thinking",
+    "How has Bernard worked with real users?",
+    "Summarise Bernard for a recruiter",
+  ],
+  "data-science": [
+    "What machine learning has Bernard done?",
+    "Tell me about his fraud detection work",
+    "What competitions has Bernard won?",
+    "Summarise Bernard for a recruiter",
+  ],
+  "analytics": [
+    "Does Bernard have SQL and analytics experience?",
+    "Has he built dashboards or done A/B testing?",
+    "What's his strongest measurable achievement?",
+    "Summarise Bernard for a recruiter",
+  ],
+  "engineering": [
+    "Has Bernard deployed anything to production?",
+    "What data pipelines has he built?",
+    "What's his tech stack?",
+    "Summarise Bernard for a recruiter",
+  ],
+  "everything": [
+    "What is Bernard's strongest AI project?",
+    "Show evidence of product thinking",
+    "Does Bernard have SQL experience?",
+    "Summarise Bernard for a recruiter",
+  ],
+};
+
+const MODE_STORAGE_KEY = "bl-chat-mode";
+const HISTORY_STORAGE_KEY = "bl-chat-history";
+
+function loadStoredMode(): RecruiterMode | null {
+  try {
+    const stored = localStorage.getItem(MODE_STORAGE_KEY);
+    return MODES.some((m) => m.id === stored) ? (stored as RecruiterMode) : null;
+  } catch {
+    return null;
+  }
+}
+
+function loadStoredHistory(): Message[] {
+  try {
+    const raw = sessionStorage.getItem(HISTORY_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.slice(-30) : [];
+  } catch {
+    return [];
+  }
+}
+
+// Always the live site, even when the brief is downloaded from localhost.
+const PORTFOLIO_URL = "https://bernardino-lintang-website.vercel.app/";
+
+const PDF_INK = "#1d1d1f";
+const PDF_INK_2 = "#6e6e73";
+const PDF_ACCENT = "#0071e3";
+const PDF_MARGIN = 56;
+const PDF_PAGE_BOTTOM = 780;
+
+function downloadBrief(summary: Message, mode: RecruiterMode) {
+  const modeLabel = MODES.find((m) => m.id === mode)?.label ?? "General";
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const contentWidth = doc.internal.pageSize.getWidth() - PDF_MARGIN * 2;
+  let y = 64;
+
+  function block(
+    text: string,
+    { size = 11, bold = false, color = PDF_INK, gapAfter = 16, leading = 1.35 }: {
+      size?: number;
+      bold?: boolean;
+      color?: string;
+      gapAfter?: number;
+      leading?: number;
+    } = {},
+  ) {
+    doc.setFont("helvetica", bold ? "bold" : "normal");
+    doc.setFontSize(size);
+    doc.setTextColor(color);
+    const lines: string[] = doc.splitTextToSize(text, contentWidth);
+    for (const line of lines) {
+      if (y > PDF_PAGE_BOTTOM) {
+        doc.addPage();
+        y = 64;
+      }
+      doc.text(line, PDF_MARGIN, y);
+      y += size * leading;
+    }
+    y += gapAfter;
+  }
+
+  block("Bernardino Lintang", { size: 20, bold: true, gapAfter: 2 });
+  block(`${modeLabel} Brief`, { size: 12.5, color: PDF_INK_2, gapAfter: 22 });
+
+  block(summary.text, { size: 11, gapAfter: 22 });
+
+  const sources = summary.sources ?? [];
+  if (sources.length > 0) {
+    block("EVIDENCE", { size: 10.5, bold: true, color: PDF_INK_2, gapAfter: 8 });
+    for (const s of sources) {
+      block(s.title + (s.badge ? `  ·  ${s.badge}` : ""), { size: 11, gapAfter: 2 });
+      if (s.demoUrl) block(s.demoUrl, { size: 9.5, color: PDF_ACCENT, gapAfter: 10 });
+      else y += 8;
+    }
+    y += 6;
+  }
+
+  block("LINKS", { size: 10.5, bold: true, color: PDF_INK_2, gapAfter: 8 });
+  block(`Portfolio    ${PORTFOLIO_URL}`, { size: 10.5, gapAfter: 4 });
+  block("GitHub       https://github.com/bernardinolintang", { size: 10.5, gapAfter: 4 });
+  block("LinkedIn     https://www.linkedin.com/in/bernardino-lintang", { size: 10.5, gapAfter: 4 });
+  block("Email        lintangbernardino@gmail.com", { size: 10.5, gapAfter: 22 });
+
+  block(
+    `Generated by the portfolio assistant on ${new Date().toLocaleDateString("en-SG", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })}.`,
+    { size: 9, color: PDF_INK_2, gapAfter: 0 },
+  );
+
+  doc.save(`bernardino-lintang-${mode}-brief.pdf`);
+}
+
+function safeTrack(event: string, props?: Record<string, string>) {
+  try {
+    track(event, props);
+  } catch {
+    /* analytics must never break the chat */
+  }
+}
+
+/* ============ Component ============ */
+
+export function PortfolioChat() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [mode, setMode] = useState<RecruiterMode | null>(null);
+  const [question, setQuestion] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMode(loadStoredMode());
+    setMessages(loadStoredHistory());
+  }, []);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(messages.slice(-30)));
+    } catch {
+      /* storage full or unavailable — history just won't persist */
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, isLoading, isOpen]);
+
+  function openChat() {
+    setIsOpen(true);
+    safeTrack("chat_opened");
+  }
+
+  function selectMode(next: RecruiterMode) {
+    // Mark the switch in the transcript so the visitor knows why the focus
+    // (and suggested questions) changed mid-conversation.
+    if (mode && mode !== next && messages.some((m) => m.role !== "divider")) {
+      const label = MODES.find((m) => m.id === next)?.label ?? next;
+      setMessages((current) => [...current, { role: "divider", text: `Now exploring ${label}` }]);
+    }
+    setMode(next);
+    try {
+      localStorage.setItem(MODE_STORAGE_KEY, next);
+    } catch {
+      /* fine */
+    }
+    safeTrack("chat_mode_selected", { mode: next });
+  }
+
+  async function callApi(payload: Record<string, unknown>): Promise<Message> {
+    const response = await fetch("/api/portfolio-chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Unable to answer right now.");
+    return {
+      role: "assistant",
+      text: data.answer,
+      sources: data.sources,
+      recommendedAction: data.recommendedAction,
+    };
+  }
+
+  async function askQuestion(value: string, fromSuggestion = false) {
+    const cleaned = value.trim();
+    if (!cleaned || isLoading) return;
+
+    if (fromSuggestion) safeTrack("chat_suggested_question", { question: cleaned });
+    else safeTrack("chat_question_asked", { mode: mode ?? "everything" });
+
+    const history = messages
+      .filter((m) => m.role !== "divider")
+      .slice(-8)
+      .map((m) => ({ role: m.role, content: m.text }));
+    setMessages((current) => [...current, { role: "user", text: cleaned }]);
+    setQuestion("");
+    setIsLoading(true);
+    try {
+      const reply = await callApi({ question: cleaned, mode: mode ?? "everything", history });
+      setMessages((current) => [...current, reply]);
+    } catch (error) {
+      setMessages((current) => [
+        ...current,
+        { role: "assistant", text: error instanceof Error ? error.message : "The portfolio assistant is temporarily unavailable." },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function generateSummary() {
+    if (isLoading) return;
+    safeTrack("chat_summary_generated", { mode: mode ?? "everything" });
+    setMessages((current) => [...current, { role: "user", text: "Generate a recruiter summary" }]);
+    setIsLoading(true);
+    try {
+      const reply = await callApi({ action: "summary", mode: mode ?? "everything" });
+      setMessages((current) => [...current, { ...reply, isSummary: true }]);
+    } catch (error) {
+      setMessages((current) => [
+        ...current,
+        { role: "assistant", text: error instanceof Error ? error.message : "The portfolio assistant is temporarily unavailable." },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function giveFeedback(index: number, value: "up" | "down") {
+    const target = messages[index];
+    const isRemoving = target?.feedback === value;
+
+    // Attach the question that produced this answer so a downvote in the
+    // Vercel Analytics dashboard is actionable, not just a bare count.
+    if (!isRemoving) {
+      const question = [...messages.slice(0, index)].reverse().find((m) => m.role === "user")?.text ?? "";
+      safeTrack("chat_feedback", {
+        value,
+        mode: mode ?? "everything",
+        question: question.slice(0, 200),
+      });
+    }
+
+    setMessages((current) =>
+      current.map((m, i) => (i === index ? { ...m, feedback: isRemoving ? undefined : value } : m)),
+    );
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    void askQuestion(question);
+  }
+
+  const suggestions = SUGGESTED_QUESTIONS[mode ?? "everything"];
+
+  /* Follow-up chips after an answer: a "tell me more" about the top evidence
+     card, plus suggested questions the visitor hasn't asked yet. */
+  function followUpQuestions(): string[] {
+    const asked = new Set(messages.filter((m) => m.role === "user").map((m) => m.text.toLowerCase()));
+    const followUps: string[] = [];
+
+    const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant");
+    const topSource = lastAssistant?.sources?.[0];
+    if (topSource) {
+      // "BlazeReport: SCDF × Dell…" → "BlazeReport"
+      const shortName = topSource.title.split(/[:(]/)[0].replace(/^Testimonial · /, "").trim();
+      const probe = `What was Bernard's role in ${shortName}?`;
+      if (!asked.has(probe.toLowerCase())) followUps.push(probe);
+    }
+
+    for (const s of suggestions) {
+      if (followUps.length >= 3) break;
+      if (!asked.has(s.toLowerCase()) && !followUps.includes(s)) followUps.push(s);
+    }
+    return followUps.slice(0, 3);
+  }
+
+  return (
+    <>
+      {!isOpen && (
+        <button type="button" className="alc-fab" onClick={openChat} aria-label="Open portfolio assistant">
+          ✦ Ask about Bernard
+        </button>
+      )}
+
+      {isOpen && (
+        <section className="alc-panel" role="dialog" aria-label="Portfolio assistant">
+          <header className="alc-head">
+            <div>
+              <h2>Ask about Bernard</h2>
+              <p>Grounded in his portfolio · answers link to evidence</p>
+            </div>
+            <button type="button" className="alc-close" onClick={() => setIsOpen(false)} aria-label="Close portfolio assistant">
+              ×
+            </button>
+          </header>
+
+          {mode === null ? (
+            <div className="alc-body" ref={scrollRef}>
+              <p className="alc-intro">What would you like to explore?</p>
+              <div className="alc-mode-grid">
+                {MODES.map((m) => (
+                  <button key={m.id} type="button" className="alc-mode-btn" onClick={() => selectMode(m.id)}>
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="alc-mode-row" role="tablist" aria-label="Focus area">
+                {MODES.map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={mode === m.id}
+                    className={"alc-chip" + (mode === m.id ? " active" : "")}
+                    onClick={() => selectMode(m.id)}
+                  >
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="alc-body" ref={scrollRef}>
+                {messages.length === 0 && (
+                  <div>
+                    <p className="alc-intro">Some questions recruiters ask:</p>
+                    <div className="alc-suggestions">
+                      {suggestions.map((s) => (
+                        <button key={s} type="button" className="alc-suggestion" onClick={() => void askQuestion(s, true)}>
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                    <button type="button" className="alc-summary-cta" onClick={() => void generateSummary()}>
+                      ✦ Generate recruiter summary
+                    </button>
+                  </div>
+                )}
+
+                {messages.map((message, index) => {
+                  if (message.role === "divider") {
+                    return (
+                      <div key={index} className="alc-divider" role="separator">
+                        <span>{message.text}</span>
+                      </div>
+                    );
+                  }
+                  return (
+                  <article key={index} className={"alc-msg " + (message.role === "user" ? "alc-user" : "alc-bot")}>
+                    <p className="alc-text">{message.text}</p>
+
+                    {message.sources && message.sources.length > 0 && (
+                      <div className="alc-sources">
+                        <p className="alc-sources-label">Relevant evidence</p>
+                        {message.sources.map((source) => {
+                          const external = source.url.startsWith("http");
+                          return (
+                            <a
+                              key={source.id}
+                              className="alc-source-card"
+                              href={source.url}
+                              target={external ? "_blank" : undefined}
+                              rel={external ? "noreferrer" : undefined}
+                              onClick={() => safeTrack("chat_source_clicked", { source: source.id })}
+                            >
+                              <span className="alc-source-title">{source.title}</span>
+                              <span className="alc-source-meta">
+                                {source.badge ? source.badge : source.type}
+                              </span>
+                            </a>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {message.role === "assistant" && (message.recommendedAction || message.isSummary) && (
+                      <div className="alc-actions">
+                        {message.recommendedAction && (
+                          <a
+                            className="alc-action-btn"
+                            href={message.recommendedAction.url}
+                            target={message.recommendedAction.url.startsWith("http") ? "_blank" : undefined}
+                            rel={message.recommendedAction.url.startsWith("http") ? "noreferrer" : undefined}
+                            onClick={() => safeTrack("chat_action_clicked", { url: message.recommendedAction!.url })}
+                          >
+                            {message.recommendedAction.label}
+                          </a>
+                        )}
+                        {message.isSummary && (
+                          <button
+                            type="button"
+                            className="alc-action-btn"
+                            onClick={() => {
+                              downloadBrief(message, mode);
+                              safeTrack("chat_brief_downloaded", { mode });
+                            }}
+                          >
+                            ⬇ Download one-page brief (PDF)
+                          </button>
+                        )}
+                      </div>
+                    )}
+
+                    {message.role === "assistant" && (
+                      <div className="alc-feedback">
+                        {message.feedback ? (
+                          <span className="alc-feedback-thanks">
+                            {message.feedback === "up"
+                              ? "Thanks — glad that helped."
+                              : "Thanks — noted. This helps Bernard improve his portfolio."}
+                          </span>
+                        ) : (
+                          <>
+                            <span className="alc-feedback-label">Was this helpful?</span>
+                            <button
+                              type="button"
+                              title="Helpful"
+                              aria-label="Helpful"
+                              onClick={() => giveFeedback(index, "up")}
+                            >
+                              👍
+                            </button>
+                            <button
+                              type="button"
+                              title="Not helpful"
+                              aria-label="Not helpful"
+                              onClick={() => giveFeedback(index, "down")}
+                            >
+                              👎
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </article>
+                  );
+                })}
+
+                {messages.length > 0 && !isLoading && (
+                  <div className="alc-followups">
+                    {followUpQuestions().map((q) => (
+                      <button
+                        key={q}
+                        type="button"
+                        className="alc-chip"
+                        onClick={() => void askQuestion(q, true)}
+                      >
+                        {q}
+                      </button>
+                    ))}
+                    <button type="button" className="alc-chip" onClick={() => void generateSummary()}>
+                      ✦ Recruiter summary
+                    </button>
+                  </div>
+                )}
+
+                {isLoading && <p className="alc-loading">Searching Bernard's portfolio…</p>}
+              </div>
+
+              <form onSubmit={handleSubmit} className="alc-input-row">
+                <input
+                  id="portfolio-chat-question"
+                  name="portfolio-chat-question"
+                  value={question}
+                  onChange={(event) => setQuestion(event.target.value)}
+                  placeholder="Ask about projects, skills, experience…"
+                  maxLength={500}
+                  aria-label="Ask a question about Bernard"
+                />
+                <button type="submit" disabled={isLoading || !question.trim()}>
+                  Send
+                </button>
+              </form>
+            </>
+          )}
+        </section>
+      )}
+    </>
+  );
+}
