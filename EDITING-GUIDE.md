@@ -7,9 +7,9 @@ understand React to change your content.
 
 ## 1. Change wording, add/remove a job, competition, or project
 
-Open **`src/components/Portfolio.tsx`**.
+Open **`src/data/portfolioContent.ts`**.
 
-Near the top you'll see plain lists (arrays) of your content:
+It contains plain lists (arrays) of your content:
 
 - `experiences` — your internships
 - `competitions` — hackathons and competitions
@@ -17,6 +17,10 @@ Near the top you'll see plain lists (arrays) of your content:
 - `events` — community / club roles
 - `testimonials` — recommendation quotes
 - `skills` — the skill tags in the About section
+- `profile` — your name, tagline, availability, and contact links
+
+Editing this file updates the site **and** the "Ask about Bernard" chat
+assistant at the same time — the assistant reads its knowledge from here.
 
 Each entry is a block like this:
 
@@ -42,9 +46,11 @@ Each entry is a block like this:
 Rule of thumb: keep the quotes and commas exactly where they are. If the site
 breaks, you probably deleted a comma or a quote.
 
-The hero headline, stat numbers, About paragraphs, and Contact text are lower
-down in the same file, inside the `return (...)` — search for the words you
-see on the page and edit them in place.
+The hero headline, About paragraphs, and Contact text shown on the page live
+in `src/components/Portfolio.tsx` inside the `return (...)` — search for the
+words you see on the page and edit them in place. If you change them, also
+update the matching text in the `profile` object of
+`src/data/portfolioContent.ts` so the chat assistant stays accurate.
 
 ---
 
@@ -115,7 +121,29 @@ dashboard for the live URL.
 
 If you ever need to set it up fresh: import the GitHub repo at vercel.com,
 framework preset **Vite**, build command `npm run build`, output directory
-`dist`. No environment variables needed.
+`dist`.
+
+**Environment variables (needed for the chat assistant):** in the Vercel
+dashboard go to Project → Settings → Environment Variables and add
+`GROQ_API_KEY` (your key from console.groq.com). Optionally add `GROQ_MODEL`
+to override the default `llama-3.3-70b-versatile`. Locally, the same values
+live in `.env.local`, which is never committed to git.
+
+---
+
+## 6. The "Ask about Bernard" chat assistant
+
+- Its knowledge comes from `src/data/portfolioContent.ts` — edit your content
+  there and the assistant automatically knows about it.
+- The floating button, suggested questions, and recruiter modes are in
+  `src/components/PortfolioChat.tsx`.
+- Answer rules (tone, grounding, word limits) are in `src/lib/chatCore.ts`
+  (`systemPrompt`). The server endpoint is `api/portfolio-chat.ts`.
+- It has built-in rate limiting (10 questions / 10 min per visitor, 500/day
+  total). Adjust the constants at the top of `src/lib/chatCore.ts`.
+- Questions asked are tracked as Vercel Analytics custom events
+  (`chat_opened`, `chat_question_asked`, `chat_source_clicked`, …) so you can
+  see what recruiters actually ask.
 
 ---
 
