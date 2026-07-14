@@ -7,7 +7,7 @@ import {
   portfolioKnowledge,
   type PortfolioEntry,
   type RecruiterMode,
-} from "./portfolioKnowledge";
+} from "./portfolioKnowledge.js";
 
 const SYNONYMS: Record<string, string[]> = {
   sql: ["snowflake", "postgresql", "database", "query", "queries", "analytics"],

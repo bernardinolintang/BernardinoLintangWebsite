@@ -12,8 +12,8 @@ import {
   projects,
   skills,
   testimonials,
-} from "../data/portfolioContent";
-import { slugify } from "./slugify";
+} from "../data/portfolioContent.js";
+import { slugify } from "./slugify.js";
 
 export type RecruiterMode =
   | "ai-product"

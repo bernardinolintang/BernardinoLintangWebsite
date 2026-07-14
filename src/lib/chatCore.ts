@@ -3,8 +3,8 @@
    Never import this from client components — it reads the Groq API key. */
 
 import { readFileSync } from "node:fs";
-import { retrievePortfolioContext } from "./retrievePortfolioContext";
-import type { PortfolioEntry, RecruiterMode } from "./portfolioKnowledge";
+import { retrievePortfolioContext } from "./retrievePortfolioContext.js";
+import type { PortfolioEntry, RecruiterMode } from "./portfolioKnowledge.js";
 
 /* Reads an env var, falling back to .env.local in dev so the Vite dev
    server works regardless of how it was started. In production (Vercel),
