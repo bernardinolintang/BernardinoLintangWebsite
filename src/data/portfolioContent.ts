@@ -68,6 +68,19 @@ export const profile = {
 
 export const experiences: Experience[] = [
   {
+    title: "Business Analyst Intern",
+    company: "IBM Singapore Pte. Ltd. (IBM Consulting)",
+    period: "Sep 2026 to Dec 2026 · Singapore",
+    logo: "/ibm-logo.png",
+    bullets: [
+      "Supporting client engagements across market research and competitive strategy within IBM Consulting's hybrid cloud and AI practice.",
+      "Contributing to data analytics assessments and enterprise-wide data integrations, with exposure to cloud migration and system implementation projects.",
+      "Running workshops, meetings, and stakeholder interviews to capture, document, and synthesise requirements across client and internal teams.",
+    ],
+    angle: "Bringing a data engineering and AI product lens to client-facing consulting work.",
+    tags: ["Business Analysis", "Data Analytics", "Cloud Migration", "Stakeholder Engagement"],
+  },
+  {
     title: "Data Engineer Intern",
     company: "Home Team Science and Technology Agency (HTX)",
     period: "May 2026 to Aug 2026 · Singapore",
