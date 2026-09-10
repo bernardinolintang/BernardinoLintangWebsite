@@ -301,6 +301,17 @@ export const competitions: CompetitionCard[] = [
 
 export const projects: Project[] = [
   {
+    title: "Anonymous Q&A Board",
+    date: "Sep 2026",
+    description:
+      "A Telegram Mini App I built for the mentorship group I advise at NUS's Statistics and Data Science Society, so mentees can ask questions they'd hesitate to raise in person. Questions are organised around scheduled sessions, auto-tagged by category using an LLM (Groq), and board admins get pinged the moment a new one comes in — with no author ever attached to a question, not even for me.",
+    productDecision:
+      "Anonymity had to hold against the advisor too, not just other mentees — so the schema has no author column at all. Trust isn't a UI promise, it's structurally impossible to break.",
+    tags: ["Telegram Mini App", "Next.js", "TypeScript", "Supabase", "Groq LLM"],
+    pmTags: ["Community", "Mentorship"],
+    image: "/qa-board-screenshot.png",
+  },
+  {
     title: "CoverCraft: AI Cover Letter Generator",
     date: "Mar 2026",
     description:
