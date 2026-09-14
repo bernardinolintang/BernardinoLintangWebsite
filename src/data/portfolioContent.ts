@@ -515,6 +515,12 @@ export const volunteerProjects: VolunteerProject[] = [
 
 export const testimonials: Testimonial[] = [
   {
+    name: "HTX",
+    title: "Data Engineer Intern · 2026",
+    image: "/htx-logo.png",
+    text: "During his internship, Bernardino demonstrated strong initiative, curiosity and willingness to learn. He worked on deploying Milvus in the existing Kubernetes environment, connecting it to HTX Nutanix Unified Storage's S3 storage, and building a document ingestion and embedding pipeline for semantic search. He showed the ability to understand unfamiliar technical concepts, troubleshoot issues independently, and communicate his findings clearly. Bernardino was positive, hardworking and conscientious in his work. He asked thoughtful questions, documented his progress, and showed persistence when debugging issues involving Kubernetes, certificates, S3 configuration and embedding models. He was able to learn quickly and contribute meaningfully to the project. Bernardino would be an asset to any organisation.",
+  },
+  {
     name: "Crayon Data",
     title: "AI Engineer Intern · 2025",
     image: "/crayondata_logo.jpg",
