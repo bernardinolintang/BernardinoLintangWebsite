@@ -24,13 +24,19 @@ export type Experience = {
 
 export type Project = {
   title: string; date: string; description: string; tags: string[]; image?: string; images?: string[];
-  imagePositions?: string[];
+  imagePositions?: string[]; imageFit?: "contain";
   liveDemo?: string; github?: string; problem?: string; productDecision?: string; pmTags?: string[];
 };
 
 export type CommunityEvent = {
   title: string; date: string; description: string; tags: string[];
   image?: string; link?: string;
+};
+
+export type VolunteerProject = {
+  title: string; org: string; date: string; location: string;
+  description: string; tags: string[];
+  images: string[]; imagePositions?: string[];
 };
 
 export type Testimonial = {
@@ -253,6 +259,40 @@ export const competitions: CompetitionCard[] = [
     imgPos: "center 20%",
   },
   {
+    title: "PathwaySG: AI Education Decision Companion for Singapore Families",
+    badge: "Semi-Finalist · Top 40/100 teams",
+    date: "Sep 2026",
+    subtitle: "AI decision companion helping Singapore families navigate school admissions.",
+    description:
+      "Problem: Singapore parents plan for one child's school admissions in isolation, but most families are juggling P1 registration, PSLE, and secondary or post-secondary choices for multiple children at once, with no tool that models the whole family's journey.\n\nApproach: Built PathwaySG (\"Primary School Navigator\") for the SimplifyNext Agentic AI Hackathon 2026. Deterministic domain code, on Next.js 16, TypeScript, and SQLite as the source of truth, handles all shortlisting, eligibility, scoring, and replanning. An LLM (Groq by default, with Anthropic and AWS Bedrock as swappable providers) is layered on only for the conversational \"Ask PathwaySG\" feature, and even then can only call read-only tools behind a \"Parent Gate\" so no AI action can register a child or take an irreversible MOE step.\n\nResult: Reached the Semi-Finals, placing in the top 40 of 100 teams.",
+    tags: ["Next.js", "TypeScript", "SQLite", "Agentic AI", "Groq", "Firestore"],
+    pmTags: ["Family UX", "Human in the Loop", "Agent Design", "EdTech"],
+    images: [
+      "/simplifynext%20group%20photo.jpg",
+      "/Pathway%20SG%20SimplifyNext%20Hackathon%20Presentation.png",
+    ],
+    imagePositions: [
+      "center 10%",
+      "center center",
+    ],
+    liveDemo: "https://pathwaysg.vercel.app/",
+    caseStudy: {
+      problem:
+        "Singapore parents plan for one child's school admissions in isolation, but most families have to reason about P1 registration, PSLE, and secondary or post-secondary choices for multiple children at once.",
+      users:
+        "Singapore parents managing children's school admissions across primary, secondary, and post-secondary transitions.",
+      role: "Product design · Agent architecture · Full-stack build",
+      productDecision:
+        "Kept every registration and scoring decision inside deterministic domain code, and let the LLM only answer questions through read-only tools behind a \"Parent Gate\", so the agent can help parents reason without ever taking an irreversible MOE action on their behalf.",
+      aiWorkflow:
+        "A conversational \"Ask PathwaySG\" layer calls a supervisor of read-only domain tools for shortlisting, eligibility, and replanning; SQLite stays the single source of truth, mirrored best-effort to Firestore and DynamoDB for serverless durability.",
+      impact:
+        "Reached the Semi-Finals, top 40 of 100 teams, at the SimplifyNext Agentic AI Hackathon 2026.",
+      learned:
+        "For decisions with real consequences, like registering a child for a school, trust comes from what the AI is not allowed to do. Gating irreversible actions behind deterministic code made it possible to give parents a genuinely useful assistant without risking a wrong action.",
+    },
+  },
+  {
     title: "Careerlingo: Duolingo-style AI Career Coach",
     badge: "Top 5 Finalists · 14 teams",
     date: "June 2026",
@@ -304,12 +344,13 @@ export const projects: Project[] = [
     title: "Anonymous Q&A Board",
     date: "Sep 2026",
     description:
-      "A Telegram Mini App I built for the mentorship group I advise at NUS's Statistics and Data Science Society, so mentees can ask questions they'd hesitate to raise in person. Questions are organised around scheduled sessions, auto-tagged by category using an LLM (Groq), and board admins get pinged the moment a new one comes in — with no author ever attached to a question, not even for me.",
+      "A Telegram Mini App I built for the mentorship group I advise at NUS's Statistics and Data Science Society, so mentees can ask questions they'd hesitate to raise in person. Questions are organised around scheduled sessions, auto-tagged by category using an LLM (Groq), and board admins get pinged the moment a new one comes in, with no author ever attached to a question, not even for me.",
     productDecision:
-      "Anonymity had to hold against the advisor too, not just other mentees — so the schema has no author column at all. Trust isn't a UI promise, it's structurally impossible to break.",
+      "Anonymity had to hold against the advisor too, not just other mentees, so the schema has no author column at all. Trust isn't a UI promise, it's structurally impossible to break.",
     tags: ["Telegram Mini App", "Next.js", "TypeScript", "Supabase", "Groq LLM"],
     pmTags: ["Community", "Mentorship"],
     image: "/qa-board-screenshot.png",
+    imageFit: "contain",
   },
   {
     title: "CoverCraft: AI Cover Letter Generator",
@@ -340,7 +381,7 @@ export const projects: Project[] = [
     title: "Eksplorasi",
     date: "Jul 2026",
     description:
-      "Personal outdoor-exploration tracker for 100+ parks, trails, reservoirs, wetlands, islands, and heritage spots across Singapore. Browse every location on an interactive map, mark places as visited or want-to-go, jot per-spot notes, and follow your progress with category and regional breakdowns, synced filters across map and list views, and a wishlist-first “suggest next place” picker. Built with Next.js and local-first persistence — no account or backend required.",
+      "Personal outdoor-exploration tracker for 100+ parks, trails, reservoirs, wetlands, islands, and heritage spots across Singapore. Browse every location on an interactive map, mark places as visited or want-to-go, jot per-spot notes, and follow your progress with category and regional breakdowns, synced filters across map and list views, and a wishlist-first “suggest next place” picker. Built with Next.js and local-first persistence, no account or backend required.",
     productDecision:
       "Added visited / want-to-go / notes on each place, turning a location checklist into a personal exploration journal rather than a static directory.",
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Google Maps", "Leaflet"],
@@ -434,6 +475,42 @@ export const events: CommunityEvent[] = [
   },
 ];
 
+/* ---------- Volunteering ---------- */
+
+export const volunteerProjects: VolunteerProject[] = [
+  {
+    title: "Project Sabaidee",
+    org: "OCIP Laos · King Edward VII Hall, NUS",
+    date: "16 May – 1 Jun 2024",
+    location: "Vientiane, Laos",
+    description:
+      "Two-week Overseas Community Involvement Project with King Edward VII Hall. Helped construct classroom facilities at a rural school and ran daily lessons and activities for the children, alongside a community recycling outreach and a tie-dye workshop with local youth. Run in partnership with NUS, YEP, and Youth Corps Singapore, sponsored by Pilot and Xorex Press.",
+    tags: ["OCIP", "Construction", "Teaching", "Community Service", "Laos"],
+    images: [
+      "/project%20sabaidee%20at%20airport.jpeg",
+      "/project%20sabaidee%20at%20school.jpeg",
+      "/project%20sabaidee%20at%20recycling%20bin%20centre.jpeg",
+      "/project%20sabaidee%20at%20tshirt%20dye%20workshop.jpeg",
+      "/project%20sabaidee%20at%20laos%20monument.jpeg",
+      "/project%20sabaidee%20at%20award%20ceremony.jpeg",
+    ],
+  },
+  {
+    title: "Seas The Day: Beach Cleanup",
+    org: "Youth Corps Singapore",
+    date: "4 Jun 2023",
+    location: "Coney Island, Singapore",
+    description:
+      "Hosted the #SeasTheDay beach cleanup at Coney Island with Youth Corps Singapore's Sustainability Cluster, held in conjunction with World Environment Day. Rallied volunteers to clear litter and marine debris from the shoreline.",
+    tags: ["Youth Corps Singapore", "Event Hosting", "Environment"],
+    images: [
+      "/seastheday%20beach%20cleanup.jpeg",
+      "/seastheday%20beach%20cleanup%20with%20the%20leaders.jpeg",
+      "/seastheday%20beach%20cleanup%20w%20pranav.jpeg",
+    ],
+  },
+];
+
 /* ---------- Testimonials ---------- */
 
 export const testimonials: Testimonial[] = [
@@ -441,7 +518,7 @@ export const testimonials: Testimonial[] = [
     name: "Crayon Data",
     title: "AI Engineer Intern · 2025",
     image: "/crayondata_logo.jpg",
-    text: "He took on one of Crayon Data's most complex and high-impact problem spaces — the Agentic Offer Management Portal — and handled it with depth, seriousness, and real ownership. He stood out as a builder who genuinely wants to understand the problem deeply before jumping to solutions. His thinking consistently reflected strong systems awareness: he treated AI as a constrained tool that needs checks, auditability, and human-in-the-loop design — not as magic.",
+    text: "He took on one of Crayon Data's most complex and high-impact problem spaces, the Agentic Offer Management Portal, and handled it with depth, seriousness, and real ownership. He stood out as a builder who genuinely wants to understand the problem deeply before jumping to solutions. His thinking consistently reflected strong systems awareness: he treated AI as a constrained tool that needs checks, auditability, and human-in-the-loop design, not as magic.",
   },
   {
     name: "Superbank",

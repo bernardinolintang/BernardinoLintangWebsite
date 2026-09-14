@@ -53,7 +53,7 @@ function rateLimited(ip: string): string | null {
   }
   const hits = (ipHits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
   if (hits.length >= MAX_PER_WINDOW) {
-    return "You've asked quite a few questions in a short time — please wait a few minutes, or reach Bernard at lintangbernardino@gmail.com.";
+    return "You've asked quite a few questions in a short time, please wait a few minutes, or reach Bernard at lintangbernardino@gmail.com.";
   }
   hits.push(now);
   ipHits.set(ip, hits);
@@ -149,7 +149,7 @@ function recommendedAction(entries: PortfolioEntry[]) {
   if (withDemo) {
     // Always name the project so the button is never a mystery link — it can
     // only ever point at one of the evidence cards shown above it.
-    return { label: `${withDemo.demoLabel} — ${shortTitle(withDemo.title)}`, url: withDemo.demoUrl! };
+    return { label: `${withDemo.demoLabel}: ${shortTitle(withDemo.title)}`, url: withDemo.demoUrl! };
   }
   const first = visible[0];
   if (first) {

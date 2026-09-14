@@ -17,6 +17,9 @@
 
 /* Force the light look regardless of any theme class on <html>. */
 html, html.dark, html.light { background: var(--al-bg); }
+/* Reserve the scrollbar's width permanently, so locking body scroll for a
+   modal/lightbox (overflow:hidden) never shifts page content sideways. */
+html { scrollbar-gutter: stable; }
 body {
   background: var(--al-bg) !important;
   color: var(--al-ink) !important;
@@ -43,6 +46,12 @@ body {
 }
 .al-nav a { color: inherit; text-decoration: none; transition: color .2s; }
 .al-nav a:hover { color: var(--al-ink); }
+.al-nav-links a { position: relative; padding-bottom: 4px; }
+.al-nav-links a.active { color: var(--al-ink); font-weight: 600; }
+.al-nav-links a.active::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px;
+  height: 2px; border-radius: 1px; background: var(--al-grad);
+}
 .al-nav .al-brand { font-weight: 600; color: var(--al-ink); display: flex; align-items: center; gap: 8px; }
 .al-nav .al-brand img { width: 22px; height: 22px; border-radius: 6px; }
 .al-nav-links { display: flex; gap: 28px; }
@@ -56,6 +65,8 @@ body {
   }
   .al-nav-links.open { display: flex; }
   .al-nav-links a { padding: 14px 22px; border-top: 1px solid rgba(0,0,0,.05); font-size: 15px; }
+  .al-nav-links a.active { background: rgba(0,113,227,.06); }
+  .al-nav-links a.active::after { display: none; }
   .al-nav-toggle { display: block; }
 }
 
@@ -165,6 +176,33 @@ body {
   transition: transform .5s cubic-bezier(.22,1,.36,1); }
 .al-media-card:hover img { transform: scale(1.03); }
 
+/* ---------- portrait / contain-fit single image (opt-in via Project.imageFit) ---------- */
+.al-card-portrait {
+  position: relative; width: 100%; height: 220px; overflow: hidden;
+  cursor: zoom-in; background: #000; flex-shrink: 0;
+}
+.al-card-portrait .al-card-portrait__bg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; display: block; transform: scale(1.15);
+  filter: blur(22px) brightness(.75) saturate(1.15);
+}
+.al-card-portrait .al-card-portrait__fg {
+  position: relative; z-index: 1; width: 100%; height: 100%;
+  object-fit: contain; display: block;
+  transition: transform .5s cubic-bezier(.22,1,.36,1);
+}
+.al-media-card:hover .al-card-portrait .al-card-portrait__fg { transform: scale(1.03); }
+.al-card-portrait__hint {
+  position: absolute; top: 10px; right: 10px; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(255,255,255,.92); color: var(--al-ink);
+  box-shadow: 0 2px 10px rgba(15,23,42,.18);
+  opacity: 0; transition: opacity .2s ease; pointer-events: none;
+}
+.al-media-card:hover .al-card-portrait__hint,
+.al-card-portrait:focus-visible .al-card-portrait__hint { opacity: 1; }
+
 .al-card-carousel { position: relative; flex-shrink: 0; overflow: hidden; isolation: isolate; }
 .al-card-carousel__viewport { overflow: hidden; width: 100%; }
 .al-card-carousel__track { display: flex; touch-action: pan-y pinch-zoom; }
@@ -215,6 +253,11 @@ body {
 .al-about-text { font-size: 17px; color: var(--al-ink-2); display: flex; flex-direction: column; gap: 16px; }
 .al-skill-group h4 { font-size: 13px; font-weight: 600; color: var(--al-ink); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 10px; }
 .al-skill-group { margin-bottom: 22px; }
+
+/* ---------- volunteering board ---------- */
+.al-subhead { font-size: 22px; font-weight: 600; letter-spacing: -.01em; margin: 44px 0 20px; }
+.al-volunteer-board { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px; -webkit-overflow-scrolling: touch; }
+.al-volunteer-card { scroll-snap-align: start; flex: 0 0 min(380px, 86vw); padding: 0; }
 
 /* ---------- testimonials ---------- */
 .al-testis { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px; -webkit-overflow-scrolling: touch; }
@@ -360,12 +403,32 @@ body {
 .al-modal-lg .al-links-row { margin-top: 22px; }
 @media (max-width: 560px) { .al-modal-lg { padding: 28px 22px; } }
 
+/* ---------- image lightbox (click-to-expand for contain-fit cards) ---------- */
+.al-lightbox-overlay { z-index: 400; }
+.al-lightbox {
+  z-index: 401; width: auto; max-width: 92vw; max-height: 88vh;
+  padding: 0; background: transparent; border-radius: 12px; box-shadow: none;
+  display: flex; align-items: center; justify-content: center;
+}
+.al-lightbox .al-modal-close {
+  background: rgba(0,0,0,.55); color: #fff; border-radius: 50%;
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; top: 10px; right: 10px;
+}
+.al-lightbox .al-modal-close:hover { background: rgba(0,0,0,.75); color: #fff; }
+.al-lightbox__img {
+  display: block; height: min(85vh, 1100px); width: auto; max-width: 92vw;
+  object-fit: contain; border-radius: 12px; box-shadow: 0 30px 60px rgba(0,0,0,.45);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .al-rv { opacity: 1; transform: none; transition: none; }
   .al-media-card, .al-media-card img, .al-stack .al-card, .al-btn { transition: none; }
   .al-media-card:hover, .al-stack .al-card:hover, .al-btn:hover { transform: none; box-shadow: var(--al-shadow); }
   .al-media-card:hover img { transform: none; }
   .al-media-card:hover .al-card-carousel__slide img { transform: none; }
+  .al-card-portrait__fg, .al-card-portrait__hint { transition: none; }
+  .al-media-card:hover .al-card-portrait .al-card-portrait__fg { transform: none; }
   .al-progress { display: none; }
   .al-modal, .al-modal-overlay { animation: none; }
 }

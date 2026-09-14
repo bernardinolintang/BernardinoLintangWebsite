@@ -12,6 +12,7 @@ import {
   projects,
   skills,
   testimonials,
+  volunteerProjects,
 } from "../data/portfolioContent.js";
 import { slugify } from "./slugify.js";
 
@@ -107,11 +108,11 @@ function buildKnowledge(): PortfolioEntry[] {
   entries.push(makeEntry({
     id: "profile",
     type: "profile",
-    title: `${profile.name} — ${profile.headline}`,
+    title: `${profile.name}: ${profile.headline}`,
     summary: `${profile.tagline} ${profile.intro}`,
     details: [
       ...profile.about,
-      ...profile.stats.map((s) => `${s.value} — ${s.label}`),
+      ...profile.stats.map((s) => `${s.value}: ${s.label}`),
       profile.education,
       profile.availability,
       `Contact: ${profile.email} · GitHub: ${profile.github} · LinkedIn: ${profile.linkedin}`,
@@ -197,7 +198,7 @@ function buildKnowledge(): PortfolioEntry[] {
     entries.push(makeEntry({
       id: slugify("skills-" + group),
       type: "skill",
-      title: `Skills — ${group}`,
+      title: `Skills: ${group}`,
       summary: `${group}: ${items.join(", ")}.`,
       details: [
         `Bernard's ${group} toolkit: ${items.join(", ")}.`,
@@ -222,6 +223,20 @@ function buildKnowledge(): PortfolioEntry[] {
       url: "#" + slugify(ev.title),
       demoUrl: ev.link,
       demoLabel: ev.link ? "View the portfolio" : undefined,
+    }));
+  }
+
+  for (const v of volunteerProjects) {
+    entries.push(makeEntry({
+      id: slugify(v.title),
+      type: "community",
+      title: v.title,
+      date: v.date,
+      summary: v.description,
+      details: [v.description, `${v.org} · ${v.location}`],
+      skills: v.tags,
+      keywords: ["community", "volunteering", "OCIP", "Laos", "Youth Corps", "beach cleanup", "service"],
+      url: "#" + slugify(v.title),
     }));
   }
 

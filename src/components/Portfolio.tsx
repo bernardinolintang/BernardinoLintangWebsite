@@ -9,6 +9,7 @@ import {
   projects,
   skills,
   testimonials,
+  volunteerProjects,
   type CompetitionCard,
 } from "../data/portfolioContent";
 import { slugify } from "../lib/slugify";
@@ -79,9 +80,41 @@ function Desc({ text }: { text: string }) {
   );
 }
 
+const NAV = [
+  ["About", "about"],
+  ["Experience", "experience"],
+  ["Competitions", "competitions"],
+  ["Projects", "projects"],
+  ["Community", "community"],
+  ["Contact", "contact"],
+];
+
+/* Highlights the nav link for whichever section is currently in view */
+function useActiveSection() {
+  const [active, setActive] = useState("");
+  useEffect(() => {
+    const sections = NAV.map(([, id]) => document.getElementById(id)).filter(
+      (el): el is HTMLElement => !!el
+    );
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length > 0) {
+          setActive(visible[0].target.id);
+        }
+      },
+      { rootMargin: "-48px 0px -60% 0px", threshold: 0 }
+    );
+    sections.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+  return active;
+}
+
 export default function Portfolio() {
   useReveal();
   useEvidenceHighlight();
+  const activeSection = useActiveSection();
   const [menu, setMenu] = useState(false);
   const [showResume, setShowResume] = useState(false);
   const [caseStudy, setCaseStudy] = useState<CompetitionCard | null>(null);
@@ -119,15 +152,6 @@ export default function Portfolio() {
     };
   }, [showResume, caseStudy]);
 
-  const NAV = [
-    ["About", "about"],
-    ["Experience", "experience"],
-    ["Competitions", "competitions"],
-    ["Projects", "projects"],
-    ["Community", "community"],
-    ["Contact", "contact"],
-  ];
-
   /* ======================= RENDER ======================= */
   return (
     <div className="al">
@@ -142,7 +166,12 @@ export default function Portfolio() {
         </a>
         <div className={"al-nav-links" + (menu ? " open" : "")}>
           {NAV.map(([label, id]) => (
-            <a key={id} href={"#" + id} onClick={() => setMenu(false)}>
+            <a
+              key={id}
+              href={"#" + id}
+              className={id === activeSection ? "active" : undefined}
+              onClick={() => setMenu(false)}
+            >
               {label}
             </a>
           ))}
@@ -331,6 +360,7 @@ export default function Portfolio() {
                     images={cardImages(p)}
                     alt={p.title}
                     imagePositions={p.imagePositions}
+                    fit={p.imageFit}
                   />
                 )}
                 <div className="al-media-body">
@@ -387,6 +417,24 @@ export default function Portfolio() {
                       <a className="al-link" href={ev.link} target="_blank" rel="noreferrer">View portfolio</a>
                     </div>
                   )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <h3 className="al-subhead al-rv">Volunteering.</h3>
+          <div className="al-volunteer-board al-rv">
+            {volunteerProjects.map((v) => (
+              <div className="al-card al-media-card al-volunteer-card" id={slugify(v.title)} key={v.title}>
+                <CardImageCarousel images={v.images} alt={v.title} imagePositions={v.imagePositions} />
+                <div className="al-media-body">
+                  <h3>{v.title}</h3>
+                  <div className="al-org">{v.org}</div>
+                  <div className="al-date">{v.date} · {v.location}</div>
+                  <Desc text={v.description} />
+                  <div className="al-tags">
+                    {v.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
+                  </div>
                 </div>
               </div>
             ))}

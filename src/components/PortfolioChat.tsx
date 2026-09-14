@@ -463,8 +463,8 @@ export function PortfolioChat() {
                         {message.feedback ? (
                           <span className="alc-feedback-thanks">
                             {message.feedback === "up"
-                              ? "Thanks — glad that helped."
-                              : "Thanks — noted. This helps Bernard improve his portfolio."}
+                              ? "Thanks, glad that helped."
+                              : "Thanks, noted. This helps Bernard improve his portfolio."}
                           </span>
                         ) : (
                           <>
