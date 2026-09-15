@@ -509,6 +509,16 @@ export const volunteerProjects: VolunteerProject[] = [
       "/seastheday%20beach%20cleanup%20w%20pranav.jpeg",
     ],
   },
+  {
+    title: "Beach Cleanup with SG Beach Warriors",
+    org: "SG Beach Warriors",
+    date: "2023",
+    location: "Coney Island, Singapore",
+    description:
+      "Cleaning up beaches is something I do in my free time, not just for organised events. Joined SG Beach Warriors for a cleanup at Coney Island, clearing litter washed up along the shoreline.",
+    tags: ["SG Beach Warriors", "Beach Cleanup", "Environment"],
+    images: ["/beach%20cleanup%20with%20entt.jpg"],
+  },
 ];
 
 /* ---------- Testimonials ---------- */
