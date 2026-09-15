@@ -531,7 +531,7 @@ export const volunteerProjects: VolunteerProject[] = [
 
 export const leadershipRoles: LeadershipRole[] = [
   {
-    title: "Publicity Head | Alumni Relations Committee",
+    title: "Publicity Head for Alumni Relations Committee",
     org: "NUS Students' Science Club",
     date: "Oct 2025 – Aug 2026",
     location: "Singapore",
