@@ -7,6 +7,7 @@ import {
   competitions,
   events,
   experiences,
+  leadershipRoles,
   projects,
   skills,
   testimonials,
@@ -435,6 +436,26 @@ export default function Portfolio() {
                   <Desc text={v.description} />
                   <div className="al-tags">
                     {v.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </ScrollCarouselRow>
+
+          <h3 className="al-subhead al-rv">Leadership.</h3>
+          <ScrollCarouselRow trackClassName="al-volunteer-board al-rv">
+            {leadershipRoles.map((l) => (
+              <div className="al-card al-media-card al-volunteer-card" id={slugify(l.title)} key={l.title}>
+                <CardImageCarousel images={l.images} alt={l.title} imagePositions={l.imagePositions} />
+                <div className="al-media-body">
+                  <h3>{l.title}</h3>
+                  <div className="al-org">{l.org}</div>
+                  <div className="al-date">{l.date} · {l.location}</div>
+                  <ul className="al-bullets">
+                    {l.bullets.map((b, i) => <li key={i}>{b}</li>)}
+                  </ul>
+                  <div className="al-tags">
+                    {l.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
                   </div>
                 </div>
               </div>

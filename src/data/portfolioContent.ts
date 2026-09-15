@@ -39,6 +39,12 @@ export type VolunteerProject = {
   images: string[]; imagePositions?: string[];
 };
 
+export type LeadershipRole = {
+  title: string; org: string; date: string; location: string;
+  bullets: string[]; tags: string[];
+  images: string[]; imagePositions?: string[];
+};
+
 export type Testimonial = {
   name: string; title: string; image: string; text: string;
 };
@@ -518,6 +524,61 @@ export const volunteerProjects: VolunteerProject[] = [
       "Cleaning up beaches is something I do in my free time, not just for organised events. Joined SG Beach Warriors for a cleanup at Coney Island, clearing litter washed up along the shoreline.",
     tags: ["SG Beach Warriors", "Beach Cleanup", "Environment"],
     images: ["/beach%20cleanup%20with%20entt.jpg"],
+  },
+];
+
+/* ---------- Leadership ---------- */
+
+export const leadershipRoles: LeadershipRole[] = [
+  {
+    title: "Head of Branding and Marketing",
+    org: "Developer Student Clubs (DSC), NUS",
+    date: "Jul 2025 – Jul 2026 · 1 yr 1 mo",
+    location: "Singapore · Hybrid",
+    bullets: [
+      "Recruit Branding & Marketing associates with appropriate skill sets and the #TechForGood drive",
+      "Lead discussions within the B&M department and delegate tasks to associates for the various internal club events",
+      "Manage and oversee the execution of tasks assigned to associates",
+      "Ensure quality and appropriateness of material before release to the public",
+      "Liaise with other teams to understand and properly reflect their intended message",
+    ],
+    tags: ["Leadership", "Branding", "Marketing", "Team Management"],
+    images: ["/dg%20group%20photo.jpg"],
+  },
+  {
+    title: "Marketing Head for Science Club Welfare",
+    org: "NUS Science Club Welfare",
+    date: "Oct 2024 – Aug 2025",
+    location: "Singapore",
+    bullets: [
+      "Led outreach initiatives by creating and presenting sponsorship pitches to potential sponsors, resulting in valuable partnerships.",
+      "Managed and coordinated the collection of sponsored items with confirmed sponsors, ensuring smooth and timely delivery.",
+      "Oversaw and ensured the successful achievement of all sponsorship and marketing objectives.",
+      "Co-managed a team of 7 executives alongside another marketing head, fostering collaboration and driving team success.",
+      "Created a mail merge to automate the email process, streamlining communication with sponsors and cutting down time taken to send emails by 50%.",
+      "Created tutorials and videos for my team on emailing sponsors.",
+    ],
+    tags: ["Leadership", "Sponsorship", "Marketing", "Team Management"],
+    images: [
+      "/sci%20club%20marketing%20grp%20photo.jpg",
+      "/sci%20club%20welfare%20photo.jpg",
+    ],
+  },
+  {
+    title: "Orientation Group Leader (OGL) Head",
+    org: "NUS Science Orientation Week (SOW)",
+    date: "Jul 2024",
+    location: "Singapore",
+    bullets: [
+      "Co-led a group of 16 Orientation Group Leaders and 80 freshmen during the Science Orientation Week (SOW) with a partner, fostering teamwork and a welcoming environment.",
+      "Developed and implemented a comprehensive training plan to prepare for dance performances and flag painting activities, enhancing participants' skills and engagement.",
+      "Demonstrated leadership and adaptability by addressing various challenges throughout the camp, ensuring the safety and enjoyment of all participants.",
+    ],
+    tags: ["Leadership", "Mentorship", "Event Planning"],
+    images: [
+      "/SOW%20grp%20photo%202.jpg",
+      "/SOW%20grp%20photo%201.jpg",
+    ],
   },
 ];
 

@@ -8,6 +8,7 @@ import {
   competitions,
   events,
   experiences,
+  leadershipRoles,
   profile,
   projects,
   skills,
@@ -237,6 +238,20 @@ function buildKnowledge(): PortfolioEntry[] {
       skills: v.tags,
       keywords: ["community", "volunteering", "OCIP", "Laos", "Youth Corps", "beach cleanup", "service"],
       url: "#" + slugify(v.title),
+    }));
+  }
+
+  for (const l of leadershipRoles) {
+    entries.push(makeEntry({
+      id: slugify(l.title),
+      type: "community",
+      title: l.title,
+      date: l.date,
+      summary: l.bullets[0],
+      details: [...l.bullets, `${l.org} · ${l.location}`],
+      skills: l.tags,
+      keywords: ["leadership", "led a team", "managed", "committee", "club", "extracurricular"],
+      url: "#" + slugify(l.title),
     }));
   }
 
