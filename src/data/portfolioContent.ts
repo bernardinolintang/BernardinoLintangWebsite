@@ -545,7 +545,7 @@ export const leadershipRoles: LeadershipRole[] = [
   },
   {
     title: "Head of Branding and Marketing",
-    org: "Developer Student Clubs (DSC), NUS",
+    org: "Developer Group (DG), NUS",
     date: "Jul 2025 – Jul 2026 · 1 yr 1 mo",
     location: "Singapore · Hybrid",
     bullets: [
