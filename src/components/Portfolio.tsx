@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "../apple.css";
 import { CardImageCarousel } from "./CardImageCarousel";
+import { ScrollCarouselRow } from "./ScrollCarouselRow";
 import { PortfolioChat } from "./PortfolioChat";
 import {
   competitions,
@@ -423,7 +424,7 @@ export default function Portfolio() {
           </div>
 
           <h3 className="al-subhead al-rv">Volunteering.</h3>
-          <div className="al-volunteer-board al-rv">
+          <ScrollCarouselRow trackClassName="al-volunteer-board al-rv">
             {volunteerProjects.map((v) => (
               <div className="al-card al-media-card al-volunteer-card" id={slugify(v.title)} key={v.title}>
                 <CardImageCarousel images={v.images} alt={v.title} imagePositions={v.imagePositions} />
@@ -438,7 +439,7 @@ export default function Portfolio() {
                 </div>
               </div>
             ))}
-          </div>
+          </ScrollCarouselRow>
         </div>
       </section>
 
@@ -446,7 +447,7 @@ export default function Portfolio() {
       <section className="al-section" id="testimonials">
         <div className="al-wrap">
           <h2 className="al-rv">What people say.</h2>
-          <div className="al-testis al-rv">
+          <ScrollCarouselRow trackClassName="al-testis al-rv">
             {testimonials.map((t) => (
               <div className="al-card al-testi" id={slugify("testimonial-" + t.name)} key={t.name}>
                 <div className="al-testi-head">
@@ -459,7 +460,7 @@ export default function Portfolio() {
                 <p className="al-desc">{t.text}</p>
               </div>
             ))}
-          </div>
+          </ScrollCarouselRow>
         </div>
       </section>
 

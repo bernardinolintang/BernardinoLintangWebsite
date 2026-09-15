@@ -271,6 +271,28 @@ body {
 .al-testi-head b { font-size: 15px; display: block; }
 .al-testi-head span { font-size: 13px; color: var(--al-ink-2); }
 
+/* ---------- scroll-row carousel arrows (volunteer board + testimonials) ---------- */
+.al-volunteer-board, .al-testis {
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.al-volunteer-board::-webkit-scrollbar, .al-testis::-webkit-scrollbar { display: none; }
+.al-scroll-row { position: relative; }
+.al-scroll-row__btn {
+  display: none; position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+  align-items: center; justify-content: center;
+  width: 40px; height: 40px; border: none; border-radius: 50%;
+  background: rgba(255,255,255,.92); color: var(--al-ink);
+  box-shadow: 0 2px 10px rgba(15,23,42,.18); cursor: pointer;
+  transition: opacity .2s ease, background .2s ease, transform .2s ease;
+}
+.al-scroll-row__btn--prev { left: -20px; }
+.al-scroll-row__btn--next { right: -20px; }
+.al-scroll-row__btn:hover { background: #fff; transform: translateY(-50%) scale(1.06); }
+.al-scroll-row__btn:disabled { opacity: 0; pointer-events: none; }
+@media (min-width: 700px) {
+  .al-scroll-row__btn { display: flex; }
+}
+
 /* ---------- contact ---------- */
 .al-contact { text-align: center; padding: 110px 0; }
 .al-contact h2 { margin-bottom: 14px; }
