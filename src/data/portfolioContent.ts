@@ -532,9 +532,9 @@ export const volunteerProjects: VolunteerProject[] = [
 export const leadershipRoles: LeadershipRole[] = [
   {
     title: "Publicity Head | Alumni Relations Committee",
-    org: "NUS Students' Science Club · Full-time",
-    date: "Oct 2025 – Aug 2026 · 11 mos",
-    location: "Singapore · Hybrid",
+    org: "NUS Students' Science Club",
+    date: "Oct 2025 – Aug 2026",
+    location: "Singapore",
     bullets: [
       "Lead ARC brand & communications: set creative direction and messaging; own Instagram & LinkedIn content calendar and copy.",
       "Manage 3 Publicity Executives end-to-end (briefs, assignments, QA); ship reusable Canva/Figma templates, event comms packs and on-site signage.",
