@@ -4,6 +4,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 type ScrollCarouselRowProps = {
   /** Class name(s) applied to the scrollable track (keeps existing layout/snap CSS). */
   trackClassName: string;
+  /** Accessible label for the scrollable region, e.g. "Volunteering projects". */
+  ariaLabel: string;
   children: React.ReactNode;
 };
 
@@ -11,8 +13,10 @@ type ScrollCarouselRowProps = {
  * Wraps a horizontally-scrolling row of cards with prev/next arrow buttons.
  * Native scroll (swipe/trackpad/drag) still works underneath; the buttons
  * just nudge scrollLeft and let CSS scroll-snap settle on the nearest card.
+ * The track itself is focusable (tabIndex 0) so keyboard users can also
+ * scroll it directly with the arrow keys, not just via the prev/next buttons.
  */
-export function ScrollCarouselRow({ trackClassName, children }: ScrollCarouselRowProps) {
+export function ScrollCarouselRow({ trackClassName, ariaLabel, children }: ScrollCarouselRowProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
@@ -44,7 +48,13 @@ export function ScrollCarouselRow({ trackClassName, children }: ScrollCarouselRo
 
   return (
     <div className="al-scroll-row">
-      <div className={trackClassName} ref={trackRef}>
+      <div
+        className={trackClassName}
+        ref={trackRef}
+        tabIndex={0}
+        role="group"
+        aria-label={ariaLabel}
+      >
         {children}
       </div>
       <button

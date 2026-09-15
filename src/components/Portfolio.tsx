@@ -429,7 +429,7 @@ export default function Portfolio() {
           </div>
 
           <h3 className="al-subhead al-rv">Volunteering.</h3>
-          <ScrollCarouselRow trackClassName="al-volunteer-board al-rv">
+          <ScrollCarouselRow trackClassName="al-volunteer-board al-rv" ariaLabel="Volunteering projects">
             {volunteerProjects.map((v) => (
               <div className="al-card al-media-card al-volunteer-card" id={slugify(v.title)} key={v.title}>
                 <CardImageCarousel images={v.images} alt={v.title} imagePositions={v.imagePositions} />
@@ -447,7 +447,7 @@ export default function Portfolio() {
           </ScrollCarouselRow>
 
           <h3 className="al-subhead al-rv">Leadership.</h3>
-          <ScrollCarouselRow trackClassName="al-volunteer-board al-rv">
+          <ScrollCarouselRow trackClassName="al-volunteer-board al-rv" ariaLabel="Leadership roles">
             {leadershipRoles.map((l) => (
               <div className="al-card al-media-card al-volunteer-card" id={slugify(l.title)} key={l.title}>
                 <CardImageCarousel images={l.images} alt={l.title} imagePositions={l.imagePositions} />
@@ -472,7 +472,7 @@ export default function Portfolio() {
       <section className="al-section" id="testimonials">
         <div className="al-wrap">
           <h2 className="al-rv">What people say.</h2>
-          <ScrollCarouselRow trackClassName="al-testis al-rv">
+          <ScrollCarouselRow trackClassName="al-testis al-rv" ariaLabel="Testimonials">
             {testimonials.map((t) => (
               <div className="al-card al-testi" id={slugify("testimonial-" + t.name)} key={t.name}>
                 <div className="al-testi-head">

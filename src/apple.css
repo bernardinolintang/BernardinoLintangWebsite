@@ -275,6 +275,9 @@ body {
 .al-volunteer-board, .al-testis {
   scrollbar-width: none; -ms-overflow-style: none;
 }
+.al-volunteer-board:focus-visible, .al-testis:focus-visible {
+  outline: 2px solid var(--al-accent); outline-offset: 4px; border-radius: 12px;
+}
 .al-volunteer-board::-webkit-scrollbar, .al-testis::-webkit-scrollbar { display: none; }
 .al-scroll-row { position: relative; }
 .al-scroll-row__btn {
