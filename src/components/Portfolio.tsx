@@ -3,6 +3,7 @@ import "../apple.css";
 import { CardImageCarousel } from "./CardImageCarousel";
 import { ScrollCarouselRow } from "./ScrollCarouselRow";
 import { PortfolioChat } from "./PortfolioChat";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 import {
   competitions,
   events,
@@ -120,6 +121,8 @@ export default function Portfolio() {
   const [menu, setMenu] = useState(false);
   const [showResume, setShowResume] = useState(false);
   const [caseStudy, setCaseStudy] = useState<CompetitionCard | null>(null);
+  const caseStudyModalRef = useFocusTrap<HTMLDivElement>(!!(caseStudy && caseStudy.caseStudy));
+  const resumeModalRef = useFocusTrap<HTMLDivElement>(showResume);
 
   /* Scroll-progress bar: write scroll fraction into a CSS var */
   useEffect(() => {
@@ -183,6 +186,7 @@ export default function Portfolio() {
         </button>
       </nav>
 
+      <main>
       {/* HERO */}
       <header className="al-hero al-wrap" id="top">
         <img className="al-avatar al-rv" src="/formal-picture.JPG" alt="Bernardino Lintang" />
@@ -227,7 +231,7 @@ export default function Portfolio() {
             <div className="al-rv">
               {Object.entries(skills).map(([group, items]) => (
                 <div className="al-skill-group" key={group}>
-                  <h4>{group}</h4>
+                  <h3>{group}</h3>
                   <div className="al-tags">
                     {items.map((s) => (
                       <span className="al-tag" key={s}>{s}</span>
@@ -505,7 +509,7 @@ export default function Portfolio() {
       {caseStudy && caseStudy.caseStudy && (
         <>
           <div className="al-modal-overlay" onClick={() => setCaseStudy(null)} />
-          <div className="al-modal al-modal-lg" role="dialog" aria-modal="true" aria-labelledby="al-case-title">
+          <div className="al-modal al-modal-lg" role="dialog" aria-modal="true" aria-labelledby="al-case-title" ref={caseStudyModalRef}>
             <button className="al-modal-close" aria-label="Close" onClick={() => setCaseStudy(null)}>×</button>
             <span className="al-badge">{caseStudy.badge}</span>
             <h3 id="al-case-title">{caseStudy.title}</h3>
@@ -536,7 +540,7 @@ export default function Portfolio() {
       {showResume && (
         <>
           <div className="al-modal-overlay" onClick={() => setShowResume(false)} />
-          <div className="al-modal" role="dialog" aria-modal="true" aria-labelledby="al-resume-title">
+          <div className="al-modal" role="dialog" aria-modal="true" aria-labelledby="al-resume-title" ref={resumeModalRef}>
             <button className="al-modal-close" aria-label="Close" onClick={() => setShowResume(false)}>×</button>
             <div className="al-modal-eyebrow">🔒 Resume access</div>
             <h3 id="al-resume-title">Let's connect first</h3>
@@ -564,10 +568,11 @@ export default function Portfolio() {
         </>
       )}
 
-      <footer className="al-footer">© {new Date().getFullYear()} Bernardino Lintang</footer>
-
       {/* PORTFOLIO ASSISTANT */}
       <PortfolioChat />
+      </main>
+
+      <footer className="al-footer">© {new Date().getFullYear()} Bernardino Lintang</footer>
     </div>
   );
 }

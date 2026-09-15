@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 
 type CardImageCarouselProps = {
   images: string[];
@@ -15,6 +16,7 @@ export function CardImageCarousel({ images, alt, imgPos, imagePositions, fit }: 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const lightboxRef = useFocusTrap<HTMLDivElement>(lightboxOpen);
   const multi = images.length > 1;
 
   const scrollPrev = useCallback(
@@ -92,7 +94,7 @@ export function CardImageCarousel({ images, alt, imgPos, imagePositions, fit }: 
             createPortal(
               <>
                 <div className="al-modal-overlay al-lightbox-overlay" onClick={() => setLightboxOpen(false)} />
-                <div className="al-modal al-lightbox" role="dialog" aria-modal="true" aria-label={alt}>
+                <div className="al-modal al-lightbox" role="dialog" aria-modal="true" aria-label={alt} ref={lightboxRef}>
                   <button className="al-modal-close" aria-label="Close" onClick={() => setLightboxOpen(false)}>×</button>
                   <img src={images[0]} alt={alt} className="al-lightbox__img" />
                 </div>
