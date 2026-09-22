@@ -299,6 +299,35 @@ export const competitions: CompetitionCard[] = [
     },
   },
   {
+    title: "Don't Get Played: Anti-Drug Reflex Arcade Game",
+    badge: "Top 8 Finalist · 150+ participants",
+    date: "Sep 2026",
+    subtitle: "Dumb Ways to Die-style arcade game that trains anti-drug reflexes, not lecture recall.",
+    description:
+      "Problem: Anti-drug outreach for youth is still pamphlets and assembly talks, but the actual risk moments are fast. A laced vape pod, a spiked drink, a friend asking you to hold a bag at the checkpoint. Knowing the facts doesn't help if you freeze for three seconds.\n\nApproach: Built \"Don't Get Played!\" with Team BOB (Sylvester Lim, Crescent Liew, Lim Ding Heng) at the SCOGA × NCADA Anti-Drug Jam 2026. 20 rapid-fire minigames across four pillars, Spot It, Say No, Get Out, and Look Out, using taps, swipes, drags, and hold-to-resist mechanics. The speed multiplier climbs with every win, and each slip-up surfaces a real takeaway sourced from CNB, HSA, and SCDF advisories. Added combos, local leaderboards, and one-click challenge links so it spreads the way a game does.\n\nResult: Top 8 finalist out of 150+ participants. Playable in the browser, no install, no sign-up.",
+    tags: ["React", "TypeScript", "Tailwind CSS", "Web Audio API", "Vite"],
+    pmTags: ["Behaviour Design", "Game Design", "Public Health", "Youth Outreach"],
+    angle:
+      "Traded the lecture for reflex training. The win condition isn't remembering a statistic, it's reacting fast enough when the choice is three seconds long.",
+    image: "/anti%20drug%20jam%202026%20group%20photo.jpg",
+    liveDemo: "https://aistudio.google.com/apps/44f5eebf-cca3-4be3-8304-da5821187598?showPreview=true&showAssistant=true",
+    caseStudy: {
+      problem:
+        "Youth tune out text-heavy anti-drug material, while real threats are disguised (etomidate vape pods, cannabis edibles, counterfeit study pills) and peer pressure plays out in seconds, not in a classroom.",
+      users:
+        "Singapore youth and students who encounter parties, peer pressure, and disguised substances in everyday social settings.",
+      role: "Game design · Minigame mechanics · Front-end build · Content sourcing",
+      productDecision:
+        "Built for reflex rather than recall. Every minigame runs on a 3 to 5 second timer with an escalating speed multiplier, so players practise deciding under pressure instead of reading advice they'd never retrieve in the moment.",
+      aiWorkflow:
+        "No model in the loop by design. Educational takeaways are pulled from official CNB, HSA, and SCDF advisories and hard-coded, because an anti-drug game teaching legal facts cannot risk a hallucinated one.",
+      impact:
+        "Top 8 of 150+ participants at the SCOGA × NCADA Anti-Drug Jam 2026, with people picking it up and playing unprompted at the showcase.",
+      learned:
+        "Distribution is part of the intervention. Combos, leaderboards, and shareable challenge links did more for reach than any amount of extra content would have.",
+    },
+  },
+  {
     title: "Careerlingo: Duolingo-style AI Career Coach",
     badge: "Top 5 Finalists · 14 teams",
     date: "June 2026",

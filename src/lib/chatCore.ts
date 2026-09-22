@@ -22,10 +22,10 @@ function envVar(name: string): string | undefined {
 }
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-const DEFAULT_MODEL = "llama-3.3-70b-versatile";
+const DEFAULT_MODEL = "openai/gpt-oss-120b";
 /* Groq free-tier quotas are per model, so when the primary model is
    rate-limited we retry once on a smaller model with its own quota. */
-const FALLBACK_MODEL = "llama-3.1-8b-instant";
+const FALLBACK_MODEL = "openai/gpt-oss-20b";
 const MAX_QUESTION_LENGTH = 500;
 // Keep history short: it exists for pronoun/follow-up resolution, and longer
 // history makes the model more likely to echo a previous answer on a new topic.
@@ -226,6 +226,12 @@ async function callGroq(messages: { role: string; content: string }[]): Promise<
   }
 }
 
+/* Only Groq's reasoning models accept reasoning_effort; sending it to a
+   plain chat model is rejected, so keep the GROQ_MODEL override safe. */
+function isReasoningModel(model: string): boolean {
+  return model.includes("gpt-oss") || model.includes("qwen");
+}
+
 async function callGroqModel(
   messages: { role: string; content: string }[],
   model: string,
@@ -247,6 +253,10 @@ async function callGroqModel(
         messages,
         temperature: 0.3,
         max_tokens: 400,
+        /* These are reasoning models, and reasoning tokens are billed against
+           max_tokens. Left unbounded they eat the budget and the answer comes
+           back truncated or empty, so keep the thinking short. */
+        ...(isReasoningModel(model) ? { reasoning_effort: "low" } : {}),
       }),
       signal: controller.signal,
     });
