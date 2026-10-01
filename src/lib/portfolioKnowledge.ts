@@ -89,17 +89,24 @@ function inferModes(text: string): RecruiterMode[] {
   return modes;
 }
 
-function extras(id: string): string[] {
-  const key = Object.keys(EXTRA_KEYWORDS).find((k) => id.includes(k) || k.includes(id.slice(0, 12)));
+/* Ids are slugs cut to 40 characters, which can drop the very word a key
+   needs ("…agency (HTX)", "…taylor swift's albums"), so the full title is
+   checked as well. */
+function extras(id: string, title: string): string[] {
+  const fullSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const key = Object.keys(EXTRA_KEYWORDS).find(
+    (k) => id.includes(k) || fullSlug.includes(k) || k.includes(id.slice(0, 12)),
+  );
   return key ? EXTRA_KEYWORDS[key] : [];
 }
 
 function makeEntry(e: Omit<PortfolioEntry, "modes" | "keywords"> & { keywords?: string[] }): PortfolioEntry {
   const all = [e.title, e.summary, ...e.details, ...e.skills, ...(e.keywords ?? [])].join(" ");
+  const extra = extras(e.id, e.title);
   return {
     ...e,
-    keywords: [...(e.keywords ?? []), ...extras(e.id)],
-    modes: inferModes(all + " " + extras(e.id).join(" ")),
+    keywords: [...(e.keywords ?? []), ...extra],
+    modes: inferModes(all + " " + extra.join(" ")),
   };
 }
 

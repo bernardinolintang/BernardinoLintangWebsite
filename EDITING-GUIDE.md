@@ -41,16 +41,56 @@ Each entry is a block like this:
 - **Add an entry**: copy a whole `{ ... }` block, paste it above or below,
   keep the comma after the closing `}`.
 - **Remove an entry**: delete the whole `{ ... }` block including its comma.
-- **Reorder**: cut and paste blocks. Top of the list = top of the section.
+- **Reorder**: cut and paste blocks. Top of the list = top of the section
+  (except the two sections below, which sort themselves).
 
 Rule of thumb: keep the quotes and commas exactly where they are. If the site
 breaks, you probably deleted a comma or a quote.
 
-The hero headline, About paragraphs, and Contact text shown on the page live
-in `src/components/Portfolio.tsx` inside the `return (...)` — search for the
-words you see on the page and edit them in place. If you change them, also
-update the matching text in the `profile` object of
-`src/data/portfolioContent.ts` so the chat assistant stays accurate.
+### Extra fields the interactive sections need
+
+When you add a new entry, copy these from a neighbouring block too:
+
+- **Experience** (the career rail): `short` is the name shown on the timeline
+  ("HTX"), `focus` is the one-line label under the role, and `lanes` says which
+  of `"data"`, `"ai"`, `"product"` the role leaned on. The rail places and
+  orders each role from the dates in `period`, so keep the
+  "May 2026 to Aug 2026 · Singapore" format.
+- **Competitions** (the results board): `short` is what you built, `event` is
+  where, `place` and `field` are what's displayed ("2nd", "87 teams"), and
+  `rank` is the number the board sorts by (1 = winner, 2 = runner-up, 5 for a
+  top-5 finish, and so on).
+- **Leadership** (the map): `short` is the label under the node. The map has
+  room for six roles.
+
+### Wording that isn't in the data file
+
+- Hero headline, the rotating "survive ___" words, and the suggested
+  questions: `src/components/sections/Hero.tsx` (the lists at the top).
+- The big Community statement: `STATEMENT` at the top of
+  `src/components/sections/Community.tsx`.
+- Contact heading: `src/components/Portfolio.tsx`, search for "Let's build".
+- The intro line, About paragraphs, "Studying" / "Open to" facts, stats, and
+  availability text come from the `profile` object in
+  `src/data/portfolioContent.ts`, so the page and the chat assistant stay in
+  sync. "Open to" shows everything after the first sentence of
+  `profile.availability`.
+
+The numbers you see around the page (the About index, "5 internships" above
+each heading, the leaderboard's podium count) are counted from the data, so
+they update themselves when you add or remove an entry.
+
+Each section of the page is its own file in `src/components/sections/`
+(`CareerRail`, `Leaderboard`, `ProjectReel`, `Community`, `Testimonials`).
+Their styles live in `src/redesign.css`.
+
+### Search (Ctrl/⌘ + K)
+
+The search box (`src/components/CommandPalette.tsx`) looks through the same
+content file as everything else, so new entries are searchable straight away.
+The starter suggestions ("Kubernetes", "RAG", …) are the `TRY` list at the top
+of that file. Pick words that actually appear in your content, or the
+suggestion will come back empty.
 
 ---
 

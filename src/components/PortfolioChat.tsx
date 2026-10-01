@@ -180,6 +180,8 @@ export function PortfolioChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const askRef = useRef<(q: string, fromSuggestion?: boolean) => void>(() => {});
 
   useEffect(() => {
     setMode(loadStoredMode());
@@ -194,13 +196,55 @@ export function PortfolioChat() {
     }
   }, [messages]);
 
+  /* Keep the latest question pinned to the top of the panel: it's in view
+     while the assistant is searching, and when the answer lands underneath it
+     the visitor is already at its first line instead of being dropped at the
+     bottom and having to scroll back up. Keyed on the message count, so
+     tapping a feedback thumb doesn't move the view. */
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, isLoading, isOpen]);
+    const body = scrollRef.current;
+    if (!body) return;
+    const asked = body.querySelectorAll<HTMLElement>(".alc-user");
+    const question = asked[asked.length - 1];
+    const lastIsDivider = messages[messages.length - 1]?.role === "divider";
+    const top =
+      question && !lastIsDivider
+        ? question.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - 12
+        : body.scrollHeight;
+    body.scrollTo({ top, behavior: "smooth" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages.length, isLoading, isOpen]);
 
   function openChat() {
     setIsOpen(true);
     safeTrack("chat_opened");
+  }
+
+  /* The page can open the assistant from anywhere (the hero's suggested
+     questions, the command palette's "Ask the AI assistant" row, "Ask why"
+     on the career rail), optionally with a question. */
+  useEffect(() => {
+    function onAsk(e: Event) {
+      const q = (e as CustomEvent<{ question?: string }>).detail?.question;
+      setIsOpen(true);
+      safeTrack("chat_opened", { from: q ? "page_question" : "page" });
+      if (q) {
+        setMode((m) => m ?? "everything");
+        askRef.current(q, true);
+      }
+      setTimeout(() => inputRef.current?.focus(), 60);
+    }
+    window.addEventListener("bl-ask", onAsk);
+    return () => window.removeEventListener("bl-ask", onAsk);
+  }, []);
+
+  /* Evidence links jump to the item on the page. On a phone the panel
+     covers the page, so it steps aside to let the visitor see where it went. */
+  function onEvidenceClick(url: string) {
+    if (url.startsWith("#")) {
+      if (window.location.hash === url) window.dispatchEvent(new HashChangeEvent("hashchange"));
+      if (window.innerWidth < 760) setIsOpen(false);
+    }
   }
 
   function selectMode(next: RecruiterMode) {
@@ -299,6 +343,8 @@ export function PortfolioChat() {
       current.map((m, i) => (i === index ? { ...m, feedback: isRemoving ? undefined : value } : m)),
     );
   }
+
+  askRef.current = (q, fromSuggestion) => void askQuestion(q, fromSuggestion);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -418,11 +464,15 @@ export function PortfolioChat() {
                               href={source.url}
                               target={external ? "_blank" : undefined}
                               rel={external ? "noreferrer" : undefined}
-                              onClick={() => safeTrack("chat_source_clicked", { source: source.id })}
+                              onClick={() => {
+                                safeTrack("chat_source_clicked", { source: source.id });
+                                onEvidenceClick(source.url);
+                              }}
                             >
                               <span className="alc-source-title">{source.title}</span>
                               <span className="alc-source-meta">
                                 {source.badge ? source.badge : source.type}
+                                {!external && <span className="alc-source-jump"> · Show me →</span>}
                               </span>
                             </a>
                           );
@@ -438,7 +488,10 @@ export function PortfolioChat() {
                             href={message.recommendedAction.url}
                             target={message.recommendedAction.url.startsWith("http") ? "_blank" : undefined}
                             rel={message.recommendedAction.url.startsWith("http") ? "noreferrer" : undefined}
-                            onClick={() => safeTrack("chat_action_clicked", { url: message.recommendedAction!.url })}
+                            onClick={() => {
+                              safeTrack("chat_action_clicked", { url: message.recommendedAction!.url });
+                              onEvidenceClick(message.recommendedAction!.url);
+                            }}
                           >
                             {message.recommendedAction.label}
                           </a>
@@ -516,6 +569,7 @@ export function PortfolioChat() {
 
               <form onSubmit={handleSubmit} className="alc-input-row">
                 <input
+                  ref={inputRef}
                   id="portfolio-chat-question"
                   name="portfolio-chat-question"
                   value={question}

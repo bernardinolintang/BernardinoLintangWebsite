@@ -10,6 +10,9 @@ export type CompetitionCard = {
   subtitle?: string; pmTags?: string[]; angle?: string; liveDemo?: string;
   article?: string; articleLabel?: string;
   imgPos?: string;
+  /* Leaderboard: what was built (big), where (small), and the placing.
+     rank sorts the board (1 = winner); place/field are what's displayed. */
+  short: string; event: string; place: string; field: string; rank: number;
   caseStudy?: {
     problem: string; users: string; role: string; productDecision: string;
     aiWorkflow: string; impact: string; learned: string;
@@ -19,6 +22,9 @@ export type CompetitionCard = {
 export type Experience = {
   title: string; company: string; period: string; logo?: string;
   bullets: string[]; angle?: string; tags: string[];
+  /* Career rail: short name on the timeline, one-line focus, and which of
+     DATA / AI / PRODUCT the role leaned on (lit up under the role). */
+  short: string; focus: string; lanes: ("data" | "ai" | "product")[];
   links?: { href: string; label: string }[];
 };
 
@@ -43,6 +49,8 @@ export type LeadershipRole = {
   title: string; org: string; date: string; location: string;
   bullets: string[]; tags: string[];
   images: string[]; imagePositions?: string[];
+  /* Label on the leadership map node */
+  short: string;
 };
 
 export type Testimonial = {
@@ -82,6 +90,9 @@ export const experiences: Experience[] = [
   {
     title: "Business Analyst Intern",
     company: "IBM Singapore Pte. Ltd. (IBM Consulting)",
+    short: "IBM",
+    focus: "Consulting · hybrid cloud & AI",
+    lanes: ["data", "product"],
     period: "Sep 2026 to Dec 2026 · Singapore",
     logo: "/ibm-logo.png",
     bullets: [
@@ -95,6 +106,9 @@ export const experiences: Experience[] = [
   {
     title: "Data Engineer Intern",
     company: "Home Team Science and Technology Agency (HTX)",
+    short: "HTX",
+    focus: "AI infrastructure",
+    lanes: ["data", "ai"],
     period: "May 2026 to Aug 2026 · Singapore",
     logo: "/htx-logo.png",
     bullets: [
@@ -107,6 +121,9 @@ export const experiences: Experience[] = [
   {
     title: "GenAI Product Development Intern",
     company: "CPF Board",
+    short: "CPF",
+    focus: "GenAI product",
+    lanes: ["ai", "product"],
     period: "Jan 2026 to May 2026 · Singapore",
     logo: "/cpf-logo.png",
     bullets: [
@@ -120,6 +137,9 @@ export const experiences: Experience[] = [
   {
     title: "AI Engineer Intern",
     company: "Crayon Data",
+    short: "Crayon Data",
+    focus: "Applied AI · LLM pipelines",
+    lanes: ["data", "ai"],
     period: "Dec 2025 to Jan 2026 · Chennai, India",
     logo: "/crayon-data-logo.jpg",
     bullets: [
@@ -136,6 +156,9 @@ export const experiences: Experience[] = [
   {
     title: "Operations (Data Science) Intern",
     company: "Superbank",
+    short: "Superbank",
+    focus: "Data science · fraud",
+    lanes: ["data"],
     period: "May 2025 to Aug 2025 · Jakarta, Indonesia",
     logo: "/superbank-logo.webp",
     bullets: [
@@ -158,6 +181,11 @@ export const experiences: Experience[] = [
 export const competitions: CompetitionCard[] = [
   {
     title: "BlazeReport: SCDF × Dell Lifesavers Innovation Challenge",
+    short: "BlazeReport",
+    event: "SCDF × Dell Lifesavers Innovation Challenge",
+    place: "2nd",
+    field: "87 teams",
+    rank: 2,
     badge: "1st Runner-Up · 87 teams",
     date: "Jul 2026",
     subtitle: "AI fire investigation reporting system for SCDF officers.",
@@ -207,6 +235,11 @@ export const competitions: CompetitionCard[] = [
   },
   {
     title: "NUS Datathon 2026: Company Intelligence & AI Analytics",
+    short: "Company Intelligence",
+    event: "NUS Datathon 2026",
+    place: "1st",
+    field: "76 teams",
+    rank: 1,
     badge: "1st Place · 76 teams",
     date: "Feb 2026",
     subtitle: "Company intelligence that turns raw firmographic data into decisions.",
@@ -233,6 +266,11 @@ export const competitions: CompetitionCard[] = [
   },
   {
     title: "Micron × AISG National AI Student Challenge: SmartLogParser",
+    short: "SmartLogParser",
+    event: "Micron × AISG National AI Student Challenge",
+    place: "2nd",
+    field: "17 teams",
+    rank: 2,
     badge: "1st Runner-Up · 17 teams",
     date: "May 2026",
     description:
@@ -244,6 +282,11 @@ export const competitions: CompetitionCard[] = [
   },
   {
     title: "MeDo Vibe Coding Hackathon: BTO Lens",
+    short: "BTO Lens",
+    event: "MeDo Vibe Coding Hackathon",
+    place: "3rd",
+    field: "40 teams",
+    rank: 3,
     badge: "2nd Runner-Up · 40 teams",
     date: "Apr 2026",
     description:
@@ -255,6 +298,11 @@ export const competitions: CompetitionCard[] = [
   },
   {
     title: "SDS Hackathon 2025: Medical Insurance Cost Prediction",
+    short: "Insurance Cost Prediction",
+    event: "SDS Hackathon 2025",
+    place: "3rd",
+    field: "40 teams",
+    rank: 3,
     badge: "2nd Runner-Up · 40 teams",
     date: "Nov 2025",
     description:
@@ -266,6 +314,11 @@ export const competitions: CompetitionCard[] = [
   },
   {
     title: "PathwaySG: AI Education Decision Companion for Singapore Families",
+    short: "PathwaySG",
+    event: "SimplifyNext Agentic AI Hackathon 2026",
+    place: "Top 40",
+    field: "100 teams",
+    rank: 40,
     badge: "Semi-Finalist · Top 40/100 teams",
     date: "Sep 2026",
     subtitle: "AI decision companion helping Singapore families navigate school admissions.",
@@ -300,6 +353,11 @@ export const competitions: CompetitionCard[] = [
   },
   {
     title: "Don't Get Played: Anti-Drug Reflex Arcade Game",
+    short: "Don't Get Played",
+    event: "SCOGA × NCADA Anti-Drug Jam 2026",
+    place: "Top 8",
+    field: "150+ participants",
+    rank: 8,
     badge: "Top 8 Finalist · 150+ participants",
     date: "Sep 2026",
     subtitle: "Dumb Ways to Die-style arcade game that trains anti-drug reflexes, not lecture recall.",
@@ -329,6 +387,11 @@ export const competitions: CompetitionCard[] = [
   },
   {
     title: "Careerlingo: Duolingo-style AI Career Coach",
+    short: "Careerlingo",
+    event: "LinkedIn Career Trailblazer Camp",
+    place: "Top 5",
+    field: "14 teams",
+    rank: 5,
     badge: "Top 5 Finalists · 14 teams",
     date: "June 2026",
     subtitle: "LinkedIn Career Trailblazer Camp - AI Hackathon",
@@ -362,6 +425,11 @@ export const competitions: CompetitionCard[] = [
   },
   {
     title: "NUS Datathon 2025: Financial Advisory Matching",
+    short: "Advisor Matching",
+    event: "NUS Datathon 2025",
+    place: "Top 5",
+    field: "40 teams",
+    rank: 5,
     badge: "Top 5 Finalists · 40 teams",
     date: "Feb 2025",
     description:
@@ -553,6 +621,7 @@ export const volunteerProjects: VolunteerProject[] = [
       "Cleaning up beaches is something I do in my free time, not just for organised events. Joined SG Beach Warriors for a cleanup at Coney Island, clearing litter washed up along the shoreline.",
     tags: ["SG Beach Warriors", "Beach Cleanup", "Environment"],
     images: ["/beach%20cleanup%20with%20entt.jpg"],
+    imagePositions: ["center 34%"], // tall photo: keep the faces in frame when it's cropped to a banner
   },
 ];
 
@@ -561,6 +630,7 @@ export const volunteerProjects: VolunteerProject[] = [
 export const leadershipRoles: LeadershipRole[] = [
   {
     title: "Publicity Head for Alumni Relations Committee",
+    short: "ARC Publicity",
     org: "NUS Students' Science Club",
     date: "Oct 2025 – Aug 2026",
     location: "Singapore",
@@ -574,6 +644,7 @@ export const leadershipRoles: LeadershipRole[] = [
   },
   {
     title: "Head of Branding and Marketing",
+    short: "DG Branding",
     org: "Developer Group (DG), NUS",
     date: "Jul 2025 – Jul 2026 · 1 yr 1 mo",
     location: "Singapore · Hybrid",
@@ -589,6 +660,7 @@ export const leadershipRoles: LeadershipRole[] = [
   },
   {
     title: "Marketing Head for Science Club Welfare",
+    short: "Welfare Marketing",
     org: "NUS Science Club Welfare",
     date: "Oct 2024 – Aug 2025",
     location: "Singapore",
@@ -608,6 +680,7 @@ export const leadershipRoles: LeadershipRole[] = [
   },
   {
     title: "Orientation Group Leader (OGL) Head",
+    short: "SOW OGL Head",
     org: "NUS Science Orientation Week (SOW)",
     date: "Jul 2024",
     location: "Singapore",

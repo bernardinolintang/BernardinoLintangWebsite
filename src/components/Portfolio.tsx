@@ -1,27 +1,25 @@
 import { useEffect, useState } from "react";
 import "../apple.css";
-import { CardImageCarousel } from "./CardImageCarousel";
-import { ScrollCarouselRow } from "./ScrollCarouselRow";
+import "../redesign.css";
+import { Search } from "lucide-react";
 import { PortfolioChat } from "./PortfolioChat";
+import { CommandPalette } from "./CommandPalette";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import {
-  competitions,
-  events,
-  experiences,
-  leadershipRoles,
-  projects,
-  skills,
-  testimonials,
-  volunteerProjects,
-  type CompetitionCard,
+  competitions, events, experiences, leadershipRoles, profile, projects, skills, testimonials, volunteerProjects,
 } from "../data/portfolioContent";
-import { slugify } from "../lib/slugify";
+import { openPalette, useMediaQuery } from "../lib/scrollFx";
+import { splitSentences } from "../lib/text";
+import { CountUp, SectionTitle } from "./sections/shared";
+import { Hero } from "./sections/Hero";
+import { CareerRail } from "./sections/CareerRail";
+import { Leaderboard } from "./sections/Leaderboard";
+import { ProjectReel } from "./sections/ProjectReel";
+import { Community } from "./sections/Community";
+import { Testimonials } from "./sections/Testimonials";
 
-function cardImages(item: { image?: string; images?: string[] }) {
-  return item.images ?? (item.image ? [item.image] : []);
-}
-
-/* Small reveal-on-scroll hook (no dependencies) */
+/* Reveal-on-scroll for every .al-rv element. Sections swap layouts when the
+   window crosses a breakpoint, so newly mounted elements are picked up too. */
 function useReveal() {
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -34,53 +32,78 @@ function useReveal() {
         }),
       { threshold: 0.12 }
     );
-    document.querySelectorAll(".al-rv").forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-}
-
-/* Every experience/competition/project/community/testimonial card carries a
-   DOM id matching its chatbot evidence slug (see portfolioKnowledge.ts), so a
-   "relevant evidence" link can land on the exact card instead of the section.
-   Cards sit two-up in a grid, so simply scrolling there isn't always enough
-   to tell WHICH card is the evidence — this briefly pulses it too. Runs on
-   the initial hash (a shared deep link) and on every in-page hash change
-   (clicking a source card while the chat panel is open). */
-function useEvidenceHighlight() {
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | null = null;
-    function highlightFromHash() {
-      const hash = decodeURIComponent(window.location.hash.slice(1));
-      if (!hash) return;
-      const el = document.getElementById(hash);
-      if (!el) return;
-      if (timer) clearTimeout(timer);
-      el.classList.add("al-card-highlight");
-      timer = setTimeout(() => el.classList.remove("al-card-highlight"), 1600);
-    }
-    highlightFromHash();
-    window.addEventListener("hashchange", highlightFromHash);
+    let raf = 0;
+    const scan = () => {
+      raf = 0;
+      document.querySelectorAll(".al-rv:not(.al-in)").forEach((el) => io.observe(el));
+    };
+    scan();
+    const mo = new MutationObserver(() => {
+      if (!raf) raf = requestAnimationFrame(scan);
+    });
+    mo.observe(document.querySelector(".al") ?? document.body, { childList: true, subtree: true });
     return () => {
-      window.removeEventListener("hashchange", highlightFromHash);
-      if (timer) clearTimeout(timer);
+      io.disconnect();
+      mo.disconnect();
+      if (raf) cancelAnimationFrame(raf);
     };
   }, []);
 }
 
-/* Expandable long description */
-function Desc({ text }: { text: string }) {
-  const [open, setOpen] = useState(false);
-  const long = text.length > 260;
-  return (
-    <>
-      <p className={"al-desc" + (long && !open ? " clamped" : "")}>{text}</p>
-      {long && (
-        <button className="al-link al-more" onClick={() => setOpen(!open)}>
-          {open ? "Show less" : "Show more"}
-        </button>
-      )}
-    </>
-  );
+/* Every experience/competition/project/community/testimonial carries a DOM
+   id matching its chatbot evidence slug (see portfolioKnowledge.ts), so a
+   "relevant evidence" link lands on the exact item. In the pinned sections
+   that id belongs to an invisible scroll anchor; its data-hl names the
+   visible element to pulse instead. The pulse waits for the smooth scroll
+   to finish so it's seen, not missed mid-flight. */
+function useEvidenceHighlight() {
+  useEffect(() => {
+    let wait: ReturnType<typeof setTimeout> | null = null;
+    let clear: ReturnType<typeof setTimeout> | null = null;
+    let onEnd: (() => void) | null = null;
+
+    function pulse(el: HTMLElement) {
+      const target = (el.dataset.hl && document.getElementById(el.dataset.hl)) || el;
+      target.classList.remove("al-card-highlight");
+      void target.offsetWidth; // restart the animation if it's already running
+      target.classList.add("al-card-highlight");
+      if (clear) clearTimeout(clear);
+      clear = setTimeout(() => target.classList.remove("al-card-highlight"), 1600);
+    }
+
+    function highlightFromHash(initial = false) {
+      const hash = decodeURIComponent(window.location.hash.slice(1));
+      if (!hash || hash === "top") return;
+      const el = document.getElementById(hash);
+      if (!el) return;
+      if (initial) el.scrollIntoView();
+      if (el.tagName === "SECTION") return; // a whole chapter: scroll there, nothing to pulse
+      if (wait) clearTimeout(wait);
+      if (onEnd) window.removeEventListener("scrollend", onEnd);
+      let done = false;
+      const fire = () => {
+        if (done) return;
+        done = true;
+        if (onEnd) window.removeEventListener("scrollend", onEnd);
+        pulse(el);
+      };
+      onEnd = fire;
+      window.addEventListener("scrollend", fire, { once: true });
+      wait = setTimeout(fire, 1100);
+    }
+
+    // Give lazily measured sections (the project reel) a beat to lay out.
+    const boot = setTimeout(() => highlightFromHash(true), 450);
+    const onHash = () => highlightFromHash();
+    window.addEventListener("hashchange", onHash);
+    return () => {
+      clearTimeout(boot);
+      window.removeEventListener("hashchange", onHash);
+      if (onEnd) window.removeEventListener("scrollend", onEnd);
+      if (wait) clearTimeout(wait);
+      if (clear) clearTimeout(clear);
+    };
+  }, []);
 }
 
 const NAV = [
@@ -92,19 +115,47 @@ const NAV = [
   ["Contact", "contact"],
 ];
 
-/* Highlights the nav link for whichever section is currently in view */
+/* The About section's index: everything on the page, counted from the data. */
+const INDEX = [
+  { id: "experience", n: experiences.length, label: "internships" },
+  { id: "competitions", n: competitions.length, label: "competitions" },
+  { id: "projects", n: projects.length, label: "projects" },
+  { id: "community", n: events.length + volunteerProjects.length + leadershipRoles.length, label: "community stories" },
+  { id: "testimonials", n: testimonials.length, label: "testimonials" },
+];
+
+/* "Graduating mid-2027. Open to …" → just the "Open to …" part, since the
+   line above it already says when he graduates. */
+const OPEN_TO = splitSentences(profile.availability).slice(1).join(" ") || profile.availability;
+
+/* Sections that tint the page background as you move through them. */
+const ZONES = [...NAV.map(([, id]) => id), "testimonials"];
+
+/* Tracks which section is in view: drives the nav highlight, the
+   "04 / Projects" counter, and the page's background tint. A section counts
+   once it reaches the top 40% of the screen; when two overlap that band the
+   later one wins. The full set is tracked (not just what changed), so a
+   section leaving the band can never leave a stale highlight behind. */
 function useActiveSection() {
   const [active, setActive] = useState("");
   useEffect(() => {
-    const sections = NAV.map(([, id]) => document.getElementById(id)).filter(
+    const sections = ZONES.map((id) => document.getElementById(id)).filter(
       (el): el is HTMLElement => !!el
     );
+    const order = sections
+      .slice()
+      .sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1))
+      .map((el) => el.id);
+    const inBand = new Set<string>();
     const io = new IntersectionObserver(
       (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting);
-        if (visible.length > 0) {
-          setActive(visible[0].target.id);
+        for (const e of entries) {
+          if (e.isIntersecting) inBand.add(e.target.id);
+          else inBand.delete(e.target.id);
         }
+        const current = order.filter((id) => inBand.has(id)).pop();
+        if (current) setActive(current);
+        else if (window.scrollY < 200) setActive("");
       },
       { rootMargin: "-48px 0px -60% 0px", threshold: 0 }
     );
@@ -114,15 +165,42 @@ function useActiveSection() {
   return active;
 }
 
+/* A refresh starts at the very top, like a first visit. Without this the
+   browser restores the old scroll position, or jumps to whatever #section was
+   left in the address bar. A link opened fresh with a #hash (a shared deep
+   link) is still honoured; only a reload clears it. */
+function useFreshStart() {
+  useEffect(() => {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    const reloaded = nav?.type === "reload";
+    const hash = window.location.hash;
+    if (hash && (reloaded || hash === "#top")) {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+    if (reloaded || !hash || hash === "#top") window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+}
+
+/* Logo and "Back to top": go to the very top without leaving #top in the address. */
+function toTop(e: React.MouseEvent) {
+  e.preventDefault();
+  const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({ top: 0, behavior: calm ? "instant" : "smooth" });
+  if (window.location.hash) history.replaceState(null, "", window.location.pathname + window.location.search);
+}
+
 export default function Portfolio() {
+  useFreshStart();
   useReveal();
   useEvidenceHighlight();
   const activeSection = useActiveSection();
   const [menu, setMenu] = useState(false);
   const [showResume, setShowResume] = useState(false);
-  const [caseStudy, setCaseStudy] = useState<CompetitionCard | null>(null);
-  const caseStudyModalRef = useFocusTrap<HTMLDivElement>(!!(caseStudy && caseStudy.caseStudy));
   const resumeModalRef = useFocusTrap<HTMLDivElement>(showResume);
+  const reduce = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
+  const navIndex = NAV.findIndex(([, id]) => id === (activeSection === "testimonials" ? "community" : activeSection));
 
   /* Scroll-progress bar: write scroll fraction into a CSS var */
   useEffect(() => {
@@ -140,13 +218,11 @@ export default function Portfolio() {
     };
   }, []);
 
-  /* Close any open modal on Escape, and lock body scroll while open */
+  /* Close the resume modal on Escape, and lock body scroll while open */
   useEffect(() => {
-    if (!showResume && !caseStudy) return;
+    if (!showResume) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") return;
-      setShowResume(false);
-      setCaseStudy(null);
+      if (e.key === "Escape") setShowResume(false);
     };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -155,424 +231,161 @@ export default function Portfolio() {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [showResume, caseStudy]);
+  }, [showResume]);
 
   /* ======================= RENDER ======================= */
   return (
-    <div className="al">
+    <div className="al" id="top" data-zone={activeSection || "top"}>
       {/* SCROLL PROGRESS */}
       <div className="al-progress" aria-hidden="true" />
 
       {/* NAV */}
       <nav className="al-nav">
-        <a className="al-brand" href="#top">
+        <a className="al-brand" href="#top" onClick={toTop}>
           <img src="/Logo.png" alt="" onError={(e) => ((e.target as HTMLImageElement).style.display = "none")} />
           Bernardino Lintang
         </a>
         <div className={"al-nav-links" + (menu ? " open" : "")}>
-          {NAV.map(([label, id]) => (
+          {NAV.map(([label, id], i) => (
             <a
               key={id}
               href={"#" + id}
-              className={id === activeSection ? "active" : undefined}
+              data-label={label}
+              className={i === navIndex ? "active" : undefined}
               onClick={() => setMenu(false)}
             >
               {label}
             </a>
           ))}
         </div>
-        <button className="al-nav-toggle" aria-label="Menu" onClick={() => setMenu(!menu)}>
-          ☰
-        </button>
+        <div className="al-nav-end">
+          <span className={"al-nav-count" + (navIndex >= 0 ? " is-on" : "")} aria-hidden="true">
+            {navIndex >= 0 && (
+              <>
+                <b>{String(navIndex + 1).padStart(2, "0")}</b> / {NAV[navIndex][0]}
+              </>
+            )}
+          </span>
+          <button type="button" className="al-nav-ask" onClick={() => openPalette()} aria-label="Search the portfolio">
+            <Search size={13} strokeWidth={2.5} aria-hidden="true" />
+            <span>Search</span>
+            <kbd>{isMac ? "⌘K" : "Ctrl K"}</kbd>
+          </button>
+          <button className="al-nav-toggle" aria-label="Menu" onClick={() => setMenu(!menu)}>
+            ☰
+          </button>
+        </div>
       </nav>
 
       <main>
-      {/* HERO */}
-      <header className="al-hero al-wrap" id="top">
-        <img className="al-avatar al-rv" src="/formal-picture.JPG" alt="Bernardino Lintang" />
-        <div className="al-eyebrow al-rv">BERNARDINO LINTANG · AI PRODUCT BUILDER</div>
-        <h1 className="al-rv">
-          I build AI products that <span className="al-grad-text">survive real users.</span>
-        </h1>
-        <p className="al-rv">
-          I turn messy workflows into tested, deployable AI products, from product strategy and UX
-          through to data and engineering.
-        </p>
-        <div className="al-cta-row al-rv">
-          <a className="al-btn" href="#competitions">View my work</a>
-          <button type="button" className="al-link" onClick={() => setShowResume(true)}>Resume</button>
-          <a className="al-link" href="#contact">Contact</a>
-        </div>
+        <Hero onResume={() => setShowResume(true)} />
 
-        <div className="al-stats">
-          <div className="al-stat al-rv"><b>1st / 76</b><span>NUS Datathon 2026</span></div>
-          <div className="al-stat al-rv"><b>2nd / 87</b><span>SCDF × Dell Challenge</span></div>
-          <div className="al-stat al-rv"><b>4+</b><span>AI products shipped</span></div>
-          <div className="al-stat al-rv"><b>70%+</b><span>Manual workflow reduced</span></div>
-        </div>
-      </header>
-
-      {/* ABOUT */}
-      <section className="al-section al-alt" id="about">
-        <div className="al-wrap">
-          <h2 className="al-rv">About. <small>Constrained AI, built to deploy.</small></h2>
-          <div className="al-about-grid">
-            <div className="al-about-text al-rv">
-              <p>
-                I build production AI systems, from LLM-powered ingestion pipelines that replace manual
-                workflows to RAG architectures serving policy-aligned responses at scale.
-              </p>
-              <p>
-                My work sits at the intersection of applied ML, data engineering, and GenAI product
-                development. I treat every model as a constrained tool that needs schema enforcement,
-                evaluation, and failure modes designed before the first line of inference code.
-              </p>
-            </div>
-            <div className="al-rv">
-              {Object.entries(skills).map(([group, items]) => (
-                <div className="al-skill-group" key={group}>
-                  <h3>{group}</h3>
-                  <div className="al-tags">
-                    {items.map((s) => (
-                      <span className="al-tag" key={s}>{s}</span>
-                    ))}
+        {/* ABOUT */}
+        <section className="al-section" id="about">
+          <div className="al-wrap">
+            <SectionTitle title="About." kicker="Constrained AI, built to deploy." chapter="01" note="Profile" />
+            <div className="al-about-grid">
+              <div className="al-about-text al-rv">
+                {profile.about.map((p, i) => (
+                  <p key={p.slice(0, 24)} className={i === 0 ? "al-about-lead" : undefined}>{p}</p>
+                ))}
+                <dl className="al-facts">
+                  <div><dt>Studying</dt><dd>{profile.education}</dd></div>
+                  <div><dt>Open to</dt><dd>{OPEN_TO}</dd></div>
+                </dl>
+              </div>
+              <div className="al-rv">
+                {Object.entries(skills).map(([group, items]) => (
+                  <div className="al-skill-group" key={group}>
+                    <h3>{group}</h3>
+                    <div className="al-tags">
+                      {items.map((s) => (
+                        <span className="al-tag" key={s}>{s}</span>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Everything on this page, counted. Each one jumps to its chapter. */}
+            <nav className="al-index al-rv" aria-label="What's on this page">
+              {INDEX.map((x) => (
+                <a className="al-index-item" href={"#" + x.id} key={x.id}>
+                  <CountUp value={String(x.n)} reduce={reduce} />
+                  <span>{x.label}</span>
+                  <i aria-hidden="true">→</i>
+                </a>
               ))}
-            </div>
+            </nav>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* EXPERIENCE */}
-      <section className="al-section" id="experience">
-        <div className="al-wrap">
-          <h2 className="al-rv">Experience. <small>Production, not prototypes.</small></h2>
-          <div className="al-stack">
-            {experiences.map((x) => (
-              <div className="al-card al-rv" id={slugify(x.company)} key={x.title + x.company}>
-                <div className="al-meta">
-                  <div className="al-meta-main">
-                    {x.logo && (
-                      <img
-                        className="al-exp-logo"
-                        src={x.logo}
-                        alt={x.company + " logo"}
-                        loading="lazy"
-                        onError={(e) => ((e.target as HTMLImageElement).style.display = "none")}
-                      />
-                    )}
-                    <div>
-                      <h3>{x.title}</h3>
-                      <div className="al-org">{x.company}</div>
-                    </div>
-                  </div>
-                  <div className="al-period">{x.period}</div>
-                </div>
-                <ul className="al-bullets">
-                  {x.bullets.map((b, i) => <li key={i}>{b}</li>)}
-                </ul>
-                {x.angle && (
-                  <p className="al-angle"><b>Product angle:</b> {x.angle}</p>
-                )}
-                <div className="al-tags">
-                  {x.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
-                </div>
-                {x.links && x.links.length > 0 && (
-                  <div className="al-links-row">
-                    {x.links.map((l) => (
-                      <a className="al-link" key={l.href} href={l.href} target="_blank" rel="noreferrer">
-                        {l.label}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        <CareerRail />
+        <Leaderboard />
+        <ProjectReel />
+        <Community />
+        <Testimonials />
 
-      {/* COMPETITIONS */}
-      <section className="al-section al-alt" id="competitions">
-        <div className="al-wrap">
-          <h2 className="al-rv">Competitions. <small>Built to win.</small></h2>
-          <div className="al-grid-2">
-            {competitions.map((c) => (
-              <div className="al-card al-media-card al-rv" id={slugify(c.title)} key={c.title}>
-                {cardImages(c).length > 0 && (
-                  <CardImageCarousel
-                    images={cardImages(c)}
-                    alt={c.title}
-                    imgPos={c.imgPos}
-                    imagePositions={c.imagePositions}
-                  />
-                )}
-                <div className="al-media-body">
-                  <span className="al-badge">{c.badge}</span>
-                  <h3>{c.title}</h3>
-                  {c.subtitle && <div className="al-subtitle">{c.subtitle}</div>}
-                  <div className="al-date">{c.date}</div>
-                  <Desc text={c.description} />
-                  {c.caseStudy && (
-                    <dl className="al-rundown">
-                      <div className="al-rundown-row"><dt>Problem</dt><dd>{c.caseStudy.problem}</dd></div>
-                      <div className="al-rundown-row"><dt>Users</dt><dd>{c.caseStudy.users}</dd></div>
-                      <div className="al-rundown-row"><dt>Impact</dt><dd>{c.caseStudy.impact}</dd></div>
-                    </dl>
-                  )}
-                  {c.angle && (
-                    <p className="al-angle"><b>Product angle:</b> {c.angle}</p>
-                  )}
-                  <div className="al-tags">
-                    {c.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
-                  </div>
-                  {c.pmTags && (
-                    <div className="al-pm-tags">
-                      {c.pmTags.map((t) => <span className="al-pm-tag" key={t}>{t}</span>)}
-                    </div>
-                  )}
-                  {(c.caseStudy || c.liveDemo || c.article) && (
-                    <div className="al-links-row">
-                      {c.caseStudy && (
-                        <button type="button" className="al-link" onClick={() => setCaseStudy(c)}>
-                          Case study
-                        </button>
-                      )}
-                      {c.liveDemo && <a className="al-link" href={c.liveDemo} target="_blank" rel="noreferrer">Live demo</a>}
-                      {c.article && (
-                        <a className="al-link" href={c.article} target="_blank" rel="noreferrer">
-                          {c.articleLabel ?? "Article"}
-                        </a>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* PROJECTS */}
-      <section className="al-section" id="projects">
-        <div className="al-wrap">
-          <h2 className="al-rv">Projects. <small>Shipped and live.</small></h2>
-          <div className="al-grid-2">
-            {projects.map((p) => (
-              <div className="al-card al-media-card al-rv" id={slugify(p.title)} key={p.title}>
-                {cardImages(p).length > 0 && (
-                  <CardImageCarousel
-                    images={cardImages(p)}
-                    alt={p.title}
-                    imagePositions={p.imagePositions}
-                    fit={p.imageFit}
-                  />
-                )}
-                <div className="al-media-body">
-                  <h3>{p.title}</h3>
-                  <div className="al-date">{p.date}</div>
-                  <Desc text={p.description} />
-                  {(p.problem || p.productDecision) && (
-                    <p className="al-angle">
-                      {p.productDecision
-                        ? <><b>Product decision:</b> {p.productDecision}</>
-                        : <><b>Problem:</b> {p.problem}</>}
-                    </p>
-                  )}
-                  <div className="al-tags">
-                    {p.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
-                  </div>
-                  {p.pmTags && (
-                    <div className="al-pm-tags">
-                      {p.pmTags.map((t) => <span className="al-pm-tag" key={t}>{t}</span>)}
-                    </div>
-                  )}
-                  {(p.liveDemo || p.github) && (
-                    <div className="al-links-row">
-                      {p.liveDemo && <a className="al-link" href={p.liveDemo} target="_blank" rel="noreferrer">Live demo</a>}
-                      {p.github && <a className="al-link" href={p.github} target="_blank" rel="noreferrer">GitHub</a>}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* COMMUNITY */}
-      <section className="al-section al-alt" id="community">
-        <div className="al-wrap">
-          <h2 className="al-rv">Community. <small>Beyond the code.</small></h2>
-          <div className="al-grid-2">
-            {events.map((ev) => (
-              <div className="al-card al-media-card al-rv" id={slugify(ev.title)} key={ev.title}>
-                {cardImages(ev).length > 0 && (
-                  <CardImageCarousel images={cardImages(ev)} alt={ev.title} />
-                )}
-                <div className="al-media-body">
-                  <h3>{ev.title}</h3>
-                  <div className="al-date">{ev.date}</div>
-                  <Desc text={ev.description} />
-                  <div className="al-tags">
-                    {ev.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
-                  </div>
-                  {ev.link && (
-                    <div className="al-links-row">
-                      <a className="al-link" href={ev.link} target="_blank" rel="noreferrer">View portfolio</a>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <h3 className="al-subhead al-rv">Volunteering.</h3>
-          <ScrollCarouselRow trackClassName="al-volunteer-board al-rv" ariaLabel="Volunteering projects">
-            {volunteerProjects.map((v) => (
-              <div className="al-card al-media-card al-volunteer-card" id={slugify(v.title)} key={v.title}>
-                <CardImageCarousel images={v.images} alt={v.title} imagePositions={v.imagePositions} />
-                <div className="al-media-body">
-                  <h3>{v.title}</h3>
-                  <div className="al-org">{v.org}</div>
-                  <div className="al-date">{v.date} · {v.location}</div>
-                  <Desc text={v.description} />
-                  <div className="al-tags">
-                    {v.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </ScrollCarouselRow>
-
-          <h3 className="al-subhead al-rv">Leadership.</h3>
-          <ScrollCarouselRow trackClassName="al-volunteer-board al-rv" ariaLabel="Leadership roles">
-            {leadershipRoles.map((l) => (
-              <div className="al-card al-media-card al-volunteer-card" id={slugify(l.title)} key={l.title}>
-                <CardImageCarousel images={l.images} alt={l.title} imagePositions={l.imagePositions} />
-                <div className="al-media-body">
-                  <h3>{l.title}</h3>
-                  <div className="al-org">{l.org}</div>
-                  <div className="al-date">{l.date} · {l.location}</div>
-                  <ul className="al-bullets">
-                    {l.bullets.map((b, i) => <li key={i}>{b}</li>)}
-                  </ul>
-                  <div className="al-tags">
-                    {l.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </ScrollCarouselRow>
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
-      <section className="al-section" id="testimonials">
-        <div className="al-wrap">
-          <h2 className="al-rv">What people say.</h2>
-          <ScrollCarouselRow trackClassName="al-testis al-rv" ariaLabel="Testimonials">
-            {testimonials.map((t) => (
-              <div className="al-card al-testi" id={slugify("testimonial-" + t.name)} key={t.name}>
-                <div className="al-testi-head">
-                  <img src={t.image} alt={t.name} loading="lazy" onError={(e) => ((e.target as HTMLImageElement).style.display = "none")} />
-                  <div>
-                    <b>{t.name}</b>
-                    <span>{t.title}</span>
-                  </div>
-                </div>
-                <p className="al-desc">{t.text}</p>
-              </div>
-            ))}
-          </ScrollCarouselRow>
-        </div>
-      </section>
-
-      {/* CONTACT */}
-      <section className="al-section al-contact" id="contact">
-        <div className="al-wrap">
-          <h2 className="al-rv">Let's talk.</h2>
-          <p className="al-rv">
-            Graduating mid-2027. Open to AI, ML, and Data Engineering internships now and graduate roles
-            for 2027. If you're building production AI systems and need someone who ships, reach out.
-          </p>
-          <div className="al-cta-row al-rv">
-            <a className="al-btn" href="mailto:lintangbernardino@gmail.com">Email me</a>
-            <a className="al-link" href="https://github.com/bernardinolintang" target="_blank" rel="noreferrer">GitHub</a>
-            <a className="al-link" href="https://www.linkedin.com/in/bernardino-lintang" target="_blank" rel="noreferrer">LinkedIn</a>
-          </div>
-        </div>
-      </section>
-
-      {/* CASE STUDY MODAL */}
-      {caseStudy && caseStudy.caseStudy && (
-        <>
-          <div className="al-modal-overlay" onClick={() => setCaseStudy(null)} />
-          <div className="al-modal al-modal-lg" role="dialog" aria-modal="true" aria-labelledby="al-case-title" ref={caseStudyModalRef}>
-            <button className="al-modal-close" aria-label="Close" onClick={() => setCaseStudy(null)}>×</button>
-            <span className="al-badge">{caseStudy.badge}</span>
-            <h3 id="al-case-title">{caseStudy.title}</h3>
-            {caseStudy.subtitle && <div className="al-subtitle">{caseStudy.subtitle}</div>}
-            <div className="al-date">{caseStudy.date}</div>
-            <div className="al-case-sec"><h4>Problem</h4><p>{caseStudy.caseStudy.problem}</p></div>
-            <div className="al-case-sec"><h4>Users</h4><p>{caseStudy.caseStudy.users}</p></div>
-            <div className="al-case-sec"><h4>My role</h4><p>{caseStudy.caseStudy.role}</p></div>
-            <div className="al-case-sec"><h4>Product decision</h4><p>{caseStudy.caseStudy.productDecision}</p></div>
-            <div className="al-case-sec"><h4>AI workflow</h4><p>{caseStudy.caseStudy.aiWorkflow}</p></div>
-            <div className="al-case-sec"><h4>Impact</h4><p>{caseStudy.caseStudy.impact}</p></div>
-            <div className="al-case-sec"><h4>What I learned</h4><p>{caseStudy.caseStudy.learned}</p></div>
-            {caseStudy.pmTags && (
-              <div className="al-pm-tags">
-                {caseStudy.pmTags.map((t) => <span className="al-pm-tag" key={t}>{t}</span>)}
-              </div>
-            )}
-            {caseStudy.liveDemo && (
-              <div className="al-links-row">
-                <a className="al-link" href={caseStudy.liveDemo} target="_blank" rel="noreferrer">Live demo</a>
-              </div>
-            )}
-          </div>
-        </>
-      )}
-
-      {/* RESUME ACCESS MODAL */}
-      {showResume && (
-        <>
-          <div className="al-modal-overlay" onClick={() => setShowResume(false)} />
-          <div className="al-modal" role="dialog" aria-modal="true" aria-labelledby="al-resume-title" ref={resumeModalRef}>
-            <button className="al-modal-close" aria-label="Close" onClick={() => setShowResume(false)}>×</button>
-            <div className="al-modal-eyebrow">🔒 Resume access</div>
-            <h3 id="al-resume-title">Let's connect first</h3>
-            <p>
-              I share my resume by request. Drop me an email or a LinkedIn message and I'll
-              send it right over. Both buttons below open with a message already drafted for you.
+        {/* CONTACT: the page goes quiet and loops back to the headline */}
+        <section className="al-finale" id="contact">
+          <div className="al-wrap">
+            <p className="al-finale-kicker al-rv">You've reached the end. I haven't.</p>
+            <h2 className="al-rv">
+              Let's build something that <span className="al-grad-text">survives real users.</span>
+            </h2>
+            <p className="al-finale-text al-rv">
+              {profile.availability} If you're building production AI systems and need someone who ships, reach out.
             </p>
-            <div className="al-modal-actions">
-              <a
-                className="al-btn"
-                href="mailto:lintangbernardino@gmail.com?subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
-              >
-                ✉️ Email me
-              </a>
-              <a
-                className="al-btn-outline"
-                href="https://www.linkedin.com/messaging/compose/?recipient=bernardino-lintang&subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Message on LinkedIn
-              </a>
+            <div className="al-cta-row al-rv">
+              <a className="al-btn al-btn-light" href={"mailto:" + profile.email}>Email me →</a>
+              <a className="al-link" href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
+              <a className="al-link" href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             </div>
           </div>
-        </>
-      )}
+        </section>
 
-      {/* PORTFOLIO ASSISTANT */}
-      <PortfolioChat />
+        {/* RESUME ACCESS MODAL */}
+        {showResume && (
+          <>
+            <div className="al-modal-overlay" onClick={() => setShowResume(false)} />
+            <div className="al-modal" role="dialog" aria-modal="true" aria-labelledby="al-resume-title" ref={resumeModalRef}>
+              <button className="al-modal-close" aria-label="Close" onClick={() => setShowResume(false)}>×</button>
+              <div className="al-modal-eyebrow">🔒 Resume access</div>
+              <h3 id="al-resume-title">Let's connect first</h3>
+              <p>
+                I share my resume by request. Drop me an email or a LinkedIn message and I'll
+                send it right over. Both buttons below open with a message already drafted for you.
+              </p>
+              <div className="al-modal-actions">
+                <a
+                  className="al-btn"
+                  href="mailto:lintangbernardino@gmail.com?subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
+                >
+                  ✉️ Email me
+                </a>
+                <a
+                  className="al-btn-outline"
+                  href="https://www.linkedin.com/messaging/compose/?recipient=bernardino-lintang&subject=Resume%20Request&body=Hi%20Bernardino%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20request%20a%20copy%20of%20your%20resume.%0A%0AThank%20you!"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Message on LinkedIn
+                </a>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* PORTFOLIO ASSISTANT + SEARCH */}
+        <PortfolioChat />
+        <CommandPalette />
       </main>
 
-      <footer className="al-footer">© {new Date().getFullYear()} Bernardino Lintang</footer>
+      <footer className="al-footer">
+        <span>© {new Date().getFullYear()} Bernardino Lintang</span>
+        <a href="#top" onClick={toTop}>Back to top ↑</a>
+      </footer>
     </div>
   );
 }
