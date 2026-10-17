@@ -738,6 +738,15 @@
 }
 .al-footer a { color: #a1a1a6; text-decoration: none; transition: color .2s; }
 .al-footer a:hover { color: #fff; }
+.al-visitor { display: inline-flex; align-items: center; gap: 8px; animation: al-visitor-in .6s ease both; }
+.al-visitor strong { color: #c4b5fd; font-weight: 600; font-variant-numeric: tabular-nums; }
+.al-visitor-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: #34d399;
+  box-shadow: 0 0 0 0 rgba(52,211,153,.5); animation: al-visitor-pulse 2.4s ease-out infinite;
+}
+@keyframes al-visitor-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@keyframes al-visitor-pulse { 0% { box-shadow: 0 0 0 0 rgba(52,211,153,.5); } 80%, 100% { box-shadow: 0 0 0 6px rgba(52,211,153,0); } }
+@media (prefers-reduced-motion: reduce) { .al-visitor, .al-visitor-dot { animation: none; } }
 
 /* ==========================================================================
    DETAIL MODAL (competitions, projects, community stories)

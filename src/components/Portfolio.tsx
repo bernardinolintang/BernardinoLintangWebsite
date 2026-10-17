@@ -4,6 +4,7 @@ import "../redesign.css";
 import { Search } from "lucide-react";
 import { PortfolioChat } from "./PortfolioChat";
 import { CommandPalette } from "./CommandPalette";
+import { VisitorCounter } from "./VisitorCounter";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import {
   competitions, events, experiences, leadershipRoles, profile, projects, skills, testimonials, volunteerProjects,
@@ -384,6 +385,7 @@ export default function Portfolio() {
 
       <footer className="al-footer">
         <span>© {new Date().getFullYear()} Bernardino Lintang</span>
+        <VisitorCounter />
         <a href="#top" onClick={toTop}>Back to top ↑</a>
       </footer>
     </div>
