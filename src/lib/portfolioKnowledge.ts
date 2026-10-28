@@ -192,6 +192,17 @@ function buildKnowledge(): PortfolioEntry[] {
         p.description,
         ...(p.problem ? [`Problem: ${p.problem}`] : []),
         ...(p.productDecision ? [`Product decision: ${p.productDecision}`] : []),
+        ...(p.decisions ? [`Key decisions: ${p.decisions.join(" ")}`] : []),
+        ...(p.status
+          ? [
+              `Status: ${p.status.label} (last updated ${p.status.updated}). Still being built, not finished.`,
+              `Shipped so far: ${p.status.shipped.join(", ")}.`,
+              `In progress: ${p.status.inProgress.join(", ")}.`,
+              `Next: ${p.status.next.join(", ")}.`,
+            ]
+          : []),
+        ...(p.limitations ? [`Known limitations: ${p.limitations.join(" ")}`] : []),
+        ...(p.testing ? [`Testing: ${p.testing}`] : []),
         ...(p.liveDemo ? ["Deployed and publicly accessible (live demo available)."] : []),
         ...(p.github ? ["Source code available on GitHub."] : []),
       ],

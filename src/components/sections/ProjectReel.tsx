@@ -3,7 +3,7 @@ import { profile, projects, type Project } from "../../data/portfolioContent";
 import { slugify } from "../../lib/slugify";
 import { PIN_QUERY, clamp, pinProgress, useMediaQuery, useScrollFrame } from "../../lib/scrollFx";
 import { ScrollCarouselRow } from "../ScrollCarouselRow";
-import { DetailModal, SectionTitle, TagList, hostOf, type DetailContent } from "./shared";
+import { DetailModal, SectionTitle, StatusPill, TagList, hostOf, type DetailContent } from "./shared";
 
 /* ==========================================================================
    PROJECTS: the product reel.
@@ -20,20 +20,48 @@ const pad = (n: number) => String(n).padStart(2, "0");
 const PACE = 0.75;
 
 function chromeLabel(p: Project) {
-  return hostOf(p.liveDemo) ?? (p.date.includes("·") ? p.date.split("·")[0].trim() : p.tags[0]);
+  return (
+    hostOf(p.liveDemo) ??
+    (p.status ? "in development" : p.date.includes("·") ? p.date.split("·")[0].trim() : p.tags[0])
+  );
 }
 
 function toDetail(p: Project): DetailContent {
+  const s = p.status;
+  /* Projects with a full case study (status board etc.) read in the order:
+     problem, what I built, key decisions, status, limitations, stack. */
+  const caseStudy = !!s;
   return {
     title: p.title,
+    subtitle: p.tagline,
+    status: s?.label,
     meta: p.date,
+    metaNote: s ? `Last updated ${s.updated}` : undefined,
     images: p.images ?? (p.image ? [p.image] : []),
     imagePositions: p.imagePositions,
     imageFit: p.imageFit,
     description: p.description,
     sections: [
-      ...(p.problem ? [{ label: "Problem", text: p.problem }] : []),
-      ...(p.productDecision ? [{ label: "Product decision", text: p.productDecision }] : []),
+      ...(p.problem ? [{ label: caseStudy ? "The problem" : "Problem", text: p.problem }] : []),
+      ...(p.productDecision && !caseStudy ? [{ label: "Product decision", text: p.productDecision }] : []),
+    ],
+    blocks: [
+      ...(p.built ? [{ kind: "table" as const, label: "What I built", head: ["Pain point", "What it does"] as [string, string], rows: p.built }] : []),
+      ...(p.decisions ? [{ kind: "list" as const, label: "Key decisions", items: p.decisions }] : []),
+      ...(s
+        ? [{
+            kind: "board" as const,
+            label: "Status",
+            note: `Last updated ${s.updated}.`,
+            cols: [
+              { title: "Shipped", items: s.shipped },
+              { title: "In progress", items: s.inProgress },
+              { title: "Next", items: s.next },
+            ],
+          }]
+        : []),
+      ...(p.limitations ? [{ kind: "list" as const, label: "Honest limitations", items: p.limitations }] : []),
+      ...(p.testing ? [{ kind: "text" as const, label: "Stack and testing", text: p.testing }] : []),
     ],
     tags: p.tags,
     pmTags: p.pmTags,
@@ -75,9 +103,11 @@ function Window({
       <div className="al-win-body">
         <div className="al-win-top">
           <span className="al-win-idx">{pad(i + 1)}</span>
+          {p.status && <StatusPill label={p.status.label} />}
           <span className="al-win-date">{p.date}</span>
         </div>
         <h3>{p.title}</h3>
+        {p.tagline && <p className="al-win-tag">{p.tagline}</p>}
         <p className="al-win-line">{p.blurb ?? p.productDecision ?? p.problem ?? p.description}</p>
         <TagList tags={p.tags} max={3} />
         <div className="al-links-row">
@@ -161,7 +191,7 @@ export function ProjectReel() {
   }, pinned && shift > 0);
 
   const title = (
-    <SectionTitle title="Projects." kicker="Shipped and live." chapter="04" note={`${projects.length} projects`} />
+    <SectionTitle title="Projects." kicker="Shipped, and still building." chapter="04" note={`${projects.length} projects`} />
   );
 
   if (!pinned) {

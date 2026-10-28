@@ -34,6 +34,24 @@ export type Project = {
   liveDemo?: string; github?: string; problem?: string; productDecision?: string; pmTags?: string[];
   /* Optional short line for the project card. Falls back to productDecision. */
   blurb?: string;
+  /* Optional one-line tagline shown under the title on the card. */
+  tagline?: string;
+  /* For projects that are still being built. Shows a status pill on the card
+     and a status board in the write-up. */
+  status?: {
+    label: string;          // "In progress"
+    updated: string;        // "Oct 2026"
+    shipped: string[];
+    inProgress: string[];
+    next: string[];
+  };
+  /* Key decisions and honest limitations, shown in the write-up. */
+  decisions?: string[];
+  limitations?: string[];
+  /* Pain point → solution rows, shown as a compact two-column table. */
+  built?: [string, string][];
+  /* One line on how it's tested, shown under "Stack and testing". */
+  testing?: string;
 };
 
 export type CommunityEvent = {
@@ -445,6 +463,67 @@ export const competitions: CompetitionCard[] = [
 /* ---------- Projects ---------- */
 
 export const projects: Project[] = [
+  {
+    title: "Wardrobe360",
+    tagline: "Your wardrobe, in the round.",
+    date: "2026 – present",
+    blurb:
+      "Digitise your clothes, see them on your own photo, and get fit guidance from your measurements.",
+    description:
+      "People can't confidently decide what to wear or buy without trying things on, and none of the tools they have help with that.\n\nWardrobe360 is a personal virtual wardrobe. You digitise your clothes, see them on your own photo, and get outfit suggestions built from what you already own. It is a visual outfit simulator, not a physical fit predictor. It runs entirely in the browser with no API keys, and a hosted AI engine is an opt-in extra.",
+    problem:
+      "Online try-on is guesswork: product photos show a model, not you. Size guidance is generic, and many apps blur how a garment looks with how it fits. Your wardrobe is invisible to you, so you repeat outfits and buy duplicates. And avatar tools either look fake or raise privacy concerns, with some giving body-shaming feedback.",
+    productDecision:
+      "Fit is deterministic and kept separate from the generated image, so the picture never pretends to predict how a garment fits.",
+    built: [
+      ["Can't see it on me", "Photo try-on on your own full-body photo, using a quick on-device preview or an optional realistic AI engine."],
+      ["Fit uncertainty", "A deterministic fit estimator from your measurements (ease, stretch, size steps, honest confidence), never taken from the generated image."],
+      ["Hidden wardrobe", "Add clothes by upload, paste, camera, screenshot or product URL, with automatic background removal and classification."],
+      ["Outfit trial and error", "12 equipment slots, layering, variants, and saved or side-by-side compared outfits, plus an optional 3D mannequin."],
+      ["Body-image and privacy risk", "Body-neutral recommendations. Photos stay private, with consent for every generation and delete-anytime controls."],
+      ["Setup friction", "You confirm a draft instead of typing metadata for every item."],
+      ["Irrelevant advice", "Rule-based streetwear suggestions scored on 8 dimensions, using only clothes you own."],
+    ],
+    decisions: [
+      "Fit is deterministic and separate from the generated image.",
+      "Recommendations are body-neutral: they talk about garments, colour, layering and occasion, never your body.",
+      "Private by default, with consent for every generation.",
+      "Runs on-device with no API keys. Hosted AI is an opt-in extra.",
+    ],
+    status: {
+      label: "In progress",
+      updated: "Oct 2026",
+      shipped: [
+        "Onboarding",
+        "Wardrobe ingestion",
+        "On-device and hosted try-on",
+        "Fit estimator",
+        "3D studio",
+        "Outfits and compare",
+        "Recommendations",
+        "Privacy controls",
+      ],
+      inProgress: ["Hardening and polish"],
+      next: [
+        "Size-chart ingestion for more accurate fit",
+        "Pose-based garment placement",
+        "Multi-user sign-in",
+        "Real vision and background-removal providers",
+      ],
+    },
+    limitations: [
+      "The try-on is a visual approximation, not a fit predictor.",
+      "Hosted try-on can reinterpret prints and logos.",
+      "Only 4 of the 16 demo garments have clean cutouts.",
+      "The hosted AI engine hasn't been tested end to end against a live key.",
+    ],
+    testing:
+      "Lint, typecheck, 154 unit tests, end-to-end tests and the production build are all green.",
+    tags: ["Next.js", "TypeScript", "Three.js", "Supabase", "Playwright"],
+    pmTags: ["Privacy by Design", "Fit & Trust", "Human in the Loop"],
+    image: "/wardrobe360-wardrobe.jpg",
+    imagePositions: ["center top"],
+  },
   {
     title: "NutriSnap",
     date: "Apr 2026",

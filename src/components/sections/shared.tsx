@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { CardImageCarousel } from "../CardImageCarousel";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
+import { useMediaQuery } from "../../lib/scrollFx";
 
 /* Section heading that reveals word by word ("About." then the grey kicker).
    Uses the page-wide .al-rv observer, so it animates when scrolled into view. */
@@ -100,10 +101,88 @@ export function TagList({ tags, max = 3, variant }: { tags: string[]; max?: numb
   );
 }
 
+/* "● In progress" pill. The dot pulses slowly (switched off for reduced motion in CSS). */
+export function StatusPill({ label }: { label: string }) {
+  return (
+    <span className="al-status">
+      <i aria-hidden="true" />
+      {label}
+    </span>
+  );
+}
+
+/* Three-column Shipped / In progress / Next board. On narrow screens the
+   columns stack, with the first one open and the others collapsed. */
+function StatusBoard({ cols }: { cols: { title: string; items: string[] }[] }) {
+  const wide = useMediaQuery("(min-width: 640px)");
+  if (wide) {
+    return (
+      <div className="al-board">
+        {cols.map((c) => (
+          <div className="al-board-col" key={c.title}>
+            <h5>{c.title}</h5>
+            <ul>{c.items.map((x) => <li key={x}>{x}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return (
+    <div className="al-board is-stacked">
+      {cols.map((c, i) => (
+        <details className="al-board-col" key={c.title} open={i === 0}>
+          <summary>{c.title}<span>{c.items.length}</span></summary>
+          <ul>{c.items.map((x) => <li key={x}>{x}</li>)}</ul>
+        </details>
+      ))}
+    </div>
+  );
+}
+
+export type DetailBlock =
+  | { kind: "list"; label: string; items: string[] }
+  | { kind: "text"; label: string; text: string }
+  | { kind: "table"; label: string; head: [string, string]; rows: [string, string][] }
+  | { kind: "board"; label: string; note?: string; cols: { title: string; items: string[] }[] };
+
+function Block({ b }: { b: DetailBlock }) {
+  return (
+    <div className="al-case-sec">
+      <h4>{b.label}</h4>
+      {b.kind === "text" && <p>{b.text}</p>}
+      {b.kind === "list" && (
+        <ul className="al-bullets al-detail-bullets">{b.items.map((x) => <li key={x}>{x}</li>)}</ul>
+      )}
+      {b.kind === "table" && (
+        <table className="al-pairs">
+          <thead>
+            <tr><th scope="col">{b.head[0]}</th><th scope="col">{b.head[1]}</th></tr>
+          </thead>
+          <tbody>
+            {b.rows.map(([a, c]) => <tr key={a}><th scope="row">{a}</th><td>{c}</td></tr>)}
+          </tbody>
+        </table>
+      )}
+      {b.kind === "board" && (
+        <>
+          {b.note && <p className="al-board-note">{b.note}</p>}
+          <StatusBoard cols={b.cols} />
+        </>
+      )}
+    </div>
+  );
+}
+
 export type DetailContent = {
   eyebrow?: string;
   title: string;
   subtitle?: string;
+  /* Shown as a pill under the title, e.g. "In progress". */
+  status?: string;
+  /* Extra context after the date, e.g. "Last updated Oct 2026". */
+  metaNote?: string;
+  /* Rendered in order after `sections`. */
+  blocks?: DetailBlock[];
   meta?: string;
   images?: string[];
   imagePositions?: string[];
@@ -157,7 +236,13 @@ export function DetailModal({ content, onClose }: { content: DetailContent | nul
         {c.eyebrow && <span className="al-badge">{c.eyebrow}</span>}
         <h3 id="al-detail-title">{c.title}</h3>
         {c.subtitle && <div className="al-subtitle">{c.subtitle}</div>}
-        {c.meta && <div className="al-date">{c.meta}</div>}
+        {(c.status || c.meta) && (
+          <div className="al-date al-detail-meta">
+            {c.status && <StatusPill label={c.status} />}
+            {c.meta && <span>{c.meta}</span>}
+            {c.metaNote && <span>{c.metaNote}</span>}
+          </div>
+        )}
         {c.description && <p className="al-detail-desc">{c.description}</p>}
         {c.bullets && c.bullets.length > 0 && (
           <ul className="al-bullets al-detail-bullets">
@@ -170,6 +255,7 @@ export function DetailModal({ content, onClose }: { content: DetailContent | nul
             <p>{s.text}</p>
           </div>
         ))}
+        {c.blocks?.map((b) => <Block b={b} key={b.label} />)}
         {c.tags && c.tags.length > 0 && (
           <div className="al-tags">
             {c.tags.map((t) => <span className="al-tag" key={t}>{t}</span>)}
