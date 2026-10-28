@@ -32,6 +32,8 @@ export type Project = {
   title: string; date: string; description: string; tags: string[]; image?: string; images?: string[];
   imagePositions?: string[]; imageFit?: "contain";
   liveDemo?: string; github?: string; problem?: string; productDecision?: string; pmTags?: string[];
+  /* Optional short line for the project card. Falls back to productDecision. */
+  blurb?: string;
 };
 
 export type CommunityEvent = {
@@ -443,6 +445,18 @@ export const competitions: CompetitionCard[] = [
 /* ---------- Projects ---------- */
 
 export const projects: Project[] = [
+  {
+    title: "NutriSnap",
+    date: "Apr 2026",
+    blurb:
+      "Trying to hit a calorie deficit while training is hard when logging every meal is tedious, and the good apps sit behind a paywall. So I built my own: snap a photo of your food and get calories and macros back in seconds.",
+    description:
+      "If you're lifting and trying to hit a calorie deficit, the maths is easy but the tracking isn't. Weighing food, searching databases and logging every meal gets tedious fast, and most of the apps that make it easier want a monthly subscription. I didn't want to pay for something this basic, so I built my own.\n\nNutriSnap is a web app where you snap a photo of your meal and a vision model (Gemini) identifies the food, estimates the portion, and returns calories, protein, carbs and fats. You can crop and rotate the photo first and add a note like \"large portion\" to improve the estimate. Meals roll up into daily progress rings against your own targets. A built-in maintenance-calorie (TDEE) calculator uses the Mifflin-St Jeor equation to show whether your goal puts you in a deficit or surplus. A history view has charts, search, filters and PDF export so you can see trends over time, and meal reminders nudge you to log.",
+    productDecision:
+      "Logging had to take seconds, or I'd stop doing it. So it's photo-first, with no sign-up and no accounts. You open it and start tracking, and each device keeps its own data.",
+    tags: ["TanStack Start", "React", "TypeScript", "Supabase", "Gemini Vision", "Tailwind CSS"],
+    pmTags: ["Health", "Fitness"],
+  },
   {
     title: "Anonymous Q&A Board",
     date: "Sep 2026",

@@ -78,7 +78,7 @@ function Window({
           <span className="al-win-date">{p.date}</span>
         </div>
         <h3>{p.title}</h3>
-        <p className="al-win-line">{p.productDecision ?? p.problem ?? p.description}</p>
+        <p className="al-win-line">{p.blurb ?? p.productDecision ?? p.problem ?? p.description}</p>
         <TagList tags={p.tags} max={3} />
         <div className="al-links-row">
           <button type="button" className="al-more-btn" onClick={onOpen}>Read more</button>
