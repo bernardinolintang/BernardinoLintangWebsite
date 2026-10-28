@@ -521,8 +521,8 @@ export const projects: Project[] = [
       "Lint, typecheck, 154 unit tests, end-to-end tests and the production build are all green.",
     tags: ["Next.js", "TypeScript", "Three.js", "Supabase", "Playwright"],
     pmTags: ["Privacy by Design", "Fit & Trust", "Human in the Loop"],
-    image: "/wardrobe360-wardrobe.jpg",
-    imagePositions: ["center top"],
+    images: ["/wardrobe%20360%20cover%20page.png", "/wardrobe360-wardrobe.jpg"],
+    imagePositions: ["center 30%", "center top"],
   },
   {
     title: "NutriSnap",
