@@ -456,6 +456,8 @@ export const projects: Project[] = [
       "Logging had to take seconds, or I'd stop doing it. So it's photo-first, with no sign-up and no accounts. You open it and start tracking, and each device keeps its own data.",
     tags: ["TanStack Start", "React", "TypeScript", "Supabase", "Gemini Vision", "Tailwind CSS"],
     pmTags: ["Health", "Fitness"],
+    images: ["/bitelog%20telegram.png", "/bitelog%20logo.jpg"],
+    imageFit: "contain",
   },
   {
     title: "Anonymous Q&A Board",

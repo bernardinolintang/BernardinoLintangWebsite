@@ -209,6 +209,9 @@ body {
 .al-card-carousel__slide { flex: 0 0 100%; min-width: 0; overflow: hidden; }
 .al-card-carousel__slide img { width: 100%; height: 220px; object-fit: cover; display: block; }
 .al-media-card:hover .al-card-carousel__slide img { transform: none; }
+/* Opt-in via Project.imageFit: show whole images (screenshots, logos) instead of cropping */
+.al-card-carousel.is-contain .al-card-carousel__slide { background: #000; }
+.al-card-carousel.is-contain .al-card-carousel__slide img { object-fit: contain; }
 .al-card-carousel__btn {
   position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
   display: flex; align-items: center; justify-content: center;

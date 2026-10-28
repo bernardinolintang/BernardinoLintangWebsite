@@ -116,7 +116,7 @@ export function CardImageCarousel({ images, alt, imgPos, imagePositions, fit }: 
   }
 
   return (
-    <div className="al-card-carousel">
+    <div className={"al-card-carousel" + (fit === "contain" ? " is-contain" : "")}>
       <div className="al-card-carousel__viewport" ref={emblaRef}>
         <div className="al-card-carousel__track">
           {images.map((src, i) => {
