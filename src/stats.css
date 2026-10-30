@@ -1,0 +1,75 @@
+/* Private /stats dashboard. Self-contained dark theme. */
+.st {
+  min-height: 100vh; background: #0b0b0f; color: #e8e8ed;
+  padding: 32px max(16px, calc((100vw - 1040px) / 2)) 64px;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.st h1 { font-size: 28px; letter-spacing: -.02em; margin: 0 0 4px; }
+.st h2 { font-size: 18px; margin: 0 0 4px; }
+.st h3 { font-size: 15px; margin: 0 0 14px; }
+.st p { margin: 0; color: #a1a1a6; font-size: 14px; }
+.st b { color: #fff; }
+.st small { color: #6e6e73; font-size: 12px; margin-left: 4px; }
+.st-empty { color: #6e6e73 !important; padding: 8px 0; }
+
+.st-login { display: flex; align-items: center; justify-content: center; }
+.st-login form { width: min(340px, 100%); display: grid; gap: 12px; }
+.st-login input, .st-login button {
+  font: inherit; padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14);
+  background: #16161c; color: #fff;
+}
+.st-login button { background: #fff; color: #0b0b0f; font-weight: 600; cursor: pointer; }
+.st-error { color: #f87171 !important; }
+
+.st-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.st-range { display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: #16161c; }
+.st-range button {
+  font: inherit; font-size: 13px; padding: 7px 14px; border: 0; border-radius: 7px;
+  background: transparent; color: #a1a1a6; cursor: pointer;
+}
+.st-range button.on { background: #2a2a34; color: #fff; }
+
+.st-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.st-kpi { background: #16161c; border-radius: 14px; padding: 18px; display: grid; gap: 4px; }
+.st-kpi b { font-size: 30px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.st-kpi span { font-size: 13px; color: #a1a1a6; }
+
+.st-card { background: #16161c; border-radius: 14px; padding: 22px; margin-bottom: 16px; }
+.st-sub { margin-bottom: 18px !important; }
+.st-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.st-grid .st-card { margin: 0; }
+
+.st-fn { display: grid; grid-template-columns: 140px 1fr 90px 52px; align-items: center; gap: 12px; padding: 6px 0; font-size: 14px; }
+.st-fn-bar, .st-row-bar { height: 10px; border-radius: 6px; background: #23232b; overflow: hidden; }
+.st-fn-bar i, .st-row-bar i { display: block; height: 100%; border-radius: 6px; background: linear-gradient(90deg, #4da3ff, #a78bfa 60%, #f472b6); }
+.st-fn-num, .st-row-num { text-align: right; font-variant-numeric: tabular-nums; }
+.st-fn-drop { font-size: 12px; color: #6e6e73; text-align: right; }
+.st-fn-drop.hot { color: #f87171; font-weight: 600; }
+
+.st-row { display: grid; grid-template-columns: minmax(0, 1.3fr) 1fr 72px; align-items: center; gap: 10px; padding: 6px 0; font-size: 14px; }
+.st-row-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.st-hours { display: flex; align-items: flex-end; gap: 4px; height: 140px; }
+.st-hour { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; }
+.st-hour i { width: 100%; border-radius: 4px 4px 0 0; background: #4a4a63; min-height: 0; }
+.st-hour i.peak { background: linear-gradient(#a78bfa, #f472b6); }
+.st-hour span { font-size: 11px; color: #6e6e73; height: 12px; }
+.st-periods, .st-dow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 18px; }
+.st-dow { grid-template-columns: repeat(7, 1fr); }
+.st-periods div, .st-dow div { background: #1d1d25; border-radius: 10px; padding: 12px; display: grid; gap: 2px; }
+.st-periods b, .st-dow b { font-size: 20px; }
+.st-periods span, .st-dow span { font-size: 12px; color: #a1a1a6; }
+
+.st-days { display: flex; align-items: flex-end; gap: 3px; height: 90px; margin-top: 12px; }
+.st-days i { flex: 1; border-radius: 3px 3px 0 0; background: #4da3ff; min-height: 1px; opacity: .85; }
+
+.st-foot { margin-top: 20px !important; font-size: 13px !important; }
+.st-foot code { background: #1d1d25; padding: 2px 6px; border-radius: 5px; color: #c4b5fd; }
+
+@media (max-width: 720px) {
+  .st-kpis { grid-template-columns: repeat(2, 1fr); }
+  .st-grid { grid-template-columns: 1fr; }
+  .st-fn { grid-template-columns: 96px 1fr 70px 40px; gap: 8px; font-size: 13px; }
+  .st-periods { grid-template-columns: repeat(2, 1fr); }
+  .st-dow { grid-template-columns: repeat(4, 1fr); }
+}

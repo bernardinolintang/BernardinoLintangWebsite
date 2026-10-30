@@ -5,6 +5,10 @@ import ErrorBoundary from "./ErrorBoundary";
 
 // Prefer default export; if your component is named, export default it.
 const Portfolio = lazy(() => import("./components/Portfolio"));
+const StatsPage = lazy(() => import("./components/StatsPage"));
+
+// The private analytics dashboard lives at /stats.
+const isStatsPage = window.location.pathname.replace(/\/+$/, "") === "/stats";
 
 export default function App() {
   return (
@@ -16,7 +20,7 @@ export default function App() {
           </div>
         }
       >
-        <Portfolio />
+        {isStatsPage ? <StatsPage /> : <Portfolio />}
       </Suspense>
     </ErrorBoundary>
   );

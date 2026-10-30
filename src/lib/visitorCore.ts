@@ -1,21 +1,11 @@
 /* Shared visitor-counter logic used by the Vercel function
-   (api/visitor-count.ts) and the Vite dev middleware.
-   Talks to Upstash Redis over its REST API, so no extra dependency.
-   Vercel's Upstash integration sets KV_REST_API_URL / KV_REST_API_TOKEN. */
+   (api/visitor-count.ts) and the Vite dev middleware. */
+
+import { redisConfig } from "./redis.js";
 
 const COUNTER_KEY = "visitors";
 
 type CounterResult = { status: number; body: { count?: number; error?: string } };
-
-function redisConfig() {
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-  return url && token ? { url: url.replace(/\/$/, ""), token } : null;
-}
-
-export function isCounterConfigured() {
-  return redisConfig() !== null;
-}
 
 // INCR is atomic, so two visitors arriving at once never share a number.
 // The key starts at 0, so the first visitor ever is #1.

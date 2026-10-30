@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { PortfolioChat } from "./PortfolioChat";
 import { CommandPalette } from "./CommandPalette";
 import { VisitorCounter } from "./VisitorCounter";
+import { startFunnel, trackAction } from "../lib/funnel";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import {
   competitions, events, experiences, leadershipRoles, profile, projects, skills, testimonials, volunteerProjects,
@@ -193,6 +194,7 @@ function toTop(e: React.MouseEvent) {
 
 export default function Portfolio() {
   useFreshStart();
+  useEffect(() => startFunnel({ github: profile.github, linkedin: profile.linkedin }), []);
   useReveal();
   useEvidenceHighlight();
   const activeSection = useActiveSection();
@@ -279,7 +281,7 @@ export default function Portfolio() {
       </nav>
 
       <main>
-        <Hero onResume={() => setShowResume(true)} />
+        <Hero onResume={() => { trackAction("resume_open"); setShowResume(true); }} />
 
         {/* ABOUT */}
         <section className="al-section" id="about">
