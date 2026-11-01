@@ -541,7 +541,11 @@
 }
 .al-reel-row::-webkit-scrollbar { display: none; }
 .al-reel-row:focus-visible { outline: 2px solid var(--al-accent); outline-offset: 4px; border-radius: 12px; }
-.al-reel-row .al-win { flex-basis: min(420px, 84vw); scroll-snap-align: start; }
+/* Shadow kept small enough to fit the row's padding, or the scroll edge clips it into a band. */
+.al-reel-row .al-win {
+  flex-basis: min(420px, 84vw); scroll-snap-align: start;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 4px 12px rgba(15,23,42,.06);
+}
 .al-reel-row .al-win-end { flex-basis: min(280px, 70vw); }
 .al-reel-row .al-win-shot { height: 210px; }
 .al-scroll-row .al-reel-row ~ .al-scroll-row__btn { top: 45%; }
@@ -806,6 +810,12 @@
 #competitions.al-section { padding-top: 56px; padding-bottom: 32px; }
 #community.al-section { padding-top: 64px; }
 
+/* Stacked layout (the opposite of PIN_QUERY in lib/scrollFx.ts). Sections sit
+   straight after each other here, so the padding on both sides of a join adds up. */
+@media not all and (min-width: 900px) and (min-height: 640px) and (prefers-reduced-motion: no-preference) {
+  .al-section, #competitions.al-section, #community.al-section { padding: 32px 0; }
+}
+
 /* ---------- keyboard focus ---------- */
 .al a:focus-visible, .al button:focus-visible { outline: 2px solid var(--al-accent); outline-offset: 3px; }
 .al-finale a:focus-visible { outline-color: #c4b5fd; }
@@ -1028,3 +1038,8 @@
 @media (prefers-reduced-motion: reduce) {
   .al-status i { animation: none; }
 }
+
+/* Label chips on a project card (AI / Product / Data). */
+#self-projects, #school-projects { scroll-margin-top: 48px; }
+.al-win-lanes { margin-top: 10px; }
+.al-win-lanes .al-lane { font-size: 10px; padding: 5px 9px; }

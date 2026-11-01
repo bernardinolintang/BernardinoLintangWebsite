@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { profile, projects, type Project } from "../../data/portfolioContent";
 import { slugify } from "../../lib/slugify";
 import { PIN_QUERY, clamp, pinProgress, useMediaQuery, useScrollFrame } from "../../lib/scrollFx";
@@ -12,6 +12,8 @@ import { DetailModal, SectionTitle, StatusPill, TagList, hostOf, type DetailCont
    one window at a time. Elsewhere it's a swipeable row. The full write-up
    for any project opens in a modal.
    ========================================================================== */
+
+const LANE_LABEL = { ai: "AI", product: "Product", data: "Data" } as const;
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -109,6 +111,11 @@ function Window({
         <h3>{p.title}</h3>
         {p.tagline && <p className="al-win-tag">{p.tagline}</p>}
         <p className="al-win-line">{p.blurb ?? p.productDecision ?? p.problem ?? p.description}</p>
+        <div className="al-lanes al-win-lanes" aria-label={"About: " + p.lanes.join(", ")}>
+          {p.lanes.map((l) => (
+            <span key={l} className={"al-lane is-on al-lane-" + l}>{LANE_LABEL[l]}</span>
+          ))}
+        </div>
         <TagList tags={p.tags} max={3} />
         <div className="al-links-row">
           <button type="button" className="al-more-btn" onClick={onOpen}>Read more</button>
@@ -130,15 +137,21 @@ function EndCard() {
   );
 }
 
-export function ProjectReel() {
+type ReelProps = {
+  list: Project[];
+  slugs: string[];
+  title: ReactNode;
+  idPrefix: string;
+  first: boolean;
+  onOpen: (p: Project) => void;
+};
+
+/* One reel: pinned and sideways on desktop, a swipeable row elsewhere. */
+function Reel({ list, slugs, title, idPrefix, first, onOpen }: ReelProps) {
   const pinned = useMediaQuery(PIN_QUERY);
-  const slugs = useMemo(() => projects.map((p) => slugify(p.title)), []);
   const [shift, setShift] = useState(0);
   const [anchors, setAnchors] = useState<number[]>([]);
   const [active, setActive] = useState(0);
-  const [open, setOpen] = useState<Project | null>(null);
-  const detail = useMemo(() => (open ? toDetail(open) : null), [open]);
-  const close = useCallback(() => setOpen(null), []);
   const pinRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -160,7 +173,7 @@ export function ProjectReel() {
       const max = Math.max(0, lastCard.offsetLeft + lastCard.offsetWidth + lead - vw);
       setShift(max);
       setAnchors(
-        cards.slice(0, projects.length).map((c) => clamp(c.offsetLeft + c.offsetWidth / 2 - vw / 2, 0, max)),
+        cards.slice(0, list.length).map((c) => clamp(c.offsetLeft + c.offsetWidth / 2 - vw / 2, 0, max)),
       );
     };
     measure();
@@ -168,7 +181,7 @@ export function ProjectReel() {
     if (trackRef.current) ro.observe(trackRef.current);
     if (viewRef.current) ro.observe(viewRef.current);
     return () => ro.disconnect();
-  }, [pinned]);
+  }, [pinned, list.length]);
 
   useScrollFrame(() => {
     const el = pinRef.current;
@@ -190,29 +203,27 @@ export function ProjectReel() {
     setActive((prev) => (prev === idx ? prev : idx));
   }, pinned && shift > 0);
 
-  const title = (
-    <SectionTitle title="Projects." kicker="Shipped, and still building." chapter="04" note={`${projects.length} projects`} />
-  );
+  /* The GitHub end card closes the last reel only. */
+  const end = first ? null : <EndCard />;
 
   if (!pinned) {
     return (
-      <section className="al-section" id="projects">
+      <div className="al-section" id={idPrefix}>
         <div className="al-wrap">
           {title}
-          <ScrollCarouselRow trackClassName="al-reel-row al-rv" ariaLabel="Projects">
-            {projects.map((p, i) => (
-              <Window key={slugs[i]} p={p} i={i} on id={slugs[i]} onOpen={() => setOpen(p)} />
+          <ScrollCarouselRow trackClassName="al-reel-row al-rv" ariaLabel={first ? "Self projects" : "School projects"}>
+            {list.map((p, i) => (
+              <Window key={slugs[i]} p={p} i={i} on id={slugs[i]} onOpen={() => onOpen(p)} />
             ))}
-            <EndCard />
+            {end}
           </ScrollCarouselRow>
         </div>
-        <DetailModal content={detail} onClose={close} />
-      </section>
+      </div>
     );
   }
 
   return (
-    <section id="projects">
+    <div id={idPrefix}>
       <div className="al-pin" ref={pinRef} style={{ height: `calc(100vh - 48px + ${shift * PACE}px)` }}>
         {anchors.map((a, i) => (
           <span
@@ -227,27 +238,66 @@ export function ProjectReel() {
           <div className="al-wrap al-pin-head al-reel-head">
             {title}
             <div className="al-reel-meta">
-              <span className="al-counter">{pad(active + 1)} / {pad(projects.length)}</span>
+              <span className="al-counter">{pad(active + 1)} / {pad(list.length)}</span>
               <span className="al-reel-bar"><span ref={barRef} /></span>
             </div>
           </div>
           <div className="al-reel-viewport" ref={viewRef}>
             <div className="al-reel-track" ref={trackRef}>
-              {projects.map((p, i) => (
+              {list.map((p, i) => (
                 <Window
                   key={slugs[i]}
                   p={p}
                   i={i}
                   on={i === active}
                   id={"win-" + slugs[i]}
-                  onOpen={() => setOpen(p)}
+                  onOpen={() => onOpen(p)}
                 />
               ))}
-              <EndCard />
+              {end}
             </div>
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* Two stacked reels: what I build myself first, then coursework. */
+export function ProjectReel() {
+  const [open, setOpen] = useState<Project | null>(null);
+  const detail = useMemo(() => (open ? toDetail(open) : null), [open]);
+  const close = useCallback(() => setOpen(null), []);
+  const self = useMemo(() => projects.filter((p) => p.kind === "self"), []);
+  const school = useMemo(() => projects.filter((p) => p.kind === "school"), []);
+  const selfSlugs = useMemo(() => self.map((p) => slugify(p.title)), [self]);
+  const schoolSlugs = useMemo(() => school.map((p) => slugify(p.title)), [school]);
+
+  return (
+    <section id="projects">
+      <Reel
+        list={self}
+        slugs={selfSlugs}
+        idPrefix="self-projects"
+        first
+        onOpen={setOpen}
+        title={
+          <SectionTitle
+            title="Self projects."
+            kicker="Shipped, and still building."
+            chapter="04"
+            note={`${self.length} of ${projects.length} projects`}
+          />
+        }
+      />
+      <Reel
+        list={school}
+        slugs={schoolSlugs}
+        idPrefix="school-projects"
+        first={false}
+        onOpen={setOpen}
+        title={<SectionTitle title="School projects." kicker="From the classroom." />}
+      />
       <DetailModal content={detail} onClose={close} />
     </section>
   );

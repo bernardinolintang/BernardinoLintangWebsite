@@ -190,6 +190,7 @@ function buildKnowledge(): PortfolioEntry[] {
       summary: p.description.slice(0, 220),
       details: [
         p.description,
+        `${p.kind === "self" ? "A self project, built on his own" : "A school project, done for a course"}. Labels: ${p.lanes.join(", ")}.`,
         ...(p.problem ? [`Problem: ${p.problem}`] : []),
         ...(p.productDecision ? [`Product decision: ${p.productDecision}`] : []),
         ...(p.decisions ? [`Key decisions: ${p.decisions.join(" ")}`] : []),

@@ -13,7 +13,7 @@ It contains plain lists (arrays) of your content:
 
 - `experiences` — your internships
 - `competitions` — hackathons and competitions
-- `projects` — side projects and coursework
+- `projects` — self projects and coursework (shown as two reels)
 - `events` — community / club roles
 - `testimonials` — recommendation quotes
 - `skills` — the skill tags in the About section
@@ -60,6 +60,7 @@ When you add a new entry, copy these from a neighbouring block too:
   where, `place` and `field` are what's displayed ("2nd", "87 teams"), and
   `rank` is the number the board sorts by (1 = winner, 2 = runner-up, 5 for a
   top-5 finish, and so on).
+- **Projects**: `kind` is `"self"` (something you built) or `"school"` (coursework), which decides the reel it appears in. `lanes` are the label chips on the card, any of `"ai"`, `"product"`, `"data"`.
 - **Leadership** (the map): `short` is the label under the node. The map has
   room for six roles.
 

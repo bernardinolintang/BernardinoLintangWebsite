@@ -29,6 +29,11 @@ export type Experience = {
 };
 
 export type Project = {
+  /* "self" = something I built on my own, "school" = coursework. The projects
+     section shows one reel for each. */
+  kind: "self" | "school";
+  /* Label chips on the card: which of AI / PRODUCT / DATA the project is about. */
+  lanes: ("ai" | "product" | "data")[];
   title: string; date: string; description: string; tags: string[]; image?: string; images?: string[];
   imagePositions?: string[]; imageFit?: "contain";
   liveDemo?: string; github?: string; problem?: string; productDecision?: string; pmTags?: string[];
@@ -465,6 +470,8 @@ export const competitions: CompetitionCard[] = [
 export const projects: Project[] = [
   {
     title: "Wardrobe360",
+    kind: "self",
+    lanes: ["product", "ai"],
     tagline: "Your wardrobe, in the round.",
     date: "2026 – present",
     blurb:
@@ -526,6 +533,8 @@ export const projects: Project[] = [
   },
   {
     title: "NutriSnap",
+    kind: "self",
+    lanes: ["ai", "product"],
     date: "Apr 2026",
     blurb:
       "Trying to hit a calorie deficit while training is hard when logging every meal is tedious, and the good apps sit behind a paywall. So I built my own: snap a photo of your food and get calories and macros back in seconds.",
@@ -540,6 +549,8 @@ export const projects: Project[] = [
   },
   {
     title: "Anonymous Q&A Board",
+    kind: "self",
+    lanes: ["ai", "product"],
     date: "Sep 2026",
     description:
       "A Telegram Mini App I built for the mentorship group I advise at NUS's Statistics and Data Science Society, so mentees can ask questions they'd hesitate to raise in person. Questions are organised around scheduled sessions, auto-tagged by category using an LLM (Groq), and board admins get pinged the moment a new one comes in, with no author ever attached to a question, not even for me.",
@@ -552,6 +563,8 @@ export const projects: Project[] = [
   },
   {
     title: "CoverCraft: AI Cover Letter Generator",
+    kind: "self",
+    lanes: ["ai"],
     date: "Mar 2026",
     description:
       "AI tool that writes personalised cover letters in seconds. Upload your resume to auto-fill your profile, paste a job description, and it generates a tailored letter for you.",
@@ -565,6 +578,8 @@ export const projects: Project[] = [
   },
   {
     title: "AF Tracker SG",
+    kind: "self",
+    lanes: ["product", "data"],
     date: "Apr 2026",
     description:
       "Full-stack gym-visit tracker for every Anytime Fitness outlet in Singapore. Browse all AF locations on an interactive Google Map, mark gyms as visited, and track progress across regions with real-time stats, regional breakdowns, and a shareable branded progress card. Deployed on Cloudflare Pages with Supabase for auth and data.",
@@ -577,6 +592,8 @@ export const projects: Project[] = [
   },
   {
     title: "Eksplorasi",
+    kind: "self",
+    lanes: ["product"],
     date: "Jul 2026",
     description:
       "Personal outdoor-exploration tracker for 100+ parks, trails, reservoirs, wetlands, islands, and heritage spots across Singapore. Browse every location on an interactive map, mark places as visited or want-to-go, jot per-spot notes, and follow your progress with category and regional breakdowns, synced filters across map and list views, and a wishlist-first “suggest next place” picker. Built with Next.js and local-first persistence, no account or backend required.",
@@ -589,6 +606,8 @@ export const projects: Project[] = [
   },
   {
     title: "Hybrid CNN + RAG Framework for Dermatology Decision Support",
+    kind: "school",
+    lanes: ["ai"],
     date: "IS460 Machine Learning · Aug to Nov 2024",
     description:
       "Hybrid Retrieval-Augmented Generation framework integrating CNNs for skin-disease diagnosis. Image classification for visual analysis, retrieval-augmented generation for detailed medical advice from dermatology research. Tackled class imbalance with regularisation, used pre-trained ResNet-50 and EfficientNetV2, and integrated an advanced embedding model. Implemented Agentic Chunking for dynamic retrieval; outperformed baseline models in accuracy.",
@@ -600,6 +619,8 @@ export const projects: Project[] = [
   },
   {
     title: "Multi-Model Approach for DNA-Binding Protein Classification",
+    kind: "school",
+    lanes: ["ai", "data"],
     date: "IT1244 · Aug to Nov 2024",
     description:
       "Built and benchmarked Logistic Regression, Naive Bayes, Random Forest, and CNN classifiers for DNA-binding protein prediction. Engineered features from k-mer frequencies, amino acid composition, and sequence embeddings; addressed class imbalance with weighted loss and hyperparameter tuning. The CNN outperformed all baselines on sequence-based feature capture.",
@@ -611,6 +632,8 @@ export const projects: Project[] = [
   },
   {
     title: "Academic Question Bank & Assessment Platform",
+    kind: "school",
+    lanes: ["data", "product"],
     date: "DSA3101 · Aug to Nov 2025",
     description:
       "Question Bank System for ST1131: Flask backend, Streamlit frontend, PostgreSQL database, supporting efficient search, filtering, and assembly creation by difficulty and course type. Modular ingestion using pdfplumber and python-docx, a version-tracking system for questions, and AI-assisted recommendations based on past usage. Built a Flask REST API for ingestion, search, and assembly, with full-text search and metadata tracking.",
@@ -623,6 +646,8 @@ export const projects: Project[] = [
   },
   {
     title: "Emotional Characteristics of Taylor Swift's Albums & Their Reception",
+    kind: "school",
+    lanes: ["data"],
     date: "DSA2101 · Oct to Nov 2024",
     description:
       "Analysed Taylor Swift's full discography in R to quantify how emotional attributes (valence, key, mode) correlate with critical and fan reception. Built reproducible EDA pipelines on Metacritic scores and audio features, identifying statistically significant patterns between musical positivity and album performance, with publication-ready visualisations.",
