@@ -4,6 +4,8 @@
 
 const OWNER_KEY = "al-owner";
 const SEEN_KEY = "al-funnel-seen";
+const SID_KEY = "al-funnel-sid";
+const RETURNING_KEY = "al-returning";
 
 const SECTIONS = ["about", "experience", "competitions", "projects", "community", "testimonials", "contact"];
 
@@ -39,11 +41,42 @@ function once(key: string): boolean {
   return true;
 }
 
-function send(payload: Record<string, string>) {
+/* A random id for this browsing session, so one visit's events join up.
+   It isn't tied to the person and is gone when the tab session ends. */
+function sessionId(): string {
+  const fresh = () =>
+    typeof crypto.randomUUID === "function"
+      ? crypto.randomUUID()
+      : Math.random().toString(36).slice(2) + Date.now().toString(36);
+  try {
+    let id = sessionStorage.getItem(SID_KEY);
+    if (!id) {
+      id = fresh();
+      sessionStorage.setItem(SID_KEY, id);
+    }
+    return id;
+  } catch {
+    return memorySid;
+  }
+}
+const memorySid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+
+/* True when this browser has visited before (a returning visitor). */
+function isReturning(): boolean {
+  try {
+    const seen = localStorage.getItem(RETURNING_KEY) === "1";
+    localStorage.setItem(RETURNING_KEY, "1");
+    return seen;
+  } catch {
+    return false;
+  }
+}
+
+function send(payload: Record<string, string | boolean>) {
   fetch("/api/track", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, sid: sessionId() }),
     keepalive: true,
   }).catch(() => {
     /* analytics must never break the page */
@@ -76,7 +109,7 @@ const sameUrl = (href: string, base: string) =>
 export function startFunnel(links: { github: string; linkedin: string }): () => void {
   if (isOwner()) return () => {};
 
-  if (once("visit")) send({ type: "visit", ref: referrer() });
+  if (once("visit")) send({ type: "visit", ref: referrer(), ret: isReturning() });
 
   // A section counts as reached once it is visibly on screen.
   let frame = 0;

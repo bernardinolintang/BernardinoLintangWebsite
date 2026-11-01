@@ -2,12 +2,14 @@
    api/stats.ts) and the Vite dev middleware.
 
    The browser reports three kinds of event, each at most once per session:
-     visit   - opened the site (with referrer)
+     visit   - opened the site (with referrer, new/returning)
      section - scrolled a section into view
      action  - clicked Email / GitHub / LinkedIn, opened the resume dialog
-   Counts live in Redis hashes, so the stats page can show where people
-   drop off and at what hour they visit. No personal data is stored: no IPs,
-   no user ids, only counters. */
+   Counts live in Redis hashes (one overall, one per calendar day), so the
+   stats page can filter by day and show where people drop off and when they
+   visit. Each session also gets a small record (random id, time, country,
+   device, source, sections reached) for the "recent visits" log, kept 90
+   days. No IPs, names or accounts are stored. */
 
 import { createHash, timingSafeEqual } from "node:crypto";
 import { redisConfig, redisPipeline } from "./redis.js";
@@ -21,11 +23,16 @@ export const ACTIONS = [
 
 type Headers = Record<string, string | string[] | undefined>;
 type Counts = Record<string, number>;
+type Command = (string | number)[];
 type Result = { status: number; body: unknown };
 
 const BOT = /bot|crawl|spider|slurp|preview|headless|lighthouse|facebookexternalhit|whatsapp|telegram|vercel|curl|wget/i;
+const SESSION_ID = /^[a-zA-Z0-9-]{8,40}$/;
 const MAX_EVENTS_PER_HOUR = 300;
 const DAYS_KEPT_IN_STATS = 30;
+const SESSION_TTL_SECONDS = 90 * 86_400;
+const RECENT_SESSIONS_KEPT = 500;
+const RECENT_SESSIONS_SHOWN = 100;
 
 const timeZone = () => process.env.STATS_TZ || "Asia/Singapore";
 // Production and preview/local data are kept apart so testing never pollutes real numbers.
@@ -54,9 +61,10 @@ export async function handleTrack(body: unknown, headers: Headers, ip: string): 
   const ok: Result = { status: 204, body: null };
   if (!redisConfig() || BOT.test(header(headers, "user-agent"))) return ok;
 
-  const event = (body ?? {}) as { type?: unknown; id?: unknown; ref?: unknown };
+  const event = (body ?? {}) as { type?: unknown; id?: unknown; ref?: unknown; sid?: unknown; ret?: unknown };
   const p = prefix();
   const { day, hour, weekday } = clock(new Date());
+  const sid = typeof event.sid === "string" && SESSION_ID.test(event.sid) ? event.sid : "";
 
   let field: string;
   if (event.type === "visit") field = "visit";
@@ -67,25 +75,56 @@ export async function handleTrack(body: unknown, headers: Headers, ip: string): 
   try {
     // Cap events per visitor per hour so a script can't flood the counters.
     const rlKey = `${p}:rl:${createHash("sha256").update(ip).digest("hex").slice(0, 16)}`;
-    const [hits] = await redisPipeline([["INCR", rlKey], ["EXPIRE", rlKey, 3600, "NX"]]);
-    if (typeof hits === "number" && hits > MAX_EVENTS_PER_HOUR) return { status: 429, body: { error: "Too many events." } };
+    const sessKey = `${p}:sess:${sid}`;
+    const startsSession = field === "visit" && sid !== "";
+    const gate: Command[] = [["INCR", rlKey], ["EXPIRE", rlKey, 3600, "NX"]];
+    if (startsSession) gate.push(["HSETNX", sessKey, "t", new Date().toISOString()]);
+    const gated = await redisPipeline(gate);
+    if (typeof gated[0] === "number" && gated[0] > MAX_EVENTS_PER_HOUR) return { status: 429, body: { error: "Too many events." } };
+    if (startsSession && gated[2] === 0) return ok; // this session's visit was already counted
 
-    const commands: (string | number)[][] = [
-      ["HINCRBY", `${p}:total`, field, 1],
-      ["HINCRBY", `${p}:day:${day}`, field, 1],
-    ];
+    // Fields bumped in both the overall hash and today's hash.
+    const fields = [field];
+    let country = "??";
+    let device = "desktop";
+    let source = "direct";
+    let returning = false;
     if (field === "visit") {
-      const country = /^[A-Za-z]{2}$/.test(header(headers, "x-vercel-ip-country"))
-        ? header(headers, "x-vercel-ip-country").toUpperCase()
-        : "??";
-      const device = /mobile|android|iphone|ipad/i.test(header(headers, "user-agent")) ? "mobile" : "desktop";
+      const code = header(headers, "x-vercel-ip-country");
+      if (/^[A-Za-z]{2}$/.test(code)) country = code.toUpperCase();
+      if (/mobile|android|iphone|ipad/i.test(header(headers, "user-agent"))) device = "mobile";
+      source = clean(event.ref) || "direct";
+      returning = event.ret === true;
+      fields.push(`h:${hour}`, `c:${country}`, `d:${device}`, `r:${source}`, returning ? "n:ret" : "n:new");
+    } else if (field.startsWith("s:")) {
+      fields.push(`sh:${event.id}:${hour}`);
+    }
+
+    const commands: Command[] = fields.flatMap((f): Command[] => [
+      ["HINCRBY", `${p}:total`, f, 1],
+      ["HINCRBY", `${p}:day:${day}`, f, 1],
+    ]);
+    if (field === "visit") {
+      // All-time breakdowns that predate the per-day fields.
       commands.push(
         ["HINCRBY", `${p}:hour`, hour, 1],
         ["HINCRBY", `${p}:dow`, weekday, 1],
         ["HINCRBY", `${p}:country`, country, 1],
         ["HINCRBY", `${p}:device`, device, 1],
-        ["HINCRBY", `${p}:ref`, clean(event.ref) || "direct", 1],
+        ["HINCRBY", `${p}:ref`, source, 1],
       );
+    }
+    if (sid) {
+      if (field === "visit") {
+        commands.push(
+          ["HSET", sessKey, "c", country, "d", device, "r", source, "n", returning ? "ret" : "new"],
+          ["LPUSH", `${p}:recent`, sid],
+          ["LTRIM", `${p}:recent`, 0, RECENT_SESSIONS_KEPT - 1],
+        );
+      } else {
+        commands.push(["HSET", sessKey, field, 1]);
+      }
+      commands.push(["EXPIRE", sessKey, SESSION_TTL_SECONDS]);
     }
     await redisPipeline(commands);
     return ok;
@@ -105,9 +144,15 @@ function authorized(key: string): boolean {
   return timingSafeEqual(a, b);
 }
 
+const toMap = (flat: unknown): Record<string, string> => {
+  const out: Record<string, string> = {};
+  if (Array.isArray(flat)) for (let i = 0; i + 1 < flat.length; i += 2) out[String(flat[i])] = String(flat[i + 1]);
+  return out;
+};
+
 const toCounts = (flat: unknown): Counts => {
   const out: Counts = {};
-  if (Array.isArray(flat)) for (let i = 0; i + 1 < flat.length; i += 2) out[String(flat[i])] = Number(flat[i + 1]);
+  for (const [k, v] of Object.entries(toMap(flat))) out[k] = Number(v);
   return out;
 };
 
@@ -123,14 +168,34 @@ export async function handleStats(headers: Headers): Promise<Result> {
     const rows = await redisPipeline([
       ["HGETALL", `${p}:total`], ["HGETALL", `${p}:hour`], ["HGETALL", `${p}:dow`],
       ["HGETALL", `${p}:country`], ["HGETALL", `${p}:ref`], ["HGETALL", `${p}:device`],
-      ...dates.map((d) => ["HGETALL", `${p}:day:${d}`]),
+      ...dates.map((d): Command => ["HGETALL", `${p}:day:${d}`]),
+      ["LRANGE", `${p}:recent`, 0, RECENT_SESSIONS_SHOWN - 1],
     ]);
-    const [total, hours, dow, country, ref, device, ...days] = rows.map(toCounts);
+    const [total, hours, dow, country, ref, device] = rows.slice(0, 6).map(toCounts);
+    const days = rows.slice(6, 6 + dates.length).map(toCounts);
+    const recentIds = (rows[6 + dates.length] as string[]) ?? [];
+
+    const records = recentIds.length
+      ? await redisPipeline(recentIds.map((id): Command => ["HGETALL", `${p}:sess:${id}`]))
+      : [];
+    const recent = records
+      .map((flat) => toMap(flat))
+      .filter((r) => r.t)
+      .map((r) => ({
+        t: r.t,
+        country: r.c ?? "??",
+        device: r.d ?? "desktop",
+        source: r.r ?? "direct",
+        visitor: r.n ?? "new",
+        sections: Object.keys(r).filter((k) => k.startsWith("s:")).map((k) => k.slice(2)),
+        actions: Object.keys(r).filter((k) => k.startsWith("a:")).map((k) => k.slice(2)),
+      }));
+
     return {
       status: 200,
       body: {
         timeZone: timeZone(),
-        total, hours, dow, country, ref, device,
+        total, hours, dow, country, ref, device, recent,
         days: dates.map((date, i) => ({ date, counts: days[i] })),
       },
     };
