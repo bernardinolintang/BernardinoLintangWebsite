@@ -1,10 +1,10 @@
-import { useMemo, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useMemo, useRef, useState, type CSSProperties } from "react";
 import { experiences, profile, type Experience } from "../../data/portfolioContent";
 import { slugify } from "../../lib/slugify";
 import {
   PIN_QUERY, askBernard, clamp, pinProgress, useHashTarget, useMediaQuery, useScrollFrame,
 } from "../../lib/scrollFx";
-import { SectionTitle, TagList } from "./shared";
+import { DetailModal, SectionTitle, TagList, type DetailBlock, type DetailContent } from "./shared";
 
 /* ==========================================================================
    EXPERIENCE: the career rail.
@@ -77,7 +77,17 @@ function Lanes({ on }: { on: Experience["lanes"] }) {
   );
 }
 
-function StopDetail({ stop }: { stop: Stop }) {
+/* The long write-up for a role, shown in the shared "full story" pop-up. */
+function storyDetail(x: Experience): DetailContent {
+  const blocks: DetailBlock[] = [];
+  for (const st of x.story ?? []) {
+    if (st.body) blocks.push({ kind: "text", label: st.heading, text: st.body });
+    if (st.points?.length) blocks.push({ kind: "list", label: st.body ? "What the work covered" : st.heading, items: st.points });
+  }
+  return { eyebrow: x.short, title: x.title, subtitle: x.company, meta: x.period, blocks, tags: x.tags, links: x.url ? [{ href: x.url, label: "Company website" }, ...(x.links ?? [])] : x.links };
+}
+
+function StopDetail({ stop, onOpen }: { stop: Stop; onOpen?: (d: DetailContent) => void }) {
   const x = stop.exp;
   return (
     <>
@@ -93,7 +103,13 @@ function StopDetail({ stop }: { stop: Stop }) {
         )}
         <div className="al-stage-name">{x.short}</div>
         <div className="al-stage-role">{x.title}</div>
-        <div className="al-stage-org">{x.company}</div>
+        <div className="al-stage-org">
+          {x.url ? (
+            <a href={x.url} target="_blank" rel="noreferrer" aria-label={x.company + " website (opens in a new tab)"}>
+              {x.company}<span aria-hidden="true"> ↗</span>
+            </a>
+          ) : x.company}
+        </div>
         <div className="al-stage-meta">
           {stop.range}
           {stop.location ? " · " + stop.location : ""}
@@ -107,6 +123,11 @@ function StopDetail({ stop }: { stop: Stop }) {
         </ul>
         {x.angle && <p className="al-angle"><b>Product angle:</b> {x.angle}</p>}
         <TagList tags={x.tags} max={4} />
+        {x.story && x.story.length > 0 && onOpen && (
+          <button type="button" className="al-more-btn al-story-btn" onClick={() => onOpen(storyDetail(x))}>
+            Read the full story
+          </button>
+        )}
         {x.links && x.links.length > 0 && (
           <div className="al-links-row">
             {x.links.map((l) => (
@@ -147,6 +168,9 @@ export function CareerRail() {
   const pinned = useMediaQuery(PIN_QUERY);
   const wide = useMediaQuery("(min-width: 900px)");
   const [active, setActive] = useState(0);
+  const [detail, setDetail] = useState<DetailContent | null>(null);
+  const closeDetail = useCallback(() => setDetail(null), []);
+  const modal = <DetailModal content={detail} onClose={closeDetail} />;
   const pinRef = useRef<HTMLDivElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
   const steps = stops.length + 1; // every role, then "what's next"
@@ -263,7 +287,7 @@ export function CareerRail() {
     <div className="al-stage-stack" id="exp-stage">
       {stops.map((s, i) => (
         <div className={"al-stage" + (i === active ? " is-on" : "")} aria-hidden={i !== active} key={s.slug}>
-          <StopDetail stop={s} />
+          <StopDetail stop={s} onOpen={setDetail} />
         </div>
       ))}
       <div className={"al-stage" + (active === stops.length ? " is-on" : "")} aria-hidden={active !== stops.length}>
@@ -281,11 +305,12 @@ export function CareerRail() {
           <ol className="al-tl">
             {[...stops].reverse().map((s) => (
               <li className="al-tl-item al-rv" id={s.slug} key={s.slug}>
-                <StopDetail stop={s} />
+                <StopDetail stop={s} onOpen={setDetail} />
               </li>
             ))}
           </ol>
         </div>
+        {modal}
       </section>
     );
   }
@@ -303,6 +328,7 @@ export function CareerRail() {
           {rail}
           {stage}
         </div>
+        {modal}
       </section>
     );
   }
@@ -336,6 +362,7 @@ export function CareerRail() {
           </div>
         </div>
       </div>
+      {modal}
     </section>
   );
 }

@@ -380,6 +380,18 @@ export default function Portfolio() {
           </>
         )}
 
+        {/* Always-there next step: once you're past the opening screen, Resume and
+            Email stay one tap away. Hidden at the very top (the hero has both)
+            and at Contact (the buttons are right there). */}
+        <div
+          className={"al-quick" + (activeSection && activeSection !== "contact" && !showResume ? " is-on" : "")}
+          role="group"
+          aria-label="Get in touch"
+        >
+          <button type="button" onClick={() => { trackAction("resume_open"); setShowResume(true); }}>Resume</button>
+          <a href={"mailto:" + profile.email}><span>Email<span className="al-quick-long">{"\u00a0"}me</span></span></a>
+        </div>
+
         {/* PORTFOLIO ASSISTANT + SEARCH */}
         <PortfolioChat />
         <CommandPalette />

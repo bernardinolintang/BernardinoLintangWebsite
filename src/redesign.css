@@ -422,10 +422,15 @@
   width: 100%; display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; gap: 14px;
   padding: 24px 12px; background: none; border: 0; border-radius: 14px; cursor: pointer;
   font-family: inherit; color: inherit; text-align: left;
-  opacity: .5; transition: opacity .35s ease, background .35s ease;
+  transition: background .35s ease;
   scroll-margin-top: 96px;
 }
-.al-lb-row:hover, .al-lb-item.is-on .al-lb-row { opacity: 1; }
+/* Rows you're not on fade back, but only the name and number: the placing
+   (1st, Top 5...) stays at full strength so it reads at a glance, and in
+   browsers that force their own dark mode onto the page. */
+.al-lb-pos, .al-lb-name { opacity: .5; transition: opacity .35s ease; }
+.al-lb-row:hover .al-lb-pos, .al-lb-row:hover .al-lb-name,
+.al-lb-item.is-on .al-lb-pos, .al-lb-item.is-on .al-lb-name { opacity: 1; }
 .al-lb-item.is-on .al-lb-row { background: rgba(255,255,255,.8); box-shadow: 0 1px 2px rgba(0,0,0,.04); }
 .al-lb-pos { font: 600 13px/1 var(--mono); color: var(--al-ink-2); }
 .al-lb-name b { display: block; font-size: 19px; font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
@@ -468,7 +473,8 @@
   background: #fff; border-top: 1px solid rgba(0,0,0,.06);
 }
 @media (max-width: 899px) {
-  .al-lb-row { opacity: 1; padding: 18px 6px; scroll-margin-top: 64px; }
+  .al-lb-row { padding: 18px 6px; scroll-margin-top: 64px; }
+  .al-lb-pos, .al-lb-name { opacity: 1; }
   .al-lb-res b { font-size: 24px; }
   .al-lb-name b { font-size: 17px; }
 }
@@ -1043,3 +1049,81 @@
 #self-projects, #school-projects { scroll-margin-top: 48px; }
 .al-win-lanes { margin-top: 10px; }
 .al-win-lanes .al-lane { font-size: 10px; padding: 5px 9px; }
+
+/* ==========================================================================
+   STICKY "Resume / Email me": bottom-left, opposite the chat button
+   ========================================================================== */
+.al-quick {
+  position: fixed; z-index: 89;
+  left: max(22px, env(safe-area-inset-left, 0px)); bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  display: flex; gap: 4px; padding: 4px; border-radius: 980px;
+  background: rgba(255,255,255,.9); border: 1px solid rgba(0,0,0,.08);
+  backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
+  box-shadow: 0 6px 24px rgba(0,0,0,.14);
+  opacity: 0; visibility: hidden; transform: translateY(12px);
+  transition: opacity .25s ease, transform .25s var(--ease-out), visibility 0s .25s;
+}
+.al-quick.is-on { opacity: 1; visibility: visible; transform: none; transition: opacity .25s ease, transform .25s var(--ease-out), visibility 0s; }
+.al-quick button, .al-quick a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 980px;
+  font: inherit; font-size: 15px; font-weight: 600; text-decoration: none; cursor: pointer;
+  border: 0; background: none; color: var(--al-ink);
+}
+.al-quick button:hover { background: rgba(0,0,0,.06); }
+.al-quick a { background: var(--al-accent); color: #fff; }
+.al-quick a:hover { background: var(--al-accent-hover); }
+.al-quick :focus-visible { outline: 2px solid var(--al-accent); outline-offset: 2px; }
+@media (max-width: 760px) {
+  .al-quick { left: max(16px, env(safe-area-inset-left, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .al-quick button, .al-quick a { padding: 0 14px; font-size: 14.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .al-quick, .al-quick.is-on { transition: none; transform: none; }
+}
+
+/* ==========================================================================
+   PHONES: easier to read and tap. Small print goes up to 14px or more, and
+   anything you tap is at least 44px tall (Apple's minimum touch target).
+   ========================================================================== */
+@media (max-width: 760px) {
+  .al-tag, .al-alt .al-tag { font-size: 14px; padding: 6px 13px; }
+  .al-pm-tag { font-size: 13.5px; }
+  .al-date, .al-period { font-size: 14px; }
+  .al-stage-org { font-size: 15px; }
+  .al-stage-meta { font-size: 14.5px; }
+  .al-stage-focus { font-size: 13px; }
+  .al-lane { font-size: 12px; padding: 7px 11px; }
+  .al-lb-pos { font-size: 14px; }
+  .al-lb-name small { font-size: 14px; }
+  .al-lb-res small { font-size: 13.5px; }
+  .al-hero .al-stat span, .al-stat span { font-size: 14px; }
+  .al-index-item span { font-size: 15px; }
+  .al-facts dt { font-size: 12.5px; }
+  .al-quote-by small { font-size: 14px; }
+  .al-board-note, .al-board-col ul { font-size: 14.5px; }
+  .al-photo-cap b { font-size: 14px; }
+  .al-photo-cap small { font-size: 13px; }
+  .al-node-label { font-size: 13px; }
+  .al-footer { font-size: 13.5px; padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+
+  /* Tap targets */
+  .al-link { display: inline-block; padding-block: 11px; font-size: 17px; }
+  .al-btn { min-height: 48px; padding: 14px 26px; font-size: 17px; }
+  .al-more-btn { min-height: 44px; padding: 10px 20px; font-size: 16px; }
+  .al-nav-toggle { width: 44px; height: 44px; font-size: 22px; display: grid; place-items: center; }
+  .al-nav-links a { padding: 16px 22px; font-size: 17px; }
+  .al-stage-org a { display: inline-block; padding: 6px 0; }
+  /* Hero: keep "View my work · Resume · Contact" on one row on small phones */
+  .al-hero .al-cta-row { gap: 4px 16px; }
+  .al-hero .al-link { font-size: 16px; }
+  .al-hero .al-btn { font-size: 16px; padding: 13px 22px; }
+}
+/* Very narrow phones: keep "Resume / Email" and "Ask about Bernard" side by side */
+@media (max-width: 400px) {
+  .al-quick button, .al-quick a { padding: 0 12px; font-size: 14px; }
+  .al-quick-long { display: none; }
+}
+/* Company name on the job card links to the company's site */
+.al-stage-org a { color: inherit; text-decoration: none; }
+.al-stage-org a:hover { text-decoration: underline; }
+.al-story-btn { margin-top: 16px; }

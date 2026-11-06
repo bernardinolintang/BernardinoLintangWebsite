@@ -138,7 +138,11 @@ function buildKnowledge(): PortfolioEntry[] {
       title: `${x.title} at ${x.company}`,
       date: x.period,
       summary: x.angle ?? x.bullets[0],
-      details: [...x.bullets, ...(x.angle ? [`Product angle: ${x.angle}`] : [])],
+      details: [
+        ...x.bullets,
+        ...(x.angle ? [`Product angle: ${x.angle}`] : []),
+        ...(x.story ?? []).flatMap((st) => [`${st.heading}: ${st.body ?? ""}`.trim(), ...(st.points ?? [])]),
+      ],
       skills: x.tags,
       // Anchors straight to THIS experience's card, not just the section —
       // so "relevant evidence" links land on the exact evidence, not a scroll
