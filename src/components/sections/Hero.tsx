@@ -206,7 +206,7 @@ export function Hero({ onResume }: { onResume: () => void }) {
 
         <div className="al-hero-copy">
           <img className="al-avatar al-rv" src="/formal-picture.JPG" alt="Bernardino Lintang" />
-          <div className="al-eyebrow al-rv">BERNARDINO LINTANG · AI PRODUCT BUILDER</div>
+          <div className="al-eyebrow al-rv">BERNARDINO LINTANG · AI, PRODUCT &amp; DATA</div>
           <h1 className="al-rv">
             I build AI products that{" "}
             <span className="al-hero-line2">

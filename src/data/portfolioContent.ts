@@ -26,6 +26,10 @@ export type Experience = {
      DATA / AI / PRODUCT the role leaned on (lit up under the role). */
   short: string; focus: string; lanes: ("data" | "ai" | "product")[];
   links?: { href: string; label: string }[];
+  /* Company website: the company name on the card links here. */
+  url?: string;
+  /* Optional long write-up, shown under "Read the full story" on the card. */
+  story?: { heading: string; body?: string; points?: string[] }[];
 };
 
 export type Project = {
@@ -115,22 +119,57 @@ export const experiences: Experience[] = [
   {
     title: "Business Analyst Intern",
     company: "IBM Singapore Pte. Ltd. (IBM Consulting)",
+    url: "https://www.ibm.com/",
     short: "IBM",
-    focus: "Consulting · hybrid cloud & AI",
-    lanes: ["data", "product"],
+    focus: "Business analysis · enterprise AI",
+    lanes: ["data", "ai", "product"],
     period: "Sep 2026 to Dec 2026 · Singapore",
     logo: "/ibm-logo.png",
     bullets: [
-      "Supporting client engagements across market research and competitive strategy within IBM Consulting's hybrid cloud and AI practice.",
-      "Contributing to data analytics assessments and enterprise-wide data integrations, with exposure to cloud migration and system implementation projects.",
-      "Running workshops, meetings, and stakeholder interviews to capture, document, and synthesise requirements across client and internal teams.",
+      "Meeting intelligence app: turns live, uploaded or pasted meetings into business requirements, user stories, acceptance criteria, decisions, action items and risks, built on IBM watsonx and MERaLiON.",
+      "Code knowledge graph for AI agents: maps dependencies across 6 Java microservices and 30 frontend consumers in Neo4j and serves them to agents through MCP, tested with a 50-scenario, 100-run evaluation with and without the graph.",
+      "Business analysis: gathering requirements with business and technical stakeholders, and turning unclear problems into user stories, acceptance criteria and priorities.",
     ],
-    angle: "Bringing a data engineering and AI product lens to client-facing consulting work.",
-    tags: ["Business Analysis", "Data Analytics", "Cloud Migration", "Stakeholder Engagement"],
+    angle: "Start from the business problem, map the technical dependencies, then decide how to measure whether the solution works.",
+    tags: ["IBM watsonx", "Neo4j", "MCP", "LLM Evaluation", "Requirements", "Stakeholder Engagement"],
+    story: [
+      {
+        heading: "AI-powered meeting intelligence platform",
+        body: "Important information gets scattered across meeting discussions, which makes it hard to track decisions, set ownership, and turn conversations into development tasks. I designed and built workflows that help Business Analysts organise discussions into structured outputs for requirements documentation and stakeholder follow-up. Built with IBM watsonx, MERaLiON, IBM Cloudant and IBM Code Engine.",
+      },
+      {
+        heading: "Enterprise AI code intelligence and knowledge graph",
+        body: "A small code change in enterprise software can affect backend services, frontend API calls, asynchronous Kafka messages and database interactions. This proof of concept combines deterministic source-code parsing, a Neo4j knowledge graph and the Model Context Protocol (MCP) so AI coding agents can see those dependencies and assess change impact.",
+        points: [
+          "Analysed an environment of about 6 Java microservices and 30 frontend consumers",
+          "Extracted methods, classes, API relationships and service dependencies with Tree-sitter and Java parsing",
+          "Built Neo4j graph representations for dependency tracing and change-impact analysis",
+          "Traced HTTP and Kafka communication paths between services",
+          "Automated indexing with GitHub Actions for repeatable code analysis",
+          "Compared Neo4j, CodeGraph, Graphify and GraphRAG for enterprise code understanding",
+          "Designed a 50-scenario evaluation comparing agents with and without graph-based MCP access across 100 planned runs, measuring accuracy, execution time, token use, tool use and failure patterns",
+        ],
+      },
+      {
+        heading: "Business analysis and solution design",
+        points: [
+          "Gathering and clarifying requirements with business and technical stakeholders",
+          "Analysing existing processes to find inefficiencies and opportunities",
+          "Turning ambiguous problems into structured requirements, user stories, acceptance criteria and priorities",
+          "Supporting technical research, solution comparisons, documentation and cross-functional discussions",
+          "Weighing system dependencies, feasibility, maintainability and risk when evaluating solutions",
+        ],
+      },
+      {
+        heading: "What I took away",
+        body: "How to work between business and engineering: understand the business problem first, examine the technical dependencies, design a practical solution, and define how to judge whether it works. It reinforced my interest in AI products that are technically sound, useful to the people using them, and grounded in real operational needs.",
+      },
+    ],
   },
   {
     title: "Data Engineer Intern",
     company: "Home Team Science and Technology Agency (HTX)",
+    url: "https://www.htx.gov.sg/",
     short: "HTX",
     focus: "AI infrastructure",
     lanes: ["data", "ai"],
@@ -146,6 +185,7 @@ export const experiences: Experience[] = [
   {
     title: "GenAI Product Development Intern",
     company: "CPF Board",
+    url: "https://www.cpf.gov.sg/",
     short: "CPF",
     focus: "GenAI product",
     lanes: ["ai", "product"],
@@ -162,6 +202,7 @@ export const experiences: Experience[] = [
   {
     title: "AI Engineer Intern",
     company: "Crayon Data",
+    url: "https://crayondata.ai/",
     short: "Crayon Data",
     focus: "Applied AI · LLM pipelines",
     lanes: ["data", "ai"],
@@ -181,6 +222,7 @@ export const experiences: Experience[] = [
   {
     title: "Operations (Data Science) Intern",
     company: "Superbank",
+    url: "https://www.superbank.id/en/",
     short: "Superbank",
     focus: "Data science · fraud",
     lanes: ["data"],

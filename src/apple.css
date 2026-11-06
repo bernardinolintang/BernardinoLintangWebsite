@@ -6,7 +6,7 @@
   --al-bg: #fbfbfd;          /* page background */
   --al-bg-alt: #f5f5f7;      /* alternate section background */
   --al-ink: #1d1d1f;         /* primary text */
-  --al-ink-2: #6e6e73;       /* secondary text */
+  --al-ink-2: #5d5d62;       /* secondary text (darker for contrast on phones and in sun) */
   --al-accent: #0071e3;      /* links + primary buttons */
   --al-accent-hover: #0077ed;
   --al-card: #ffffff;
