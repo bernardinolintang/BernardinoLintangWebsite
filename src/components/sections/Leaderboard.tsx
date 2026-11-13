@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { competitions, type CompetitionCard } from "../../data/portfolioContent";
+import { competitions, projects, type CompetitionCard } from "../../data/portfolioContent";
 import { slugify } from "../../lib/slugify";
 import { PIN_QUERY, pinProgress, useHashTarget, useMediaQuery, useScrollFrame } from "../../lib/scrollFx";
 import { splitSentences } from "../../lib/text";
 import { CardImageCarousel } from "../CardImageCarousel";
+import { projectDetail } from "./ProjectReel";
 import { DetailModal, SectionTitle, TagList, type DetailContent } from "./shared";
 
 /* ==========================================================================
@@ -40,6 +41,9 @@ function hook(c: CompetitionCard) {
 }
 
 function toDetail(c: CompetitionCard): DetailContent {
+  /* Linked to a project: show that project's full write-up, headed by the result. */
+  const linked = c.project ? projects.find((p) => p.title === c.project) : undefined;
+  if (linked) return { ...projectDetail(linked), eyebrow: c.badge };
   const cs = c.caseStudy;
   return {
     eyebrow: c.badge,

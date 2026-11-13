@@ -28,7 +28,7 @@ function chromeLabel(p: Project) {
   );
 }
 
-function toDetail(p: Project): DetailContent {
+export function projectDetail(p: Project): DetailContent {
   const s = p.status;
   /* Projects with a full case study (status board etc.) read in the order:
      problem, what I built, key decisions, status, limitations, stack. */
@@ -266,7 +266,7 @@ function Reel({ list, slugs, title, idPrefix, first, onOpen }: ReelProps) {
 /* Two stacked reels: what I build myself first, then coursework. */
 export function ProjectReel() {
   const [open, setOpen] = useState<Project | null>(null);
-  const detail = useMemo(() => (open ? toDetail(open) : null), [open]);
+  const detail = useMemo(() => (open ? projectDetail(open) : null), [open]);
   const close = useCallback(() => setOpen(null), []);
   const self = useMemo(() => projects.filter((p) => p.kind === "self"), []);
   const school = useMemo(() => projects.filter((p) => p.kind === "school"), []);
