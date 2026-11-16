@@ -2,6 +2,7 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState, type ReactNode
 import { profile, projects, type Project } from "../../data/portfolioContent";
 import { slugify } from "../../lib/slugify";
 import { PIN_QUERY, clamp, pinProgress, useMediaQuery, useScrollFrame } from "../../lib/scrollFx";
+import { CardImageCarousel } from "../CardImageCarousel";
 import { ScrollCarouselRow } from "../ScrollCarouselRow";
 import { DetailModal, SectionTitle, StatusPill, TagList, hostOf, type DetailContent } from "./shared";
 
@@ -28,7 +29,7 @@ function chromeLabel(p: Project) {
   );
 }
 
-function toDetail(p: Project): DetailContent {
+export function projectDetail(p: Project): DetailContent {
   const s = p.status;
   /* Projects with a full case study (status board etc.) read in the order:
      problem, what I built, key decisions, status, limitations, stack. */
@@ -79,6 +80,7 @@ function Window({
 }: { p: Project; i: number; on: boolean; id: string; onOpen: () => void }) {
   const img = p.images?.[0] ?? p.image;
   const live = !!p.liveDemo;
+  const multi = (p.images?.length ?? 0) > 1;
   return (
     <article className={"al-win" + (on ? " is-on" : "")} id={id}>
       <div className="al-win-chrome" aria-hidden="true">
@@ -86,14 +88,21 @@ function Window({
         <span className={live ? "is-live" : undefined}>{chromeLabel(p)}</span>
       </div>
       <div
-        className={"al-win-shot" + (p.imageFit === "contain" ? " is-contain" : "")}
+        className={"al-win-shot" + (p.imageFit === "contain" ? " is-contain" : "") + (multi ? " is-multi" : "")}
         onPointerMove={(e) => {
           const r = e.currentTarget.getBoundingClientRect();
           e.currentTarget.style.setProperty("--sx", (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
           e.currentTarget.style.setProperty("--sy", (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3));
         }}
       >
-        {img && (
+        {multi ? (
+          <CardImageCarousel
+            images={p.images!}
+            alt={p.title}
+            imagePositions={p.imagePositions}
+            fit={p.imageFit}
+          />
+        ) : img && (
           <img
             src={img}
             alt={p.title}
@@ -266,7 +275,7 @@ function Reel({ list, slugs, title, idPrefix, first, onOpen }: ReelProps) {
 /* Two stacked reels: what I build myself first, then coursework. */
 export function ProjectReel() {
   const [open, setOpen] = useState<Project | null>(null);
-  const detail = useMemo(() => (open ? toDetail(open) : null), [open]);
+  const detail = useMemo(() => (open ? projectDetail(open) : null), [open]);
   const close = useCallback(() => setOpen(null), []);
   const self = useMemo(() => projects.filter((p) => p.kind === "self"), []);
   const school = useMemo(() => projects.filter((p) => p.kind === "school"), []);

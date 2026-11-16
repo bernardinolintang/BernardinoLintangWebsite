@@ -10,6 +10,9 @@ export type CompetitionCard = {
   subtitle?: string; pmTags?: string[]; angle?: string; liveDemo?: string;
   article?: string; articleLabel?: string;
   imgPos?: string;
+  /* Title of a project in `projects`. When set, "Read more" opens that project's
+     full write-up (with this result as the badge) instead of this card's own text. */
+  project?: string;
   /* Leaderboard: what was built (big), where (small), and the placing.
      rank sorts the board (1 = winner); place/field are what's displayed. */
   short: string; event: string; place: string; field: string; rank: number;
@@ -505,6 +508,25 @@ export const competitions: CompetitionCard[] = [
     angle: "Framed around a business outcome where better advisor client fit drives conversion, not just a higher model score.",
     image: "/nus-datathon.jpg",
   },
+  {
+    title: "COE Compass: DSA2111 Cloud-Based Data Science & Programming",
+    short: "COE Compass",
+    event: "NUS DSA2111 Project Showcase",
+    place: "2nd",
+    field: "14 teams",
+    rank: 2,
+    badge: "1st Runner-Up · 14 teams",
+    date: "Nov 2026",
+    subtitle: "Cloud-native COE forecasts that show the uncertainty, not just one number.",
+    description:
+      "Problem: A COE premium is hard to call, and a single predicted price hides how uncertain it really is. Bidders need a range they can plan around, not a point guess.\n\nApproach: Built and presented COE Compass, a cloud-native probabilistic forecasting platform for Singapore COE premiums. It forecasts all five COE categories up to six bidding exercises ahead as quantile ranges (p5 to p95). The forecast combines a Temporal Fusion Transformer, an attention-based deep-learning model built for multi-horizon forecasting, with Box-Tiao ARIMAX, a classical time-series model that treats 8 policy events as intervention inputs, blended 50/50. Eight forecasting methods were backtested on 72 unseen bidding exercises using pinball loss, the standard score for quantile forecasts, with a random-walk baseline as the bar to clear. The models are served through FastAPI and PostgreSQL, packaged with Docker and deployed on Kubernetes (MicroK8s) on NUS Ronin cloud, with quota scenarios and bid-win probabilities on top.\n\nResult: 2nd of 14 teams. In the backtest the hybrid had the best numerical pinball loss (1,928 against 1,937 for the random walk), though statistically tied with it, and its 80% intervals covered 87.9% of held-out outcomes.",
+    angle: "Showed the forecast as a range people can plan around, instead of pretending to know one exact price.",
+    tags: ["Probabilistic Forecasting", "Temporal Fusion Transformer", "ARIMAX", "Kubernetes", "FastAPI"],
+    images: ["/coe-compass-group.jpg", "/coe-compass-cover.jpg"],
+    imagePositions: ["center 40%", "center center"],
+    liveDemo: "https://coe-compass.vercel.app/",
+    project: "COE Compass",
+  },
 ];
 
 /* ---------- Projects ---------- */
@@ -647,6 +669,39 @@ export const projects: Project[] = [
     github: "https://github.com/bernardinolintang?tab=repositories",
   },
   {
+    title: "COE Compass",
+    kind: "school",
+    lanes: ["ai", "data"],
+    tagline: "Policy-Aware Probabilistic COE Forecasting",
+    date: "DSA2111 · Aug to Nov 2026",
+    blurb:
+      "Forecasts Singapore COE premiums as probability ranges, not one exact price. Best pinball loss of 8 methods tested, statistically tied with the random walk.",
+    description:
+      "Built a cloud-native forecasting platform for Singapore COE premiums using Temporal Fusion Transformers, Box-Tiao ARIMAX and probabilistic forecasting. Forecasts all five COE categories up to six bidding exercises ahead, with uncertainty ranges, policy-aware modelling, quota scenarios and bid-win probabilities.\n\nData: 396 bidding exercises from Jan 2010 to Sep 2026, giving 1,980 category-exercise records across the 5 COE categories. Each forecast looks back 24 exercises and predicts the next 6, about 3 months ahead.\n\nTemporal Fusion Transformer (TFT): a deep-learning model designed for multi-horizon forecasting. Attention lets it weigh which past exercises and inputs matter most, and it outputs 7 quantiles (p5 to p95) per step instead of one number, so the forecast is a range. Ours is an 88,120-parameter network run as a 3-seed ensemble, so no single random initialisation drives the result.\n\nBox-Tiao ARIMAX: a classical statistical model. ARIMA captures trend and autocorrelation in the premium series, the X adds external inputs, and Box-Tiao intervention analysis lets those inputs be policy events (8 modelled). A quota or rule change then enters as a known shock rather than being mistaken for noise. This makes the model policy-aware, not a causal estimate of what any policy did.\n\nHybrid: the TFT and ARIMAX forecasts are combined 50/50, pairing the TFT's flexibility with ARIMAX's structure around policy shocks.\n\nEvaluation: 8 forecasting methods were scored on 2,010 held-out forecast-outcome pairs per model, across 72 unseen bidding exercises (Oct 2023 to Sep 2026). Pinball loss is the standard score for quantile forecasts: it weights under- and over-prediction differently at each quantile, so a model is rewarded for well-calibrated ranges, not just a good middle guess. Lower is better. The random walk (next premium = latest premium) is the baseline to clear.\n\nResults: the hybrid had the best numerical pinball loss, 1,928 against 1,937 for the random walk, but the gap is statistically tied. Its point forecasts had an MAE of S$5,549 (MAPE 6.81%), and its 80% prediction intervals covered 87.9% of actual outcomes.",
+    problem:
+      "COE premiums move with demand, quota supply and policy changes, and a single point forecast hides how uncertain the next bidding exercise really is. Bidders need a range they can plan around.",
+    productDecision:
+      "Quota scenarios and bid-win probabilities turn the forecast range into something a bidder can act on, since a distribution answers \"what are my odds at this bid?\" better than one predicted price.",
+    decisions: [
+      "Ranges over a single price: every forecast is a set of quantiles, not one predicted premium.",
+      "A baseline to clear: the random walk is the bar, and everything is judged on held-out exercises only.",
+      "Policy as inputs, not conclusions: events enter the model as interventions, with no causal claims.",
+      "Hybrid over a single model: statistical structure from ARIMAX, flexibility from the TFT.",
+    ],
+    limitations: [
+      "Numerically best, not proven better: the hybrid is statistically tied with the random walk.",
+      "Intervals ran wider than nominal: 80% intervals covered 87.9% of outcomes.",
+      "A forecast range is an estimate of uncertainty, not a guarantee of where the premium will land.",
+    ],
+    testing:
+      "Python and PyTorch for the models, served through a FastAPI API backed by PostgreSQL. Docker packages the service and its dependencies into reproducible containers, so the same build runs on a laptop and in the cloud. Kubernetes (MicroK8s) on NUS Ronin cloud deploys those containers and keeps them running. 193 automated ML, API, UI and end-to-end tests cover the pipeline.",
+    tags: ["PyTorch", "Temporal Fusion Transformer", "Box-Tiao ARIMAX", "FastAPI", "PostgreSQL", "Docker", "Kubernetes", "Python"],
+    pmTags: ["Decision Support", "Uncertainty", "Evaluation"],
+    images: ["/coe-compass-group.jpg", "/coe-compass-cover.jpg"],
+    imagePositions: ["center 40%", "center center"],
+    liveDemo: "https://coe-compass.vercel.app/",
+  },
+  {
     title: "Hybrid CNN + RAG Framework for Dermatology Decision Support",
     kind: "school",
     lanes: ["ai"],
@@ -669,7 +724,8 @@ export const projects: Project[] = [
     productDecision:
       "Benchmarked simple baselines before deep models, so the added complexity of a CNN was justified by real gains.",
     tags: ["scikit-learn", "TensorFlow", "CNN", "Bioinformatics"],
-    image: "/it1244.png",
+    images: ["/it1244 group pic.jpg", "/it1244.png"],
+    imagePositions: ["center 46%", "center center"], // tall group photo: show the faces, laptop screen in the lower half of the crop
     github: "https://github.com/bernardinolintang/IT1244-Project-DNA-Binding-Protein",
   },
   {
@@ -856,6 +912,34 @@ export const leadershipRoles: LeadershipRole[] = [
       "/SOW%20grp%20photo%202.jpg",
       "/SOW%20grp%20photo%201.jpg",
     ],
+  },
+  {
+    title: "Senior, Science Camp (SCAMP)",
+    short: "SCAMP Senior",
+    org: "NUS Students' Science Club",
+    date: "Apr 2024 – Jun 2024",
+    location: "Singapore",
+    bullets: [
+      "Co-led a group of 18 freshmen in SCAMP alongside a team of 4 other seniors, fostering a supportive and engaging environment.",
+      "Demonstrated leadership and adaptability by effectively managing challenges during the camp to ensure the safety and enjoyment of all participants.",
+    ],
+    tags: ["Leadership", "Team Building", "Communication", "Team Leadership"],
+    images: [], // photo to come
+  },
+  {
+    title: "Vice President of Film, Sound and Video Society",
+    short: "FSV Vice President",
+    org: "Catholic Junior College",
+    date: "Apr 2019 – Apr 2020 · 1 yr 1 mo",
+    location: "Singapore · On-site",
+    bullets: [
+      "Managed college events and projects, improving teamwork and organizational skills under time and resource constraints.",
+      "Oversaw equipment maintenance, procurement, and logistics.",
+      "Developed leadership and decision-making skills by guiding the team through projects and challenges.",
+      "Mentored members in photography to enhance their skills and contributions.",
+    ],
+    tags: ["Leadership", "Photography", "Videography", "Teamwork"],
+    images: [], // photo to come
   },
 ];
 

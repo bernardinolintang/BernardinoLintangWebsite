@@ -196,7 +196,11 @@ function LeadershipMap() {
             aria-label={`${r.title}, ${r.org}`}
           >
             <span className="al-node-img">
-              <img src={r.images[0]} alt="" loading="lazy" style={r.imagePositions?.[0] ? { objectPosition: r.imagePositions[0] } : undefined} />
+              {r.images[0] ? (
+                <img src={r.images[0]} alt="" loading="lazy" style={r.imagePositions?.[0] ? { objectPosition: r.imagePositions[0] } : undefined} />
+              ) : (
+                <span className="al-node-initials" aria-hidden="true">{r.short.split(" ").map((w) => w[0]).join("").slice(0, 2)}</span>
+              )}
             </span>
             <span className="al-node-label">{r.short}</span>
             <span className="al-node-date">{r.date.split("·")[0].trim()}</span>
@@ -205,9 +209,11 @@ function LeadershipMap() {
       </div>
 
       <div className="al-lead-panel" key={active} aria-live="polite">
-        <div className="al-lead-media">
-          <CardImageCarousel images={l.images} alt={l.title} imagePositions={l.imagePositions} />
-        </div>
+        {l.images.length > 0 && (
+          <div className="al-lead-media">
+            <CardImageCarousel images={l.images} alt={l.title} imagePositions={l.imagePositions} />
+          </div>
+        )}
         <div className="al-lead-body">
           <h3>{l.title}</h3>
           <div className="al-org">{l.org}</div>

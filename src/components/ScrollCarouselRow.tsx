@@ -46,6 +46,60 @@ export function ScrollCarouselRow({ trackClassName, ariaLabel, children }: Scrol
     el.scrollBy({ left: dir * el.clientWidth * 0.85, behavior: "smooth" });
   };
 
+  /* Mouse drag-to-scroll. Touch and trackpads already scroll natively; a mouse can't.
+     Photo carousels, links and buttons keep their own handling. */
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    let startX = 0;
+    let startLeft = 0;
+    let dragging = false;
+    let moved = false;
+
+    const onMove = (e: PointerEvent) => {
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 5) {
+        moved = true;
+        el.style.scrollSnapType = "none";
+        el.style.cursor = "grabbing";
+        el.style.userSelect = "none";
+      }
+      if (moved) el.scrollLeft = startLeft - dx;
+    };
+    const onUp = () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+      if (!dragging) return;
+      dragging = false;
+      if (moved) {
+        /* Swallow the click that follows a drag so it doesn't open a card */
+        const swallow = (ev: MouseEvent) => ev.stopPropagation();
+        el.addEventListener("click", swallow, { capture: true, once: true });
+        setTimeout(() => el.removeEventListener("click", swallow, true), 0);
+      }
+      el.style.scrollSnapType = "";
+      el.style.cursor = "";
+      el.style.userSelect = "";
+    };
+    const onDown = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      if ((e.target as HTMLElement).closest("a, button, input, textarea, select, .al-card-carousel")) return;
+      dragging = true;
+      moved = false;
+      startX = e.clientX;
+      startLeft = el.scrollLeft;
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
+    };
+    el.addEventListener("pointerdown", onDown);
+    return () => {
+      el.removeEventListener("pointerdown", onDown);
+      onUp();
+    };
+  }, []);
+
   return (
     <div className="al-scroll-row">
       <div
