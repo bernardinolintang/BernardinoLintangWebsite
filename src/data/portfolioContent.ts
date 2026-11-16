@@ -724,7 +724,8 @@ export const projects: Project[] = [
     productDecision:
       "Benchmarked simple baselines before deep models, so the added complexity of a CNN was justified by real gains.",
     tags: ["scikit-learn", "TensorFlow", "CNN", "Bioinformatics"],
-    image: "/it1244.png",
+    images: ["/it1244 group pic.jpg", "/it1244.png"],
+    imagePositions: ["center 46%", "center center"], // tall group photo: show the faces, laptop screen in the lower half of the crop
     github: "https://github.com/bernardinolintang/IT1244-Project-DNA-Binding-Protein",
   },
   {
@@ -911,6 +912,34 @@ export const leadershipRoles: LeadershipRole[] = [
       "/SOW%20grp%20photo%202.jpg",
       "/SOW%20grp%20photo%201.jpg",
     ],
+  },
+  {
+    title: "Senior, Science Camp (SCAMP)",
+    short: "SCAMP Senior",
+    org: "NUS Students' Science Club",
+    date: "Apr 2024 – Jun 2024",
+    location: "Singapore",
+    bullets: [
+      "Co-led a group of 18 freshmen in SCAMP alongside a team of 4 other seniors, fostering a supportive and engaging environment.",
+      "Demonstrated leadership and adaptability by effectively managing challenges during the camp to ensure the safety and enjoyment of all participants.",
+    ],
+    tags: ["Leadership", "Team Building", "Communication", "Team Leadership"],
+    images: [], // photo to come
+  },
+  {
+    title: "Vice President of Film, Sound and Video Society",
+    short: "FSV Vice President",
+    org: "Catholic Junior College",
+    date: "Apr 2019 – Apr 2020 · 1 yr 1 mo",
+    location: "Singapore · On-site",
+    bullets: [
+      "Managed college events and projects, improving teamwork and organizational skills under time and resource constraints.",
+      "Oversaw equipment maintenance, procurement, and logistics.",
+      "Developed leadership and decision-making skills by guiding the team through projects and challenges.",
+      "Mentored members in photography to enhance their skills and contributions.",
+    ],
+    tags: ["Leadership", "Photography", "Videography", "Teamwork"],
+    images: [], // photo to come
   },
 ];
 
